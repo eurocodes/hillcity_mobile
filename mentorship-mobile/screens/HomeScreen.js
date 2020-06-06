@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, Dimensions, Image, StyleSheet, Text, View } from 'react-native';
+import { Button, Dimensions, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 import logo from '../assets/logo.png';
 
@@ -7,13 +7,13 @@ const { width, height } = Dimensions.get('window');
 
 export default class HomeScreen extends Component {
 
-    signin = () => {
-
+    signinScreen = () => {
+        this.props.navigation.navigate('Signin');
     }
 
     render() {
         return (
-            <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: '#fff', height, width }}>
+            <View style={styles.mainContainer}>
                 <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', }}>
                     <Image source={logo} style={{ width: width * 0.3, height: height * 0.08, marginBottom: height / 4, }} />
                     <View style={{ alignItems: 'center', justifyContent: 'center', marginBottom: height / 4, }}>
@@ -22,9 +22,11 @@ export default class HomeScreen extends Component {
                     </View>
                 </View>
                 <View>
-                    <View style={{ width: width - 30, marginBottom: 20, }}>
-                        <Button title="Sign in" color='#1f1526' onPress={this.signin}></Button>
-                    </View>
+                    <TouchableOpacity onPress={this.signinScreen} >
+                        <View style={styles.button}>
+                            <Text style={styles.buttonText}>Sign in</Text>
+                        </View>
+                    </TouchableOpacity>
                 </View>
                 <View>
                     <Text style={{ flex: 1, alignSelf: 'flex-start' }}>Visit our website</Text>
@@ -35,9 +37,25 @@ export default class HomeScreen extends Component {
 }
 
 const styles = StyleSheet.create({
-    signinButton: {
+    mainContainer: {
         flex: 1,
+        alignItems: 'center',
         justifyContent: 'center',
-        width: 300,
+        backgroundColor: '#fff',
+        height, width
+    },
+    button: {
+        backgroundColor: '#1f1526',
+        paddingVertical: 5,
+        paddingHorizontal: 15,
+        borderRadius: 20,
+        margin: 5,
+        width: width - 30,
+        marginBottom: 20,
+    },
+    buttonText: {
+        color: '#fff',
+        fontSize: 20,
+        alignSelf: 'center'
     }
 })
