@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { Button, Dimensions, Image, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Dimensions, Image, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { setUserToken, setUserRole } from '../Backend/Storage';
 
 import { login } from '../Backend/API';
 import logo from '../assets/logo.png';
@@ -13,18 +14,43 @@ export default class SigninScreen extends Component {
         password: '',
     }
 
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.data) {
+            this.props.navigation.navigate('Main');
+        }
+    }
+
     handleInput = key => val => {
         this.setState({ [key]: val })
     }
 
     signin = async () => {
-        try {
-            await login(this.state.email, this.state.password)
-            this.props.navigation.navigate('Main');
-        } catch (err) {
-            const errMessage = err.message
-            this.setState({ err: errMessage })
+
+        if (this.state.email && this.state.password) {
+            // try {
+            //     await login(this.state.email, this.state.password)
+            //     this.props.navigation.navigate('Main');
+            // } catch (err) {
+            //     console.log(err.message)
+            // }
+
+            const response = await fetch("http://localhost:3400/api/v1/auth/login", {
+                method: "POST",
+                headers: { "content-type": "application/json" },
+                body: JSON.stringify({ email: this.state.email, password: this.state.password })
+            })
+            const results = await response.json()
+            console.log(results);
+            if (response.ok) {
+                setUserToken(results.data.token)
+                setUserRole(results.data.role)
+                this.props.navigation.navigate('Main');
+            }
+            this.setState({ err: "Failed" })
+            console.log(this.state)
         }
+        !this.state.email ? this.setState({ noEmail: "Email address field cannot be empty" }) : this.setState({ noEmail: "" })
+        !this.state.password ? this.setState({ noPassword: "Password field cannot be empty" }) : this.setState({ noPassword: "" })
     }
 
     render() {
@@ -38,12 +64,14 @@ export default class SigninScreen extends Component {
                     </View>
                 </View>
                 <View style={{ width: width - 30, marginBottom: 20, }}>
+                    <Text style={styles.errText}>{this.state.noEmail}</Text>
                     <TextInput style={styles.inputField}
                         placeholder='Email Address'
                         onChangeText={this.handleInput('email')}
                         value={this.state.email}
                         autoCapitalize='none' />
 
+                    <Text style={styles.errText}>{this.state.noPassword}</Text>
                     <TextInput style={styles.inputField}
                         placeholder='Password'
                         onChangeText={this.handleInput('password')}
@@ -79,18 +107,26 @@ const styles = StyleSheet.create({
         borderColor: '#2859b8',
         borderWidth: 1,
         borderRadius: 20,
-        margin: 5
+        marginTop: 0,
+        marginBottom: 10,
+        marginHorizontal: 10,
     },
     button: {
         backgroundColor: '#2859b8',
         paddingVertical: 5,
-        paddingHorizontal: 15,
+        paddingHorizontal: 0,
         borderRadius: 20,
-        margin: 5
+        margin: 10,
     },
     buttonText: {
         color: '#fff',
         fontSize: 20,
         alignSelf: 'center'
+    },
+    errText: {
+        color: '#f00',
+        fontSize: 12,
+        marginBottom: 0,
+        marginLeft: 20,
     }
 })
