@@ -6,10 +6,14 @@ import { createStackNavigator } from 'react-navigation-stack';
 import HomeScreen from './screens/HomeScreen';
 import SigninScreen from './screens/SigninScreen';
 import DashboardScreen from './screens/Dashboard';
+import DrawerNavigationRoutes from './screens/DrawerNavigatorRoutes';
 
-const MainNavigator = createStackNavigator({
+const MainNavigator = createSwitchNavigator({
   Dashboard: DashboardScreen,
-})
+  DrawerNavigation: DrawerNavigationRoutes,
+},
+  { initialRouteName: "DrawerNavigation" }
+);
 
 const AppNavigator = createSwitchNavigator({
   Home: HomeScreen,
