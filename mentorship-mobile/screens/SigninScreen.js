@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
-import { Dimensions, Image, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Dimensions, Image, KeyboardAvoidingView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { setUserToken, setUserRole } from '../Backend/Storage';
 
-import { login } from '../Backend/API';
 import logo from '../assets/logo.png';
 
 const { width, height } = Dimensions.get('window');
@@ -14,12 +13,6 @@ export default class SigninScreen extends Component {
         password: '',
     }
 
-    componentWillReceiveProps(nextProps) {
-        if (nextProps.data) {
-            this.props.navigation.navigate('Main');
-        }
-    }
-
     handleInput = key => val => {
         this.setState({ [key]: val })
     }
@@ -27,13 +20,6 @@ export default class SigninScreen extends Component {
     signin = async () => {
 
         if (this.state.email && this.state.password) {
-            // try {
-            //     await login(this.state.email, this.state.password)
-            //     this.props.navigation.navigate('Main');
-            // } catch (err) {
-            //     console.log(err.message)
-            // }
-
             const response = await fetch("http://localhost:3400/api/v1/auth/login", {
                 method: "POST",
                 headers: { "content-type": "application/json" },
@@ -45,9 +31,9 @@ export default class SigninScreen extends Component {
                 setUserToken(results.data.token)
                 setUserRole(results.data.role)
                 this.props.navigation.navigate('Main');
+                return
             }
-            this.setState({ err: "Failed" })
-            console.log(this.state)
+            this.props.navigation.navigate('Signin');
         }
         !this.state.email ? this.setState({ noEmail: "Email address field cannot be empty" }) : this.setState({ noEmail: "" })
         !this.state.password ? this.setState({ noPassword: "Password field cannot be empty" }) : this.setState({ noPassword: "" })
@@ -55,7 +41,7 @@ export default class SigninScreen extends Component {
 
     render() {
         return (
-            <View style={styles.mainContainer}>
+            <KeyboardAvoidingView style={styles.mainContainer}>
                 <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', }}>
                     <Image source={logo} style={{ width: width * 0.3, height: height * 0.08, marginBottom: height / 4, }} />
                     <View style={{ alignItems: 'center', justifyContent: 'center', marginBottom: height / 4, }}>
@@ -89,7 +75,7 @@ export default class SigninScreen extends Component {
                 <View>
                     <Text style={{ flex: 1, alignSelf: 'flex-start' }}>Forgot Password? Click here!</Text>
                 </View>
-            </View>
+            </KeyboardAvoidingView>
         );
     }
 }

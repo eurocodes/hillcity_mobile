@@ -1,15 +1,15 @@
 import React, { Component } from 'react';
-import { AsyncStorage, Button, Dimensions, Image, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
-import { fetchUsers } from '../Backend/API'
-import { getUserToken } from '../Backend/Storage';
+import { AsyncStorage, Dimensions, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+
+import { fetchUsersMentor, fetchUsersMentee } from '../Backend/API';
 
 const { width, height } = Dimensions.get('window');
 
 export default class Dashboard extends Component {
-
     state = {
-        myData: '',
-        myConnections: '',
+        myDetails: '',
+        myConnections: [],
+        role: '',
     }
 
     async componentDidMount() {
@@ -17,6 +17,9 @@ export default class Dashboard extends Component {
         console.log("My Role:", role);
 
         if (role === "mentor") {
+            this.getMentorDashboard()
+            return
+        } else if (role === "adminmember") {
             this.getMentorDashboard()
             return
         }
@@ -27,60 +30,119 @@ export default class Dashboard extends Component {
     // Get user Role
     getUserRole = async () => AsyncStorage.getItem("role");
 
-    // getToken = async () => getUserToken();
-    getToken = async () => AsyncStorage.getItem("token");
-    // Please use AsyncStorage or SecureStorage API
-    getMenteeDashboard = async () => {
-        const token = await this.getToken()
-        console.log("My token:", token)
-        const response = await fetch("http://localhost:3400/api/v1/auth/mentee/dashboard", {
-            method: "GET",
-            headers: {
-                "Accept": "application/json",
-                "content-type": "application/json",
-                "Authorization": token
-            }
-        })
-        const results = await response.json()
-        console.log(results);
-        if (response.ok) {
-            this.setState({ myData: results.data.myDetails, myConnections: results.data.myConnections })
-            console.log("State:", this.state)
+    getMentorDashboard = async () => {
+        try {
+            const results = await fetchUsersMentor()
+            this.setState({ myDetails: results.myDetails, myConnections: results.myConnections, role: "mentor" })
+            console.log("Our state:", this.state)
+            return
+        } catch (err) {
+            console.log(err)
+            this.props.navigation.navigate('Signin');
             return
         }
-        this.setState({ err: "Failed" })
-        console.log(this.state)
-        return
     }
 
-    getMentorDashboard = async () => {
-        const token = await this.getToken()
-        console.log("My token:", token)
-        const response = await fetch("http://localhost:3400/api/v1/auth/mentor/dashboard", {
-            method: "GET",
-            headers: {
-                "Accept": "application/json",
-                "content-type": "application/json",
-                "Authorization": token
-            }
-        })
-        const results = await response.json()
-        console.log(results);
-        if (response.ok) {
-            this.setState({ myData: results.data.myDetails, myConnections: results.data.myConnections })
-            console.log("State:", this.state)
+    getMenteeDashboard = async () => {
+        try {
+            const results = await fetchUsersMentee()
+            this.setState({ myDetails: results.myDetails, myConnections: results.myConnections, role: "mentee" })
+            console.log("Our state:", this.state)
+            return
+        } catch (err) {
+            console.log(err)
+            this.props.navigation.navigate('Signin');
             return
         }
-        this.setState({ err: "Failed" })
-        console.log(this.state)
-        return
+    }
+
+    renderConnection() {
+        return this.state.myConnections.map((val, index) => {
+            return (
+                <View style={{ flexDirection: 'row' }} key={index}>
+                    <View style={styles.appLowerMap}>
+                        <Text>Name: {`${val.firstName} ${val.lastName}`}</Text>
+                        <Text>Email Address: {val.email}</Text>
+                        <Text>Phone: {val.phone}</Text>
+                    </View>
+                    <View style={styles.appLowerMap}>
+                        <Text>Photo: {val.photo}</Text>
+                    </View>
+                </View>
+            )
+        })
     }
 
     render() {
         return (
-            <View>
-                <Text>You are logged in as {this.state.myData.firstName}</Text>
-            </View>
+            <SafeAreaView style={{ backgroundColor: '#68beff', height, }}>
+                <View style={styles.appTop}>
+                    <Text style={styles.topText}>{this.state.myDetails.firstName} {this.state.myDetails.lastName}</Text>
+                    {this.state.role === "mentor" ? (<Text style={styles.topText}>You currently have {this.state.myConnections.length} mentee(s) </Text>) : null}
+                    <Text style={styles.topText}>Your are doing very well</Text>
+                    <TouchableOpacity>
+                        <View style={styles.button}>
+                            <Text style={styles.buttonText}>My Engagements</Text>
+                        </View>
+                    </TouchableOpacity>
+                </View>
+                {this.state.role === "mentor" ? (<Text style={styles.appMid}>Here are your mentees</Text>) :
+                    (<Text style={styles.appMid}>Your Mentor and Details</Text>)}
+                <ScrollView style={styles.appLower}>
+                    {this.renderConnection()}
+                </ScrollView>
+                {/* <ScrollViewConnection
+                    myConnections={this.props.myConnections} /> */}
+            </SafeAreaView>
         )
     }
 }
+
+const styles = StyleSheet.create({
+    appTop: {
+        alignContent: 'center',
+        alignSelf: 'center',
+        height: height * 0.2,
+        width: width * 0.9,
+        margin: 10,
+        borderRadius: 10,
+        backgroundColor: '#f8fbfd',
+    },
+    topText: {
+        marginTop: 10,
+        marginLeft: 10,
+    },
+    appMid: {
+        marginLeft: 25,
+        fontSize: 25,
+        color: '#fff',
+    },
+    appLower: {
+        alignContent: 'center',
+        alignSelf: 'center',
+        height: '60%',
+        width: width * 0.9,
+        margin: 10,
+        marginBottom: 20,
+        borderRadius: 10,
+        backgroundColor: '#f8fbfd',
+    },
+    appLowerMap: {
+        margin: 10,
+        width: width * 0.5,
+    },
+    button: {
+        backgroundColor: '#68beff',
+        paddingVertical: 5,
+        paddingHorizontal: 0,
+        borderRadius: 20,
+        margin: 5,
+        alignSelf: 'flex-end',
+    },
+    buttonText: {
+        color: '#fff',
+        fontSize: 12,
+        alignSelf: 'center',
+        padding: 2,
+    },
+})

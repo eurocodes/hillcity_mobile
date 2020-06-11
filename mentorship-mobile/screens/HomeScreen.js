@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, Dimensions, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { AsyncStorage, Dimensions, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 import logo from '../assets/logo.png';
 
@@ -7,9 +7,27 @@ const { width, height } = Dimensions.get('window');
 
 export default class HomeScreen extends Component {
 
-    signinScreen = () => {
-        this.props.navigation.navigate('Signin');
+    state = {
+        token: null,
     }
+
+    async componentDidMount() {
+        const token = await this.getUserToken()
+        console.log("Token", token)
+        this.setState({ token: token })
+        console.log("State", this.state)
+    }
+
+    signinScreen = () => {
+        if (this.state.token === null) {
+            this.props.navigation.navigate('Signin');
+            return
+        }
+        this.props.navigation.navigate('Main');
+    }
+
+    // Get user token
+    getUserToken = async () => AsyncStorage.getItem("token");
 
     render() {
         return (
