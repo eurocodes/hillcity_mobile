@@ -7,7 +7,9 @@ import { createDrawerNavigator } from 'react-navigation-drawer';
 //Import External Screens
 import SideBarMenu from './SideBarMenu';
 import DashBoard from './Dashboard';
+import Engagements from './EngagementScreen';
 import NavigationDrawerHeader from '../components/NavigationDrawerHeader';
+import SingleEngagement from './SingleEngagementScreen';
 
 const FirstActivity_StackNavigator = createStackNavigator({
     First: {
@@ -23,6 +25,34 @@ const FirstActivity_StackNavigator = createStackNavigator({
     },
 });
 
+const SecondActivity_StackNavigator = createStackNavigator({
+    First: {
+        screen: Engagements,
+        navigationOptions: ({ navigation }) => ({
+            title: 'My Engagements',
+            headerLeft: () => <NavigationDrawerHeader navigationProps={navigation} />,
+            headerStyle: {
+                backgroundColor: '#307ecc',
+            },
+            headerTintColor: '#fff',
+        }),
+    },
+});
+
+const ThirdActivity_StackNavigator = createStackNavigator({
+    First: {
+        screen: SingleEngagement,
+        navigationOptions: ({ navigation }) => ({
+            title: 'Engagement',
+            headerLeft: () => <NavigationDrawerHeader navigationProps={navigation} />,
+            headerStyle: {
+                backgroundColor: '#307ecc',
+            },
+            headerTintColor: '#fff'
+        }),
+    }
+});
+
 const DrawerNavigatorRoutes = createDrawerNavigator(
     {
         DashBoard: {
@@ -31,6 +61,18 @@ const DrawerNavigatorRoutes = createDrawerNavigator(
                 drawerLabel: 'DashBoard',
             },
         },
+        Engagements: {
+            screen: SecondActivity_StackNavigator,
+            navigationOptions: {
+                drawerLabel: 'Engagements',
+            },
+        },
+        SingleEngagement: {
+            screen: ThirdActivity_StackNavigator,
+            navigationOptions: {
+                drawerLabel: 'Engagement'
+            }
+        }
     },
     {
         contentComponent: SideBarMenu,

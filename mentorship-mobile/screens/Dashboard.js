@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { AsyncStorage, Dimensions, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
+// import { getUserRole } from '../Backend/Storage';
 import { fetchUsersMentor, fetchUsersMentee } from '../Backend/API';
 
 const { width, height } = Dimensions.get('window');
@@ -28,13 +29,13 @@ export default class Dashboard extends Component {
     }
 
     // Get user Role
+    // getRole = async () => getUserRole("role");
     getUserRole = async () => AsyncStorage.getItem("role");
 
     getMentorDashboard = async () => {
         try {
             const results = await fetchUsersMentor()
             this.setState({ myDetails: results.myDetails, myConnections: results.myConnections, role: "mentor" })
-            console.log("Our state:", this.state)
             return
         } catch (err) {
             console.log(err)
@@ -47,7 +48,6 @@ export default class Dashboard extends Component {
         try {
             const results = await fetchUsersMentee()
             this.setState({ myDetails: results.myDetails, myConnections: results.myConnections, role: "mentee" })
-            console.log("Our state:", this.state)
             return
         } catch (err) {
             console.log(err)
@@ -75,19 +75,19 @@ export default class Dashboard extends Component {
 
     render() {
         return (
-            <SafeAreaView style={{ backgroundColor: '#68beff', height, }}>
+            <SafeAreaView style={{ backgroundColor: '#b3cde0', height, }}>
                 <View style={styles.appTop}>
                     <Text style={styles.topText}>{this.state.myDetails.firstName} {this.state.myDetails.lastName}</Text>
                     {this.state.role === "mentor" ? (<Text style={styles.topText}>You currently have {this.state.myConnections.length} mentee(s) </Text>) : null}
                     <Text style={styles.topText}>Your are doing very well</Text>
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={() => this.props.navigation.navigate("Engagements")}>
                         <View style={styles.button}>
                             <Text style={styles.buttonText}>My Engagements</Text>
                         </View>
                     </TouchableOpacity>
                 </View>
                 {this.state.role === "mentor" ? (<Text style={styles.appMid}>Here are your mentees</Text>) :
-                    (<Text style={styles.appMid}>Your Mentor and Details</Text>)}
+                    (<Text style={styles.appMid}>Your Mentor's Details</Text>)}
                 <ScrollView style={styles.appLower}>
                     {this.renderConnection()}
                 </ScrollView>
@@ -105,6 +105,7 @@ const styles = StyleSheet.create({
         height: height * 0.2,
         width: width * 0.9,
         margin: 10,
+        marginBottom: 5,
         borderRadius: 10,
         backgroundColor: '#f8fbfd',
     },
@@ -114,8 +115,8 @@ const styles = StyleSheet.create({
     },
     appMid: {
         marginLeft: 25,
-        fontSize: 25,
-        color: '#fff',
+        fontSize: 20,
+        color: '#307ecc',
     },
     appLower: {
         alignContent: 'center',
@@ -123,6 +124,7 @@ const styles = StyleSheet.create({
         height: '60%',
         width: width * 0.9,
         margin: 10,
+        marginTop: 5,
         marginBottom: 20,
         borderRadius: 10,
         backgroundColor: '#f8fbfd',
@@ -132,7 +134,7 @@ const styles = StyleSheet.create({
         width: width * 0.5,
     },
     button: {
-        backgroundColor: '#68beff',
+        backgroundColor: '#307ecc',
         paddingVertical: 5,
         paddingHorizontal: 0,
         borderRadius: 20,

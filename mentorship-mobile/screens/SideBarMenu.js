@@ -1,31 +1,25 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { Alert, AsyncStorage, StyleSheet, Text, View } from 'react-native';
 
-const SideBarMenu = props => {
-    let items = [
-        {
-            navOptionName: "HILLCITY MOBILE",
-            screenToNavigate: "home",
-        },
-        {
-            navOptionName: "DashBoard",
-            screenToNavigate: "DrawerNavigation",
-        },
-        {
-            navOptionName: 'My Engagements',
-            screenToNavigate: 'EngagementScreen',
-        },
-        {
-            navOptionName: 'Logout',
-            screenToNavigate: 'logout',
-        },
-    ];
+class SideBarMenu extends Component {
 
-    const handleClick = (index, screenToNavigate) => {
+    state = {
+        name: '',
+    }
+
+    async componentDidMount() {
+        const name = await this.getName()
+        this.setState({ name: name })
+    }
+
+    getName = async () => AsyncStorage.getItem("name");
+
+
+    handleClick = (index, screenToNavigate) => {
         if (screenToNavigate === "logout") {
             AsyncStorage.clear();
-            props.navigation.navigate("Signin")
-            // props.navigation.toggleDrawer();
+            this.props.navigation.navigate("Signin")
+            // this.props.navigation.toggleDrawer();
             Alert.alert(
                 "Logout",
                 "Are you sure?", "You want to logout?",
@@ -40,7 +34,7 @@ const SideBarMenu = props => {
                         text: "Confirm",
                         onPress: () => {
                             AsyncStorage.clear();
-                            props.navigation.navigate("Signin")
+                            this.props.navigation.navigate("Signin")
                             console.log("Logged out");
                         },
                     },
@@ -48,42 +42,74 @@ const SideBarMenu = props => {
                 { cancelable: false }
             );
         } else {
-            props.navigation.toggleDrawer();
+            this.props.navigation.toggleDrawer();
             global.currentScreenIndex = screenToNavigate;
-            props.navigation.navigate(screenToNavigate);
+            this.props.navigation.navigate(screenToNavigate);
         }
     };
+    render() {
+        let items = [
+            {
+                navOptionName: "Close Drawer <<<",
+                screenToNavigate: "home",
+            },
+            {
+                navOptionName: "Dash Board",
+                screenToNavigate: "DashBoard",
+            },
+            {
+                navOptionName: 'My Engagements',
+                screenToNavigate: 'Engagements',
+            },
+            {
+                navOptionName: 'Logout',
+                screenToNavigate: 'logout',
+            },
+        ];
 
-    return (
-        <View style={stylesSidebar.sideMenuContainer}>
-            <View style={{ width: '100%', flex: 1 }}>
-                {items.map((item, key) => (
-                    <View key={key}>
-                        <View
-                            style={{
-                                flexDirection: 'row',
-                                alignItems: 'center',
-                                padding: 5,
-                                marginLeft: 12,
-                                backgroundColor:
-                                    global.currentScreenIndex === item.screenToNavigate
-                                        ? '#4b9ff2'
-                                        : '#307ecc',
-                            }}
-                            key={key}
-                            onStartShouldSetResponder={() =>
-                                handleClick(key, item.screenToNavigate)
-                            }>
-                            <Text style={{ fontSize: 15, color: 'white' }}>
-                                {item.navOptionName}
-                            </Text>
-                        </View>
-                        <View style={stylesSidebar.profileHeaderLine} />
+
+        return (
+            <View style={stylesSidebar.sideMenuContainer}>
+                <View style={stylesSidebar.profileHeader}>
+                    <View style={stylesSidebar.profileHeaderPicCircle}>
+                        <Text style={{ fontSize: 25, color: '#307ecc' }}>
+                            {this.state.name.charAt(0)}
+                        </Text>
                     </View>
-                ))}
+                    <View>
+                        <Text style={stylesSidebar.profileHeaderText}>Hi, {this.state.name}</Text>
+                        <Text style={stylesSidebar.profileHeaderText2}>Welcome back</Text>
+                    </View>
+                </View>
+                <View style={{ width: '100%', flex: 1 }}>
+                    {items.map((item, key) => (
+                        <View key={key}>
+                            <View
+                                style={{
+                                    flexDirection: 'row',
+                                    alignItems: 'center',
+                                    padding: 5,
+                                    marginLeft: 12,
+                                    backgroundColor:
+                                        global.currentScreenIndex === item.screenToNavigate
+                                            ? '#4b9ff2'
+                                            : '#307ecc',
+                                }}
+                                key={key}
+                                onStartShouldSetResponder={() =>
+                                    this.handleClick(key, item.screenToNavigate)
+                                }>
+                                <Text style={{ fontSize: 15, color: 'white' }}>
+                                    {item.navOptionName}
+                                </Text>
+                            </View>
+                            <View style={stylesSidebar.profileHeaderLine} />
+                        </View>
+                    ))}
+                </View>
             </View>
-        </View>
-    );
+        );
+    }
 }
 
 const stylesSidebar = StyleSheet.create({
@@ -109,6 +135,12 @@ const stylesSidebar = StyleSheet.create({
     profileHeaderText: {
         color: 'white',
         alignSelf: 'center',
+        paddingHorizontal: 10,
+        fontWeight: 'bold',
+    },
+    profileHeaderText2: {
+        color: 'white',
+        alignSelf: 'flex-start',
         paddingHorizontal: 10,
         fontWeight: 'bold',
     },
