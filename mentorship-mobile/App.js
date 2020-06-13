@@ -5,14 +5,21 @@ import { createStackNavigator } from 'react-navigation-stack';
 
 import HomeScreen from './screens/HomeScreen';
 import SigninScreen from './screens/SigninScreen';
-import DashboardScreen from './screens/Dashboard';
 import DrawerNavigationRoutes from './screens/DrawerNavigatorRoutes';
+import SingleEngagementScreen from './screens/SingleEngagementScreen';
+
+const SingleNavigator = createSwitchNavigator({
+  Engagement: SingleEngagementScreen,
+},
+)
 
 const MainNavigator = createSwitchNavigator({
-  Dashboard: DashboardScreen,
   DrawerNavigation: DrawerNavigationRoutes,
+  EngagementOne: SingleNavigator,
 },
-  { initialRouteName: "DrawerNavigation" }
+  {
+    initialRouteName: "DrawerNavigation"
+  }
 );
 
 const AppNavigator = createSwitchNavigator({
@@ -23,11 +30,11 @@ const AppNavigator = createSwitchNavigator({
   { initialRouteName: 'Home' }
 );
 
-const AppContaimer = createAppContainer(AppNavigator);
+const AppContainer = createAppContainer(AppNavigator);
 
 export default class App extends Component {
   render() {
-    return <AppContaimer />
+    return <AppContainer />
   }
 }
 
