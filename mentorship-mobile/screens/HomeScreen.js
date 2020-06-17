@@ -42,8 +42,8 @@ export default class HomeScreen extends Component {
                         </View>
                     </View>
                     <View>
-                        <TouchableOpacity onPress={this.signinScreen} >
-                            <View style={styles.button}>
+                        <TouchableOpacity style={styles.button} onPress={this.signinScreen} >
+                            <View>
                                 <Text style={styles.buttonText}>Enter To Continue</Text>
                             </View>
                         </TouchableOpacity>

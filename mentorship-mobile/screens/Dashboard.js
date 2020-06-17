@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { AsyncStorage, Dimensions, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Alert, AsyncStorage, Dimensions, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import Constants from 'expo-constants';
 
 // import { getUserRole } from '../Backend/Storage';
 import { fetchUsersMentor, fetchUsersMentee } from '../Backend/API';
@@ -35,8 +36,15 @@ export default class Dashboard extends Component {
     getMentorDashboard = async () => {
         try {
             const results = await fetchUsersMentor()
-            this.setState({ myDetails: results.myDetails, myConnections: results.myConnections, role: "mentor" })
+            if (results.myConnections && results.myDetails) {
+                this.setState({ myDetails: results.myDetails, myConnections: results.myConnections, role: "mentor" })
+                return
+            }
+            this.setState({ err: results })
+            alert(this.state.err)
+            this.props.navigation.navigate('Signin');
             return
+            
         } catch (err) {
             console.log(err)
             this.props.navigation.navigate('Signin');
@@ -59,6 +67,7 @@ export default class Dashboard extends Component {
     renderConnection() {
         return this.state.myConnections.map((val, index) => {
             return (
+                <View>
                 <View style={{ flexDirection: 'row' }} key={index}>
                     <View style={styles.appLowerMap}>
                         <Text>Name: {`${val.firstName} ${val.lastName}`}</Text>
@@ -69,68 +78,71 @@ export default class Dashboard extends Component {
                         <Text>Photo: {val.photo}</Text>
                     </View>
                 </View>
+                <View style={styles.connectioDivider} />
+                </View>
             )
         })
     }
 
     render() {
         return (
-            <SafeAreaView style={{ backgroundColor: '#b3cde0', height, }}>
+            <ScrollView>
+                <View style={{ backgroundColor: '#b3cde0', height: 1}}>
                 <View style={styles.appTop}>
                     <Text style={styles.topText}>{this.state.myDetails.firstName} {this.state.myDetails.lastName}</Text>
                     {this.state.role === "mentor" ? (<Text style={styles.topText}>You currently have {this.state.myConnections.length} mentee(s) </Text>) : null}
                     <Text style={styles.topText}>Your are doing very well</Text>
-                    <TouchableOpacity onPress={() => this.props.navigation.navigate("Engagements")}>
-                        <View style={styles.button}>
+                    <TouchableOpacity style={styles.button} onPress={() => this.props.navigation.navigate("Engagements")}>
+                        <View >
                             <Text style={styles.buttonText}>My Engagements</Text>
                         </View>
                     </TouchableOpacity>
                 </View>
                 {this.state.role === "mentor" ? (<Text style={styles.appMid}>Here are your mentees</Text>) :
                     (<Text style={styles.appMid}>Your Mentor's Details</Text>)}
-                <ScrollView style={styles.appLower}>
+                <View style={styles.appLower}>
                     {this.renderConnection()}
-                </ScrollView>
+                </View>
                 {/* <ScrollViewConnection
                     myConnections={this.props.myConnections} /> */}
-            </SafeAreaView>
+                </View>
+            </ScrollView>
         )
     }
 }
 
 const styles = StyleSheet.create({
     appTop: {
+        paddingTop: Constants.statusBarHeight,
         alignContent: 'center',
         alignSelf: 'center',
-        height: height * 0.2,
-        width: width * 0.9,
-        margin: 10,
-        marginBottom: 5,
+        height: 'auto',
+        width: '100%',
+        margin: 2,
+        marginTop: 2,
         borderRadius: 10,
         backgroundColor: '#f8fbfd',
     },
     topText: {
-        marginTop: 10,
-        marginLeft: 10,
+        margin: 2,
     },
     appMid: {
-        marginLeft: 25,
-        fontSize: 20,
+        marginLeft: '5%',
+        fontSize: '75%',
         color: '#307ecc',
     },
     appLower: {
         alignContent: 'center',
         alignSelf: 'center',
-        height: '60%',
-        width: width * 0.9,
-        margin: 10,
-        marginTop: 5,
-        marginBottom: 20,
+        height: 'auto',
+        width: '100%',
+        margin: 2,
+        marginBottom: 2,
         borderRadius: 10,
         backgroundColor: '#f8fbfd',
     },
     appLowerMap: {
-        margin: 10,
+        margin: 5,
         width: width * 0.5,
     },
     button: {
@@ -146,5 +158,12 @@ const styles = StyleSheet.create({
         fontSize: 12,
         alignSelf: 'center',
         padding: 2,
+    },
+    connectioDivider: {
+        height: 1,
+        marginLeft: 12,
+        backgroundColor: '#e2e2e2',
+        marginTop: 2,
+        marginBottom: 2,
     },
 })

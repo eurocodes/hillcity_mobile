@@ -72,3 +72,11 @@ export const getName = () => {
 export const removeName = () => {
     AsyncStorage.clear()
 }
+
+// export const setEngID = id => {
+//     SecureStore.setItemAsync("id", id)
+// }
+
+export const setEngID = id => {
+    AsyncStorage.setItem("id", id)
+}

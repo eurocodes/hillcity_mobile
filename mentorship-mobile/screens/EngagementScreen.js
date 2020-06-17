@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { Alert, AsyncStorage, Dimensions, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import Constants from 'expo-constants'
 
+import { setEngID } from '../Backend/Storage';
 import { fetchEngagementsMentor, fetchEngagementsMentee } from '../Backend/API';
 
 export default class EngagementScreen extends Component {
@@ -33,13 +35,16 @@ export default class EngagementScreen extends Component {
         try {
             const results = await fetchEngagementsMentor()
             console.log("Mentor Result:", results)
-            this.setState({ engagements: results, role: "mentor" })
-            console.log("STATE:", this.state)
-            return
+            if (results[0]) {
+                this.setState({ engagements: results, role: "mentor" })
+                console.log("STATE:", this.state)
+                return
+            } else {
+                this.setState({ engagements: "You don't have any engagements", role: "mentor" })
+                console.log("STATE:", this.state)
+            }
         } catch (err) {
             console.log(err)
-            Alert.alert("Your session has expired")
-            this.props.navigation.navigate('Signin');
             return
         }
     }
@@ -48,23 +53,33 @@ export default class EngagementScreen extends Component {
         try {
             const results = await fetchEngagementsMentee()
             console.log("Mentor Result:", results)
-            this.setState({ engagements: results, role: "mentee" })
-            console.log("STATE:", this.state)
-            return
+            if (results[0]) {
+                this.setState({ engagements: results, role: "mentee" })
+                console.log("STATE:", this.state)
+                return
+            } else {
+                this.setState({ engagements: "You don't have any engagements", role: "mentee" })
+                console.log("STATE:", this.state)
+            }
+
         } catch (err) {
             console.log(err)
-            Alert.alert("Your session has expired")
-            this.props.navigation.navigate('Signin');
-            return
         }
     }
 
     renderMentorEngagements() {
+        if (this.state.engagements === "You don't have any engagements") {
+            return (
+                <View style={styles.mapContainerMentor}>
+                    <Text>{this.state.engagements}</Text>
+                </View>
+            )
+        }
         return this.state.engagements.map((val, index) => {
             return (
                 <View key={val.engagement_ID}>
                     <View style={{ flexDirection: 'row' }}>
-                        <View style={{ height: 70, width: 80, backgroundColor: '#6497b1', borderRadius: 30, margin: 10, alignSelf: 'center', }}>
+                        <View style={{ height: '30%', width: '12%', backgroundColor: '#4d5870', borderRadius: 30, marginLeft: 5, alignSelf: 'center', }}>
                             <Text style={{ height: 40, width: 75 }}>{val.photo}</Text>
                         </View>
                         <View style={styles.mapContainerMentor}>
@@ -73,7 +88,7 @@ export default class EngagementScreen extends Component {
                             <Text style={{ marginLeft: 8 }}>Reason for Engagement: {`${val.reason_for_engagement.slice(0, 20)}...`}</Text>
                             <Text style={{ marginLeft: 8 }}>Status: {val.status}</Text>
                             <Text style={{ marginLeft: 8 }}>Proposed date & time: {`${val.proposed_date} at ${val.proposed_time}`}</Text>
-                            <TouchableOpacity style={{ marginLeft: 8 }} onPress={() => this.props.navigation.navigate("Engagement", { id: val.engagement_ID })}>
+                            <TouchableOpacity style={{ marginLeft: 8 }} onPress={() => this.props.navigation.navigate("SingleEngagement", setEngID(val.engagement_ID))}>
                                 <Text style={{ color: "#03396c" }}>VIEW DETAILS</Text>
                             </TouchableOpacity>
                         </View>
@@ -82,9 +97,17 @@ export default class EngagementScreen extends Component {
                 </View>
             )
         })
+
     }
 
     renderMenteeEngagements() {
+        if (this.state.engagements === "You don't have any engagements") {
+            return (
+                <View style={styles.mapContainerMentor}>
+                    <Text>{this.state.engagements}</Text>
+                </View>
+            )
+        }
         return this.state.engagements.map((val, index) => {
             return (
                 <View style={styles.mapContainerMentee} key={val.engagement_ID}>
@@ -94,20 +117,37 @@ export default class EngagementScreen extends Component {
                         <Text>{val.status}</Text>
                         <Text>{val.proposed_date}</Text>
                     </View>
-                    <TouchableOpacity style={{ margin: 5 }} onPress={() => this.props.navigation.navigate("Engagement", { id: val.engagement_ID })}>
+                    <TouchableOpacity style={{ margin: 5 }} onPress={() => this.props.navigation.navigate("SingleEngagement", setEngID(val.engagement_ID))}>
                         <Text style={{ color: "#03396c" }}>VIEW DETAILS</Text>
                     </TouchableOpacity>
                     <View style={styles.engagementBottomLine} />
                 </View>
             )
         })
+
     }
 
     render() {
+
         return (
             <ScrollView style={styles.mainContainer}>
                 {this.state.role === "mentor" ? (<View>{this.renderMentorEngagements()}</View>) :
-                    (<View>{this.renderMenteeEngagements()}</View>)}
+                    (
+                        <View>
+                            <TouchableOpacity
+                                style={{
+                                    alignSelf: 'flex-end',
+                                    marginHorizontal: 30,
+                                    marginVertical: 10,
+                                    borderRadius: 10,
+                                    backgroundColor: '#011f4b'
+                                }}
+                                onPress={() => this.props.navigation.navigate("NewEngagement")}>
+                                <Text style={{ fontSize: 15, padding: 5, color: "#e9eaec" }}>Start New Engagement</Text>
+                            </TouchableOpacity>
+                            <View>{this.renderMenteeEngagements()}</View>
+                        </View>
+                    )}
             </ScrollView>
         )
     }
@@ -116,6 +156,7 @@ export default class EngagementScreen extends Component {
 const styles = StyleSheet.create({
     mainContainer: {
         flex: 1,
+        paddingTop: Constants.statusBarHeight,
         alignContent: 'center',
         backgroundColor: '#eee',
     },
@@ -123,19 +164,17 @@ const styles = StyleSheet.create({
         flex: 1,
         alignSelf: 'center',
         height: 'auto',
-        width: '90%',
-        backgroundColor: '#d7dde7',
-        borderRadius: 15,
-        margin: 10,
+        width: '98%',
+        backgroundColor: '#f2f2f2',
+        margin: 2,
     },
     mapContainerMentor: {
         flex: 1,
         alignSelf: 'flex-start',
         height: 'auto',
-        width: '90%',
-        backgroundColor: '#d7dde7',
-        borderRadius: 15,
-        margin: 10,
+        width: '98%',
+        backgroundColor: '#f2f2f2',
+        margin: 2,
     },
     engagementBottomLine: {
         height: 2,
