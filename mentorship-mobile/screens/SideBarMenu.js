@@ -1,18 +1,63 @@
 import React, { Component } from 'react';
 import { Alert, AsyncStorage, StyleSheet, Text, View } from 'react-native';
 
+const itemsMentor = [
+    {
+        navOptionName: "Close Drawer <<<",
+        screenToNavigate: "home",
+    },
+    {
+        navOptionName: "Dash Board",
+        screenToNavigate: "DashBoard",
+    },
+    {
+        navOptionName: 'My Engagements',
+        screenToNavigate: 'Engagements',
+    },
+    {
+        navOptionName: 'Logout',
+        screenToNavigate: 'logout',
+    },
+];
+
+const itemsMentee = [
+    {
+        navOptionName: "Close Drawer <<<",
+        screenToNavigate: "home",
+    },
+    {
+        navOptionName: "Dash Board",
+        screenToNavigate: "DashBoard",
+    },
+    {
+        navOptionName: 'My Engagements',
+        screenToNavigate: 'Engagements',
+    },
+    {
+        navOptionName: 'Start New Engagement',
+        screenToNavigate: 'NewEngagement',
+    },
+    {
+        navOptionName: 'Logout',
+        screenToNavigate: 'logout',
+    },
+];
+
 class SideBarMenu extends Component {
 
     state = {
         name: '',
+        role: '',
     }
 
     async componentDidMount() {
         const name = await this.getName()
-        this.setState({ name: name })
+        const role = await this.getUserRole()
+        this.setState({ name, role })
     }
 
     getName = async () => AsyncStorage.getItem("name");
+    getUserRole = async () => AsyncStorage.getItem("role");
 
 
     handleClick = (index, screenToNavigate) => {
@@ -47,41 +92,25 @@ class SideBarMenu extends Component {
             this.props.navigation.navigate(screenToNavigate);
         }
     };
+
     render() {
-        let items = [
-            {
-                navOptionName: "Close Drawer <<<",
-                screenToNavigate: "home",
-            },
-            {
-                navOptionName: "Dash Board",
-                screenToNavigate: "DashBoard",
-            },
-            {
-                navOptionName: 'My Engagements',
-                screenToNavigate: 'Engagements',
-            },
-            {
-                navOptionName: 'Logout',
-                screenToNavigate: 'logout',
-            },
-        ];
-
-
+        let items = []
+        this.state.role === "mentee" ? items = itemsMentee : items = itemsMentor
         return (
-            <View style={stylesSidebar.sideMenuContainer}>
-                <View style={stylesSidebar.profileHeader}>
-                    <View style={stylesSidebar.profileHeaderPicCircle}>
+            <View style={styles.sideMenuContainer}>
+                <View style={styles.profileHeader}>
+                    <View style={styles.profileHeaderPicCircle}>
                         <Text style={{ fontSize: 25, color: '#307ecc' }}>
                             {this.state.name.charAt(0)}
                         </Text>
                     </View>
                     <View>
-                        <Text style={stylesSidebar.profileHeaderText}>Hi, {this.state.name}</Text>
-                        <Text style={stylesSidebar.profileHeaderText2}>Welcome back</Text>
+                        <Text style={styles.profileHeaderText}>Hi, {this.state.name}</Text>
+                        <Text style={styles.profileHeaderText2}>Welcome back</Text>
                     </View>
                 </View>
                 <View style={{ width: '100%', flex: 1 }}>
+                    {/* {this.state.role === "mentee" ? this.renderMenteeSideBar() : this.renderMentorSideBar()} */}
                     {items.map((item, key) => (
                         <View key={key}>
                             <View
@@ -103,7 +132,7 @@ class SideBarMenu extends Component {
                                     {item.navOptionName}
                                 </Text>
                             </View>
-                            <View style={stylesSidebar.profileHeaderLine} />
+                            <View style={styles.profileHeaderLine} />
                         </View>
                     ))}
                 </View>
@@ -112,7 +141,7 @@ class SideBarMenu extends Component {
     }
 }
 
-const stylesSidebar = StyleSheet.create({
+const styles = StyleSheet.create({
     sideMenuContainer: {
         width: '100%',
         height: '100%',
@@ -125,8 +154,8 @@ const stylesSidebar = StyleSheet.create({
         padding: 5,
     },
     profileHeaderPicCircle: {
-        width: 60,
-        height: 60,
+        width: 40,
+        height: 40,
         borderRadius: 60 / 2,
         backgroundColor: '#fff',
         justifyContent: 'center',
@@ -136,6 +165,7 @@ const stylesSidebar = StyleSheet.create({
         color: 'white',
         alignSelf: 'center',
         paddingHorizontal: 10,
+        fontSize: '130%',
         fontWeight: 'bold',
     },
     profileHeaderText2: {
@@ -148,8 +178,8 @@ const stylesSidebar = StyleSheet.create({
         height: 1,
         marginLeft: 12,
         backgroundColor: '#e2e2e2',
-        marginTop: 5,
-        marginBottom: 5,
+        marginTop: 2,
+        marginBottom: 2,
     },
 });
 

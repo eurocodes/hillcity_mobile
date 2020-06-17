@@ -10,24 +10,56 @@ import DashBoard from './Dashboard';
 import Engagements from './EngagementScreen';
 import NavigationDrawerHeader from '../components/NavigationDrawerHeader';
 import SingleEngagement from './SingleEngagementScreen';
+import NewEngagement from './NewEngagementScreen'
 
-const FirstActivity_StackNavigator = createStackNavigator({
-    First: {
+const DashBoardStack = createStackNavigator({
+    DashBoard: {
         screen: DashBoard,
         navigationOptions: ({ navigation }) => ({
-            title: 'Dash Board',
+            title: 'Your Dash Board',
             headerLeft: () => <NavigationDrawerHeader navigationProps={navigation} />,
             headerStyle: {
                 backgroundColor: '#307ecc',
             },
             headerTintColor: '#fff',
+            headerTitleAlign: 'center',
         }),
     },
 });
 
-const SecondActivity_StackNavigator = createStackNavigator({
-    First: {
+const EngagementsStack = createStackNavigator({
+    Engagements: {
         screen: Engagements,
+        navigationOptions: {
+            header: null,
+        }
+
+    },
+});
+
+const SingleEngagementStack = createStackNavigator({
+    SingleEngagement: {
+        screen: SingleEngagement,
+        navigationOptions: {
+            header: null,
+        }
+
+    }
+});
+
+const NewEngagementStack = createStackNavigator({
+    SingleEngagement: {
+        screen: NewEngagement,
+        navigationOptions: {
+            header: null,
+        }
+
+    }
+});
+
+const EngagementsNavigatorStack = createStackNavigator({
+    Engagements: {
+        screen: EngagementsStack,
         navigationOptions: ({ navigation }) => ({
             title: 'My Engagements',
             headerLeft: () => <NavigationDrawerHeader navigationProps={navigation} />,
@@ -35,44 +67,54 @@ const SecondActivity_StackNavigator = createStackNavigator({
                 backgroundColor: '#307ecc',
             },
             headerTintColor: '#fff',
+            headerTitleAlign: 'center',
         }),
     },
-});
-
-const ThirdActivity_StackNavigator = createStackNavigator({
-    First: {
-        screen: SingleEngagement,
+    SingleEngagement: {
+        screen: SingleEngagementStack,
         navigationOptions: ({ navigation }) => ({
             title: 'Engagement',
-            headerLeft: () => <NavigationDrawerHeader navigationProps={navigation} />,
             headerStyle: {
                 backgroundColor: '#307ecc',
             },
-            headerTintColor: '#fff'
+            headerTintColor: '#fff',
+            headerTitleAlign: 'center',
         }),
-    }
-});
+    },
+    NewEngagement: {
+        screen: NewEngagementStack,
+        navigationOptions: ({ navigation }) => ({
+            title: 'Start New Engagement',
+            headerStyle: {
+                backgroundColor: '#307ecc',
+            },
+            headerTintColor: '#fff',
+            headerTitleAlign: 'center',
+        }),
+    },
+})
 
 const DrawerNavigatorRoutes = createDrawerNavigator(
     {
         DashBoard: {
-            screen: FirstActivity_StackNavigator,
+            screen: DashBoardStack,
             navigationOptions: {
                 drawerLabel: 'DashBoard',
             },
         },
-        Engagements: {
-            screen: SecondActivity_StackNavigator,
-            navigationOptions: {
-                drawerLabel: 'Engagements',
-            },
-        },
-        SingleEngagement: {
-            screen: ThirdActivity_StackNavigator,
-            navigationOptions: {
-                drawerLabel: 'Engagement'
-            }
-        }
+        Engage: EngagementsNavigatorStack,
+        // Engagements: {
+        //     screen: EngagementsStack,
+        //     navigationOptions: {
+        //         drawerLabel: 'Engagements',
+        //     },
+        // },
+        // SingleEngagement: {
+        //     screen: SingleEngagementStack,
+        //     navigationOptions: {
+        //         drawerLabel: 'Engagement'
+        //     }
+        // }
     },
     {
         contentComponent: SideBarMenu,
@@ -81,5 +123,7 @@ const DrawerNavigatorRoutes = createDrawerNavigator(
         drawerToggleRoute: 'DrawerToggle',
     }
 );
+
+// export { EngagementsStack, SingleEngagementStack, DashBoardStack };
 
 export default DrawerNavigatorRoutes;

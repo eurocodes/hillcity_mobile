@@ -12,7 +12,7 @@ const NavigationDrawerHeader = props => {
             <TouchableOpacity onPress={toggleDrawer}>
                 <Image
                     source={drawer}
-                    style={{ width: 25, height: 25, marginLeft: 5, }}
+                    style={{ width: 20, height: 25, marginLeft: 5, }}
                 />
             </TouchableOpacity>
         </View>

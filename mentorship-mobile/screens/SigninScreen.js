@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Dimensions, Image, ImageBackground, KeyboardAvoidingView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import Constants from 'expo-constants'
 import { setUserToken, setName, setUserRole } from '../Backend/Storage';
 
 import logo from '../assets/logo.png';
@@ -35,7 +36,10 @@ export default class SigninScreen extends Component {
                 this.props.navigation.navigate('Main');
                 return
             }
+            this.setState({ err: results.message })
+            alert(this.state.err)
             this.props.navigation.navigate('Signin');
+            return
         }
         !this.state.email ? this.setState({ noEmail: "Please enter email" }) : this.setState({ noEmail: "" })
         !this.state.password ? this.setState({ noPassword: "Please enter password" }) : this.setState({ noPassword: "" })
@@ -43,19 +47,19 @@ export default class SigninScreen extends Component {
 
     render() {
         return (
-            <View style={styles.mainContainer}>
+            <KeyboardAvoidingView style={styles.mainContainer}>
                 <ImageBackground
                     style={{ alignSelf: 'center', justifyContent: 'center', height: '100%', width: '100%' }}
                     source={IMG_2}>
-                    <KeyboardAvoidingView >
+                    <View style={{ alignSelf: 'center', alignContent: 'center', justifyContent: 'center', width: '100%' }} >
                         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', }}>
-                            <Image source={logo} style={{ width: width * 0.3, height: height * 0.08, marginBottom: height / 4, }} />
-                            <View style={{ alignItems: 'center', justifyContent: 'center', marginBottom: height / 4, }}>
+                            <Image source={logo} style={{ width: width * 0.3, height: height * 0.08, marginBottom: 10, }} />
+                            <View style={{ alignItems: 'center', justifyContent: 'center', marginBottom: '35%', }}>
                                 <Text style={{ color: '#fff' }}>HILLCITY MENTORSHIP On Mobile</Text>
                                 <Text style={{ color: '#fff' }}>Adding value to lives</Text>
                             </View>
                         </View>
-                        <View style={{ width: width - 30, marginBottom: 20, }}>
+                        <View style={{ width: '100%', marginBottom: '5%', marginTop: '40%' }}>
                             <TextInput style={styles.inputField}
                                 placeholder='Email Address'
                                 onChangeText={this.handleInput('email')}
@@ -71,19 +75,19 @@ export default class SigninScreen extends Component {
                                 secureTextEntry />
                             <Text style={styles.errText}>{this.state.noPassword}</Text>
 
-                            <TouchableOpacity onPress={this.signin} >
-                                <View style={styles.button}>
+                            <TouchableOpacity style={styles.button} onPress={this.signin} >
+                                <View>
                                     <Text style={styles.buttonText}>Sign in</Text>
                                 </View>
                             </TouchableOpacity>
 
                         </View>
-                        <View style={{ height: 'auto' }}>
+                        <View style={{ height: 'auto', marginTop: '5%', }}>
                             <Text style={{ alignSelf: 'center', color: '#fff' }}>Forgot Password? Click here!</Text>
                         </View>
-                    </KeyboardAvoidingView>
+                    </View>
                 </ImageBackground>
-            </View>
+            </KeyboardAvoidingView>
         );
     }
 }
@@ -94,7 +98,9 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         backgroundColor: '#fff',
-        height, width
+        paddingTop: Constants.statusBarHeight,
+        height: '100%',
+        width: '100%',
     },
     inputField: {
         height: 35,
@@ -112,6 +118,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 0,
         borderRadius: 20,
         margin: 10,
+        marginTop: 50,
     },
     buttonText: {
         color: '#fff',

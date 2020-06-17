@@ -5,22 +5,11 @@ import { createStackNavigator } from 'react-navigation-stack';
 
 import HomeScreen from './screens/HomeScreen';
 import SigninScreen from './screens/SigninScreen';
-import DrawerNavigationRoutes from './screens/DrawerNavigatorRoutes';
-import SingleEngagementScreen from './screens/SingleEngagementScreen';
-
-const SingleNavigator = createSwitchNavigator({
-  Engagement: SingleEngagementScreen,
-},
-)
+import DrawerNavigatorRoutes from './screens/DrawerNavigatorRoutes';
 
 const MainNavigator = createSwitchNavigator({
-  DrawerNavigation: DrawerNavigationRoutes,
-  EngagementOne: SingleNavigator,
-},
-  {
-    initialRouteName: "DrawerNavigation"
-  }
-);
+  DrawerNavigator: DrawerNavigatorRoutes,
+});
 
 const AppNavigator = createSwitchNavigator({
   Home: HomeScreen,

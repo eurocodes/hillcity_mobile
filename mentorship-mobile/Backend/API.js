@@ -17,11 +17,18 @@ export const fetchUsersMentor = async () => {
                 "Authorization": token
             }
         })
-        const { data } = await response.json()
-        console.log(data)
-        return data
+
+        if (response.ok) {
+            const { data } = await response.json()
+            console.log(data)
+            return data
+        } else {
+            const { message } = await response.json()
+            console.log(message)
+            return message
+        }
     } catch (err) {
-        throw new Error(err);
+        throw new Error(err)
     }
 }
 
@@ -80,7 +87,26 @@ export const fetchEngagementsMentee = async () => {
     }
 }
 
-export const fetchAcceptEngagement = async (id) => {
+export const createEngagement = async (engagementType, modeOfEngagement, reasonForEngagement, proposedDate, proposedTime) => {
+    const token = await getToken()
+    try {
+        const response = await fetch("http://localhost:3400/api/v1/post/engagement/create/new", {
+            method: "POST",
+            headers: {
+                "content-type": "application/json",
+                "Authorization": token
+            },
+            body: JSON.stringify({ engagementType, modeOfEngagement, reasonForEngagement, proposedDate, proposedTime })
+        })
+        const { data } = await response.json()
+        console.log(data)
+        return data
+    } catch (err) {
+        throw new Error(err);
+    }
+}
+
+export const fetchAcceptEngagement = async (id, comment) => {
     const token = await getToken()
     try {
         const response = await fetch(`http://localhost:3400/api/v1/update/accepted/engagements/${id}`, {
@@ -88,16 +114,18 @@ export const fetchAcceptEngagement = async (id) => {
             headers: {
                 "content-type": "application/json",
                 "Authorization": token
-            }
+            },
+            body: JSON.stringify({ comment })
         })
-        const { rows } = await response.json()
-        console.log(rows)
-        return rows
+        const { data } = await response.json()
+        console.log(data)
+        return data
     } catch (err) {
         throw new Error(err);
     }
 }
-export const fetchRejectEngagement = async (id) => {
+
+export const fetchRejectEngagement = async (id, comment) => {
     const token = await getToken()
     try {
         const response = await fetch(`http://localhost:3400/api/v1/update/rejected/engagements/${id}`, {
@@ -105,11 +133,12 @@ export const fetchRejectEngagement = async (id) => {
             headers: {
                 "content-type": "application/json",
                 "Authorization": token
-            }
+            },
+            body: JSON.stringify({ comment })
         })
-        const { rows } = await response.json()
-        console.log(rows)
-        return rows
+        const { data } = await response.json()
+        console.log(data)
+        return data
     } catch (err) {
         throw new Error(err);
     }
