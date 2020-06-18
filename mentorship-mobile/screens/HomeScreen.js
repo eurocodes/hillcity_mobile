@@ -10,16 +10,21 @@ export default class HomeScreen extends Component {
 
     state = {
         token: null,
+        role: null,
     }
 
     async componentDidMount() {
         const token = await this.getUserToken()
-        this.setState({ token: token })
+        const role = await this.getUserRole()
+        this.setState({ token, role })
     }
 
     signinScreen = () => {
         if (this.state.token === null) {
             this.props.navigation.navigate('Signin');
+            return
+        } else if (this.state.role === "adminmember") {
+            this.props.navigation.navigate('Admin');
             return
         }
         this.props.navigation.navigate('Main');
@@ -27,6 +32,7 @@ export default class HomeScreen extends Component {
 
     // Get user token
     getUserToken = async () => AsyncStorage.getItem("token");
+    getUserRole = async () => AsyncStorage.getItem("role");
 
     render() {
         return (

@@ -5,16 +5,21 @@ import { createStackNavigator } from 'react-navigation-stack';
 
 import HomeScreen from './screens/HomeScreen';
 import SigninScreen from './screens/SigninScreen';
-import DrawerNavigatorRoutes from './screens/DrawerNavigatorRoutes';
+import { DrawerNavigatorRoutes, AdminDrawerNavigatorRoutes } from './screens/DrawerNavigatorRoutes';
 
-const MainNavigator = createSwitchNavigator({
+const UserMainNavigator = createSwitchNavigator({
   DrawerNavigator: DrawerNavigatorRoutes,
+});
+
+const AdminMainNavigator = createSwitchNavigator({
+  AdminDrawerNavigator: AdminDrawerNavigatorRoutes,
 });
 
 const AppNavigator = createSwitchNavigator({
   Home: HomeScreen,
   Signin: SigninScreen,
-  Main: MainNavigator,
+  Main: UserMainNavigator,
+  Admin: AdminMainNavigator,
 },
   { initialRouteName: 'Home' }
 );

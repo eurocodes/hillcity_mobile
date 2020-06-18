@@ -10,13 +10,14 @@ import DashBoard from './Dashboard';
 import Engagements from './EngagementScreen';
 import NavigationDrawerHeader from '../components/NavigationDrawerHeader';
 import SingleEngagement from './SingleEngagementScreen';
-import NewEngagement from './NewEngagementScreen'
+import NewEngagement from './NewEngagementScreen';
+import AdminPanel from './AdminPanelScreen';
 
 const DashBoardStack = createStackNavigator({
     DashBoard: {
         screen: DashBoard,
         navigationOptions: ({ navigation }) => ({
-            title: 'Your Dash Board',
+            title: 'My Dash Board',
             headerLeft: () => <NavigationDrawerHeader navigationProps={navigation} />,
             headerStyle: {
                 backgroundColor: '#307ecc',
@@ -26,6 +27,21 @@ const DashBoardStack = createStackNavigator({
         }),
     },
 });
+
+const AdminDasboardStack = createStackNavigator({
+    AdminDashboard: {
+        screen: AdminPanel,
+        navigationOptions: ({ navigation }) => ({
+            title: "Admin Dashboard",
+            headerLeft: () => <NavigationDrawerHeader navigationProps={navigation} />,
+            headerStyle: {
+                backgroundColor: '#307ecc',
+            },
+            headerTintColor: '#fff',
+            headerTitleAlign: 'center',
+        }),
+    },
+})
 
 const EngagementsStack = createStackNavigator({
     Engagements: {
@@ -94,28 +110,32 @@ const EngagementsNavigatorStack = createStackNavigator({
     },
 })
 
-const DrawerNavigatorRoutes = createDrawerNavigator(
-    {
-        DashBoard: {
-            screen: DashBoardStack,
-            navigationOptions: {
-                drawerLabel: 'DashBoard',
-            },
+const DrawerNavigatorRoutes = createDrawerNavigator({
+    DashBoard: {
+        screen: DashBoardStack,
+        navigationOptions: {
+            drawerLabel: 'DashBoard',
         },
-        Engage: EngagementsNavigatorStack,
-        // Engagements: {
-        //     screen: EngagementsStack,
-        //     navigationOptions: {
-        //         drawerLabel: 'Engagements',
-        //     },
-        // },
-        // SingleEngagement: {
-        //     screen: SingleEngagementStack,
-        //     navigationOptions: {
-        //         drawerLabel: 'Engagement'
-        //     }
-        // }
     },
+    Engage: EngagementsNavigatorStack,
+},
+    {
+        contentComponent: SideBarMenu,
+        drawerOpenRoute: 'DrawerOpen',
+        drawerCloseRoute: 'DrawerClose',
+        drawerToggleRoute: 'DrawerToggle',
+    }
+);
+
+const AdminDrawerNavigatorRoutes = createDrawerNavigator({
+    DashBoard: {
+        screen: AdminDasboardStack,
+        navigationOptions: {
+            drawerLabel: 'Admin DashBoard',
+        },
+    },
+    Engage: EngagementsNavigatorStack,
+},
     {
         contentComponent: SideBarMenu,
         drawerOpenRoute: 'DrawerOpen',
@@ -126,4 +146,4 @@ const DrawerNavigatorRoutes = createDrawerNavigator(
 
 // export { EngagementsStack, SingleEngagementStack, DashBoardStack };
 
-export default DrawerNavigatorRoutes;
+export { DrawerNavigatorRoutes, AdminDrawerNavigatorRoutes };

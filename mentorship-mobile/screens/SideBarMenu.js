@@ -43,17 +43,33 @@ const itemsMentee = [
     },
 ];
 
+
+const time = new Date().toTimeString().split(":");
+
 class SideBarMenu extends Component {
 
     state = {
         name: '',
         role: '',
+        greeting: '',
     }
 
     async componentDidMount() {
         const name = await this.getName()
         const role = await this.getUserRole()
         this.setState({ name, role })
+        if (time[0] <= "02" || time[0] > "22") {
+            this.setState({ greeting: "You should be sleeping now", })
+            return
+        } else if (time[0] <= "11") {
+            this.setState({ greeting: "Good morning", })
+            return
+        } else if (time[0] <= "18") {
+            this.setState({ greeting: "Good day", })
+            return
+        }
+        this.setState({ greeting: "Good evening", })
+        return
     }
 
     getName = async () => AsyncStorage.getItem("name");
@@ -106,7 +122,7 @@ class SideBarMenu extends Component {
                     </View>
                     <View>
                         <Text style={styles.profileHeaderText}>Hi, {this.state.name}</Text>
-                        <Text style={styles.profileHeaderText2}>Welcome back</Text>
+                        <Text style={styles.profileHeaderText2}>{this.state.greeting}</Text>
                     </View>
                 </View>
                 <View style={{ width: '100%', flex: 1 }}>
