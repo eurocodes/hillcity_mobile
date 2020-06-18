@@ -33,6 +33,10 @@ export default class SigninScreen extends Component {
                 setUserToken(results.data.token)
                 setName(results.data.name)
                 setUserRole(results.data.role)
+                if (results.data.role === "adminmember") {
+                    this.props.navigation.navigate("Admin")
+                    return
+                }
                 this.props.navigation.navigate('Main');
                 return
             }

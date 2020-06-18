@@ -67,8 +67,8 @@ export default class Dashboard extends Component {
     renderConnection() {
         return this.state.myConnections.map((val, index) => {
             return (
-                <View>
-                <View style={{ flexDirection: 'row' }} key={index}>
+                <View  key={index}>
+                <View style={{ flexDirection: 'row' }}>
                     <View style={styles.appLowerMap}>
                         <Text>Name: {`${val.firstName} ${val.lastName}`}</Text>
                         <Text>Email Address: {val.email}</Text>
@@ -86,8 +86,8 @@ export default class Dashboard extends Component {
 
     render() {
         return (
-            <ScrollView>
-                <View style={{ backgroundColor: '#b3cde0', height: 1}}>
+            <View style={{flex: 1,}}>
+            <ScrollView style={styles.mainContainer}>
                 <View style={styles.appTop}>
                     <Text style={styles.topText}>{this.state.myDetails.firstName} {this.state.myDetails.lastName}</Text>
                     {this.state.role === "mentor" ? (<Text style={styles.topText}>You currently have {this.state.myConnections.length} mentee(s) </Text>) : null}
@@ -98,44 +98,51 @@ export default class Dashboard extends Component {
                         </View>
                     </TouchableOpacity>
                 </View>
-                {this.state.role === "mentor" ? (<Text style={styles.appMid}>Here are your mentees</Text>) :
-                    (<Text style={styles.appMid}>Your Mentor's Details</Text>)}
+                <View style={styles.appMid}>
+                {this.state.role === "mentor" ? (<Text style={styles.appMidText}>My mentees</Text>) :
+                    (<Text style={styles.appMidText}>My Mentor's Details</Text>)}
+                    </View>
                 <View style={styles.appLower}>
                     {this.renderConnection()}
                 </View>
-                {/* <ScrollViewConnection
-                    myConnections={this.props.myConnections} /> */}
-                </View>
             </ScrollView>
+            </View>
         )
     }
 }
 
 const styles = StyleSheet.create({
-    appTop: {
+    mainContainer: {
         paddingTop: Constants.statusBarHeight,
-        alignContent: 'center',
-        alignSelf: 'center',
-        height: 'auto',
+        height,
         width: '100%',
+        backgroundColor: '#e5e5e5',
+
+    },
+    appTop: {
+        flex: 1,
         margin: 2,
-        marginTop: 2,
-        borderRadius: 10,
         backgroundColor: '#f8fbfd',
     },
     topText: {
         margin: 2,
     },
     appMid: {
-        marginLeft: '5%',
-        fontSize: '75%',
+        marginTop: 2,
+        backgroundColor: '#b2b2b2',
+        height: 35,
+    },
+    appMidText: {
+        margin: 2,
+        fontSize: 15,
         color: '#307ecc',
+        alignItems: 'center',
     },
     appLower: {
         alignContent: 'center',
         alignSelf: 'center',
         height: 'auto',
-        width: '100%',
+        width: '99%',
         margin: 2,
         marginBottom: 2,
         borderRadius: 10,
@@ -148,8 +155,6 @@ const styles = StyleSheet.create({
     button: {
         backgroundColor: '#307ecc',
         paddingVertical: 5,
-        paddingHorizontal: 0,
-        borderRadius: 20,
         margin: 5,
         alignSelf: 'flex-end',
     },
