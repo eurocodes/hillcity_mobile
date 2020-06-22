@@ -143,3 +143,34 @@ export const fetchRejectEngagement = async (id, comment) => {
         throw new Error(err);
     }
 }
+
+export const fectchUploadReport = async (id, file) => {
+    const token = await getToken()
+    try {
+        const { name, uri } = file;
+        console.log("Name is", name)
+        const uriParts = name.split(".");
+        const fileType = uriParts[uriParts.length - 1];
+        console.log("Type is", fileType)
+        console.log("Uri is", uri)
+
+        const formData = new FormData()
+        formData.append("file", {
+            uri,
+            name,
+            type: `application/${fileType}`,
+        });
+
+        const options = {
+            method: "PUT",
+            body: formData,
+            headers: {
+                "Accept": "application/json",
+                "Authorization": token,
+            },
+        };
+        await fetch(`http://localhost:3400/api/v1/update/report/engagements/${id}`, options)
+    } catch (err) {
+        throw new Error(err)
+    }
+}
