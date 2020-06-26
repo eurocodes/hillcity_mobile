@@ -43,6 +43,20 @@ const itemsMentee = [
     },
 ];
 
+const itemsAdminMenu = [
+    {
+        navOptionName: "Manage Engagements",
+        screenToNavigate: "ManageEngagements",
+    },
+    {
+        navOptionName: 'Manage Mentors',
+        screenToNavigate: 'ManageMentors',
+    },
+    {
+        navOptionName: 'Manage Mentees',
+        screenToNavigate: 'ManageMentees',
+    },
+];
 
 const time = new Date().toTimeString().split(":");
 
@@ -126,7 +140,6 @@ class SideBarMenu extends Component {
                     </View>
                 </View>
                 <View style={{ width: '100%', flex: 1 }}>
-                    {/* {this.state.role === "mentee" ? this.renderMenteeSideBar() : this.renderMentorSideBar()} */}
                     {items.map((item, key) => (
                         <View key={key}>
                             <View
@@ -152,6 +165,38 @@ class SideBarMenu extends Component {
                         </View>
                     ))}
                 </View>
+                {this.state.role === "adminmember" ? (
+                    <View style={{ width: '100%', flex: 1 }}>
+                        <View>
+                            <Text style={{ fontSize: 15, color: 'white', marginLeft: 15, }}>ADMIN MANAGEMENT BOARD</Text>
+                        </View>
+                        <View style={styles.profileHeaderLine} />
+                        {itemsAdminMenu.map((item, key) => (
+                            <View key={key}>
+                                <View
+                                    style={{
+                                        flexDirection: 'row',
+                                        alignItems: 'center',
+                                        padding: 5,
+                                        marginLeft: 12,
+                                        backgroundColor:
+                                            global.currentScreenIndex === item.screenToNavigate
+                                                ? '#4b9ff2'
+                                                : '#307ecc',
+                                    }}
+                                    key={key}
+                                    onStartShouldSetResponder={() =>
+                                        this.handleClick(key, item.screenToNavigate)
+                                    }>
+                                    <Text style={{ fontSize: 15, color: 'white' }}>
+                                        {item.navOptionName}
+                                    </Text>
+                                </View>
+                                <View style={styles.profileHeaderLine} />
+                            </View>
+                        ))}
+                    </View>
+                ) : (<View />)}
             </View>
         );
     }
@@ -181,7 +226,7 @@ const styles = StyleSheet.create({
         color: 'white',
         alignSelf: 'center',
         paddingHorizontal: 10,
-        fontSize: '130%',
+        fontSize: 20,
         fontWeight: 'bold',
     },
     profileHeaderText2: {

@@ -6,6 +6,7 @@ import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import Constants from 'expo-constants';
 
 import { createEngagement } from '../Backend/API';
+import Loader from '../components/Loader';
 
 let engagementType = [{
     value: "GENERAL WELL BEING",
@@ -35,6 +36,7 @@ export default class NewEngagement extends Component {
         time: '',
         isDatePickerVisible: false,
         isTimePickerVisible: false,
+        loading: false,
     }
 
     showDatePicker = () => {
@@ -66,18 +68,22 @@ export default class NewEngagement extends Component {
     }
 
     createNewEngagement = async () => {
+        this.setState({ loading: true })
         try {
             if (this.state.engagementType !== "" && this.state.engagementMode !== "" &&
                 this.state.reasonForEngagement !== "" && this.state.date !== "" &&
                 this.state.time !== "") {
                 await createEngagement(this.state.engagementType, this.state.engagementMode,
                     this.state.reasonForEngagement, this.state.date, this.state.time)
+                this.setState({ loading: false })
                 this.props.navigation.navigate("Engagements")
                 return
             }
             alert("You haven't properly filled all fields")
+            this.setState({ loading: false })
             return
         } catch (err) {
+            this.setState({ loading: false })
             console.log(err)
         }
     }
@@ -134,6 +140,7 @@ export default class NewEngagement extends Component {
                     </View>
 
                     <View style={styles.selectMenu}>
+                        {this.state.loading ? (<View style={styles.loader}><Loader loading={this.state.loading} /></View>) : (<View />)}
                         <View>
                             <Text style={styles.selectMenuText}>Mode of Engagement</Text>
                         </View>
@@ -229,5 +236,9 @@ const styles = StyleSheet.create({
     textArea: {
         height: 100,
         justifyContent: 'flex-start',
-    }
+    },
+    loader: {
+        alignContent: 'center',
+        alignSelf: 'center',
+    },
 })

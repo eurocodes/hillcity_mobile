@@ -4,12 +4,14 @@ import Constants from 'expo-constants'
 
 import { setEngID } from '../Backend/Storage';
 import { fetchEngagementsMentor, fetchEngagementsMentee } from '../Backend/API';
+import Loader from '../components/Loader';
 
 export default class EngagementScreen extends Component {
 
     state = {
         engagements: [],
         role: "",
+        loading: false,
     }
 
     async componentDidMount() {
@@ -32,37 +34,45 @@ export default class EngagementScreen extends Component {
     getUserRole = async () => AsyncStorage.getItem("role");
 
     getMentorEngagements = async () => {
+        this.setState({ loading: true })
         try {
             const results = await fetchEngagementsMentor()
             console.log("Mentor Result:", results)
             if (results[0]) {
                 this.setState({ engagements: results, role: "mentor" })
+                this.setState({ loading: false })
                 console.log("STATE:", this.state)
                 return
             } else {
                 this.setState({ engagements: "You don't have any engagements", role: "mentor" })
+                this.setState({ loading: false })
                 console.log("STATE:", this.state)
             }
         } catch (err) {
+            this.setState({ loading: false })
             console.log(err)
             return
         }
     }
 
     getMenteeEngagements = async () => {
+        this.setState({ loading: true })
         try {
             const results = await fetchEngagementsMentee()
             console.log("Mentor Result:", results)
             if (results[0]) {
                 this.setState({ engagements: results, role: "mentee" })
+                this.setState({ loading: false })
                 console.log("STATE:", this.state)
                 return
             } else {
                 this.setState({ engagements: "You don't have any engagements", role: "mentee" })
+                this.setState({ loading: false })
                 console.log("STATE:", this.state)
             }
 
         } catch (err) {
+            this.setState({ loading: false })
             console.log(err)
         }
     }
@@ -88,7 +98,7 @@ export default class EngagementScreen extends Component {
                             <Text style={{ marginLeft: 8 }}>Reason for Engagement: {`${val.reason_for_engagement.slice(0, 20)}...`}</Text>
                             <Text style={{ marginLeft: 8 }}>Status: {val.status}</Text>
                             <Text style={{ marginLeft: 8 }}>Proposed date & time: {`${val.proposed_date} at ${val.proposed_time}`}</Text>
-                            <TouchableOpacity style={{ marginLeft: 8 }} onPress={() => this.props.navigation.navigate("SingleEngagement", setEngID(val.engagement_ID))}>
+                            <TouchableOpacity style={{ marginLeft: 8, width: '25%', }} onPress={() => this.props.navigation.navigate("SingleEngagement", setEngID(val.engagement_ID))}>
                                 <Text style={{ color: "#03396c" }}>VIEW DETAILS</Text>
                             </TouchableOpacity>
                         </View>
@@ -117,7 +127,7 @@ export default class EngagementScreen extends Component {
                         <Text>{val.status}</Text>
                         <Text>{val.proposed_date}</Text>
                     </View>
-                    <TouchableOpacity style={{ margin: 5 }} onPress={() => this.props.navigation.navigate("SingleEngagement", setEngID(val.engagement_ID))}>
+                    <TouchableOpacity style={{ margin: 5, width: '25%', }} onPress={() => this.props.navigation.navigate("SingleEngagement", setEngID(val.engagement_ID))}>
                         <Text style={{ color: "#03396c" }}>VIEW DETAILS</Text>
                     </TouchableOpacity>
                     <View style={styles.engagementBottomLine} />
@@ -145,6 +155,7 @@ export default class EngagementScreen extends Component {
                                 onPress={() => this.props.navigation.navigate("NewEngagement")}>
                                 <Text style={{ fontSize: 15, padding: 5, color: "#e9eaec" }}>Start New Engagement</Text>
                             </TouchableOpacity>
+                            {this.state.loading ? (<View style={styles.loader}><Loader loading={this.state.loading} /></View>) : (<View />)}
                             <View>{this.renderMenteeEngagements()}</View>
                         </View>
                     )}
@@ -179,5 +190,9 @@ const styles = StyleSheet.create({
     engagementBottomLine: {
         height: 2,
         backgroundColor: '#e2e2e2',
+    },
+    loader: {
+        alignContent: 'center',
+        alignSelf: 'center',
     },
 })

@@ -3,6 +3,7 @@ import { AsyncStorage, ImageBackground, Dimensions, Image, StyleSheet, Text, Tou
 
 import logo from '../assets/logo.png';
 import IMG_2 from '../assets/IMG_20.jpg';
+import Loader from '../components/Loader';
 
 const { width, height } = Dimensions.get('window');
 
@@ -11,6 +12,7 @@ export default class HomeScreen extends Component {
     state = {
         token: null,
         role: null,
+        loading: false,
     }
 
     async componentDidMount() {
@@ -20,6 +22,7 @@ export default class HomeScreen extends Component {
     }
 
     signinScreen = () => {
+        this.setState({ loading: true })
         if (this.state.token === null) {
             this.props.navigation.navigate('Signin');
             return
@@ -28,6 +31,7 @@ export default class HomeScreen extends Component {
             return
         }
         this.props.navigation.navigate('Main');
+        this.setState({ loading: false })
     }
 
     // Get user token
@@ -43,11 +47,12 @@ export default class HomeScreen extends Component {
                     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', }}>
                         <Image source={logo} style={{ width: width * 0.3, height: height * 0.08, marginBottom: height / 4, }} />
                         <View style={{ alignItems: 'center', justifyContent: 'center', marginBottom: height / 4, }}>
-                            <Text style={{ color: '#fff' }}>HILLCITY MENTORSHIP On Mobile</Text>
+                            <Text style={{ color: '#fff', fontSize: 20, fontWeight: 'bold' }}>HILLCITY MENTORSHIP On Mobile</Text>
                             <Text style={{ color: '#fff' }}>Adding value to lives</Text>
                         </View>
                     </View>
                     <View>
+                        {this.state.loading ? (<View style={styles.loader}><Loader loading={this.state.loading} /></View>) : (<View />)}
                         <TouchableOpacity style={styles.button} onPress={this.signinScreen} >
                             <View>
                                 <Text style={styles.buttonText}>Enter To Continue</Text>
@@ -85,5 +90,10 @@ const styles = StyleSheet.create({
         color: '#fff',
         fontSize: 20,
         alignSelf: 'center'
-    }
+    },
+    loader: {
+        alignContent: 'center',
+        alignSelf: 'center',
+        marginBottom: 10,
+    },
 })
