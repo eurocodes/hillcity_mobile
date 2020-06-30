@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
-import { Alert, AsyncStorage, Dimensions, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Alert, AsyncStorage, Dimensions, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Constants from 'expo-constants';
 
 // import { getUserRole } from '../Backend/Storage';
 import { fetchUsersMentor, fetchUsersMentee } from '../Backend/API';
+import Loader from '../components/Loader';
 
 const { width, height } = Dimensions.get('window');
 
@@ -12,6 +13,7 @@ export default class Dashboard extends Component {
         myDetails: '',
         myConnections: [],
         role: '',
+        loading: false,
     }
 
     async componentDidMount() {
@@ -34,31 +36,38 @@ export default class Dashboard extends Component {
     getUserRole = async () => AsyncStorage.getItem("role");
 
     getMentorDashboard = async () => {
+        this.setState({loading: true})
         try {
             const results = await fetchUsersMentor()
             if (results.myConnections && results.myDetails) {
                 this.setState({ myDetails: results.myDetails, myConnections: results.myConnections, role: "mentor" })
+                this.setState({loading: false})
                 return
             }
             this.setState({ err: results })
             alert(this.state.err)
+            this.setState({loading: false})
             this.props.navigation.navigate('Signin');
             return
             
         } catch (err) {
             console.log(err)
+            this.setState({loading: false})
             this.props.navigation.navigate('Signin');
             return
         }
     }
 
     getMenteeDashboard = async () => {
+        this.setState({loading: true})
         try {
             const results = await fetchUsersMentee()
             this.setState({ myDetails: results.myDetails, myConnections: results.myConnections, role: "mentee" })
+            this.setState({loading: false})
             return
         } catch (err) {
             console.log(err)
+            this.setState({loading: false})
             this.props.navigation.navigate('Signin');
             return
         }
@@ -74,7 +83,7 @@ export default class Dashboard extends Component {
                         <Text>Email Address: {val.email}</Text>
                         <Text>Phone: {val.phone}</Text>
                     </View>
-                    <View style={styles.appLowerMap}>
+                    <View style={styles.appLowerMapPhoto}>
                         <Text>Photo: {val.photo}</Text>
                     </View>
                 </View>
@@ -86,7 +95,7 @@ export default class Dashboard extends Component {
 
     render() {
         return (
-            <View style={{flex: 1,}}>
+            <View style={{flex: 1, height}}>
             <ScrollView style={styles.mainContainer}>
                 <View style={styles.appTop}>
                     <Text style={styles.topText}>{this.state.myDetails.firstName} {this.state.myDetails.lastName}</Text>
@@ -94,7 +103,7 @@ export default class Dashboard extends Component {
                     <Text style={styles.topText}>Your are doing very well</Text>
                     <TouchableOpacity style={styles.button} onPress={() => this.props.navigation.navigate("Engagements")}>
                         <View >
-                            <Text style={styles.buttonText}>My Engagements</Text>
+                            <Text style={styles.buttonText}>View My Engagements</Text>
                         </View>
                     </TouchableOpacity>
                 </View>
@@ -102,6 +111,7 @@ export default class Dashboard extends Component {
                 {this.state.role === "mentor" ? (<Text style={styles.appMidText}>My mentees</Text>) :
                     (<Text style={styles.appMidText}>My Mentor's Details</Text>)}
                     </View>
+                {this.state.loading ? (<View style={styles.loader}><Loader loading={this.state.loading} /></View>) : (<View />)}
                 <View style={styles.appLower}>
                     {this.renderConnection()}
                 </View>
@@ -114,29 +124,35 @@ export default class Dashboard extends Component {
 const styles = StyleSheet.create({
     mainContainer: {
         paddingTop: Constants.statusBarHeight,
-        height,
+        height: '100%',
         width: '100%',
         backgroundColor: '#e5e5e5',
 
     },
     appTop: {
         flex: 1,
-        margin: 2,
-        backgroundColor: '#f8fbfd',
+        marginBottom: 2,
+        paddingTop: 0.2,
+        backgroundColor: '#307ecc',
     },
     topText: {
         margin: 2,
+        color: '#f8fbfd',
+        fontSize: 20,
+        fontFamily: 'sans-serif',
     },
     appMid: {
         marginTop: 2,
         backgroundColor: '#b2b2b2',
         height: 35,
+        alignContent: 'center',
+        justifyContent: 'center',
     },
     appMidText: {
         margin: 2,
-        fontSize: 15,
+        fontSize: 20,
         color: '#307ecc',
-        alignItems: 'center',
+        alignSelf: 'center',
     },
     appLower: {
         alignContent: 'center',
@@ -144,13 +160,16 @@ const styles = StyleSheet.create({
         height: 'auto',
         width: '99%',
         margin: 2,
-        marginBottom: 2,
-        borderRadius: 10,
+        marginVertical: 2,
         backgroundColor: '#f8fbfd',
     },
     appLowerMap: {
         margin: 5,
-        width: width * 0.5,
+        width: width * 0.75,
+    },
+    appLowerMapPhoto: {
+        margin: 5,
+        width: width * 0.2,
     },
     button: {
         backgroundColor: '#307ecc',
@@ -160,15 +179,18 @@ const styles = StyleSheet.create({
     },
     buttonText: {
         color: '#fff',
-        fontSize: 12,
+        fontSize: 20,
         alignSelf: 'center',
         padding: 2,
     },
     connectioDivider: {
-        height: 1,
-        marginLeft: 12,
+        height: 4,
         backgroundColor: '#e2e2e2',
         marginTop: 2,
         marginBottom: 2,
+    },
+    loader: {
+        alignContent: 'center',
+        alignSelf: 'center',
     },
 })

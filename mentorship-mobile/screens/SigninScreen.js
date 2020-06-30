@@ -5,14 +5,17 @@ import { setUserToken, setName, setUserRole } from '../Backend/Storage';
 
 import logo from '../assets/logo.png';
 import IMG_2 from '../assets/IMG_20.jpg';
+import Loader from '../components/Loader';
 
 const { width, height } = Dimensions.get('window');
+const baseUrl = "https://hillcityapp.herokuapp.com";
 
 export default class SigninScreen extends Component {
 
     state = {
         email: '',
         password: '',
+        loading: false,
     }
 
     handleInput = key => val => {
@@ -22,11 +25,12 @@ export default class SigninScreen extends Component {
     signin = async () => {
 
         if (this.state.email && this.state.password) {
-            const response = await fetch("http://localhost:3400/api/v1/auth/login", {
+            const response = await fetch(`${baseUrl}/api/v1/auth/login`, {
                 method: "POST",
                 headers: { "content-type": "application/json" },
                 body: JSON.stringify({ email: this.state.email, password: this.state.password })
             })
+            this.setState({ loading: true })
             const results = await response.json()
             console.log(results);
             if (response.ok) {
@@ -38,10 +42,12 @@ export default class SigninScreen extends Component {
                     return
                 }
                 this.props.navigation.navigate('Main');
+                this.setState({ loading: false })
                 return
             }
             this.setState({ err: results.message })
             alert(this.state.err)
+            this.setState({ loading: false, email: '', password: '', })
             this.props.navigation.navigate('Signin');
             return
         }
@@ -59,11 +65,12 @@ export default class SigninScreen extends Component {
                         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', }}>
                             <Image source={logo} style={{ width: width * 0.3, height: height * 0.08, marginBottom: 10, }} />
                             <View style={{ alignItems: 'center', justifyContent: 'center', marginBottom: '35%', }}>
-                                <Text style={{ color: '#fff' }}>HILLCITY MENTORSHIP On Mobile</Text>
+                                <Text style={{ color: '#fff', fontSize: 20, fontWeight: 'bold' }}>HILLCITY MENTORSHIP On Mobile</Text>
                                 <Text style={{ color: '#fff' }}>Adding value to lives</Text>
                             </View>
                         </View>
                         <View style={{ width: '100%', marginBottom: '5%', marginTop: '40%' }}>
+                            {this.state.loading ? (<View style={styles.loader}><Loader loading={this.state.loading} /></View>) : (<View />)}
                             <TextInput style={styles.inputField}
                                 placeholder='Email Address'
                                 onChangeText={this.handleInput('email')}
@@ -114,6 +121,7 @@ const styles = StyleSheet.create({
         borderRadius: 20,
         marginTop: 10,
         marginBottom: 0,
+        paddingLeft: 15,
         marginHorizontal: 10,
     },
     button: {
@@ -128,6 +136,10 @@ const styles = StyleSheet.create({
         color: '#fff',
         fontSize: 20,
         alignSelf: 'center'
+    },
+    loader: {
+        alignContent: 'center',
+        alignSelf: 'center',
     },
     errText: {
         color: '#fff',

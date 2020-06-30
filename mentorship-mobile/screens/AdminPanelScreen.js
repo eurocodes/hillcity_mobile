@@ -5,6 +5,7 @@ import Constants from 'expo-constants';
 
 const { width, height } = Dimensions.get('window');
 import { fetchUsersMentor } from '../Backend/API';
+import Loader from '../components/Loader';
 
 const getUserName = async () => AsyncStorage.getItem("name")
 
@@ -13,6 +14,7 @@ export default class AdminPanel extends Component {
     state = {
         name: '',
         mentees: [],
+        loading: false,
     }
 
     async componentDidMount() {
@@ -23,19 +25,22 @@ export default class AdminPanel extends Component {
     }
 
     getAdminDashboard = async () => {
+        this.setState({ loading: true })
         try {
             const results = await fetchUsersMentor()
             if (results.myConnections) {
-                this.setState({ mentees: results.myConnections })
+                this.setState({ mentees: results.myConnections, })
+                this.setState({ loading: false })
                 console.log("STATE:", this.state)
                 return
             }
-            this.setState({ mentees: [results] })
+            this.setState({ mentees: [results], loading: false })
             console.log("STATE Ugee:", this.state)
             return
 
         } catch (err) {
             console.log(err)
+            this.setState({ loading: false })
             return
         }
     }
@@ -53,12 +58,12 @@ export default class AdminPanel extends Component {
                 <View key={index} >
                     <View style={styles.appLowerMap}>
                         <View style={{ flexDirection: 'row' }}>
-                            <View>
+                            <View style={styles.menteesMap}>
                                 <Text>Name: {`${val.firstName} ${val.lastName}`}</Text>
                                 <Text>Email Address: {val.email}</Text>
                                 <Text>Phone: {val.phone}</Text>
                             </View>
-                            <View >
+                            <View style={styles.menteesPhoto}>
                                 <Text>{val.photo}</Text>
                             </View>
                         </View>
@@ -80,14 +85,20 @@ export default class AdminPanel extends Component {
 
                     <View />
 
+                    <View >
+                        <TouchableOpacity onPress={() => this.props.navigation.navigate("ManageEngagements")} style={styles.buttonContainer}>
+                            <Text style={styles.buttonText}>Manage Engagements</Text>
+                        </TouchableOpacity>
+                    </View>
+
                     <View style={styles.bothButtonContainer}>
-                        <View style={styles.buttonContainer}>
-                            <TouchableOpacity onPress={() => alert("Module not yet completed")}>
+                        <View style={{ width: '50%' }}>
+                            <TouchableOpacity onPress={() => this.props.navigation.navigate("ManageMentors")} style={styles.buttonContainer}>
                                 <Text style={styles.buttonText}>Manage Mentors</Text>
                             </TouchableOpacity>
                         </View>
-                        <View style={styles.buttonContainer}>
-                            <TouchableOpacity onPress={() => alert("Module not yet completed")}>
+                        <View style={{ width: '50%' }}>
+                            <TouchableOpacity onPress={() => this.props.navigation.navigate("ManageMentees")} style={styles.buttonContainer}>
                                 <Text style={styles.buttonText}>Manage Mentees</Text>
                             </TouchableOpacity>
                         </View>
@@ -97,6 +108,7 @@ export default class AdminPanel extends Component {
                     </View>
 
                     <View style={styles.mentees}>
+                        {this.state.loading ? (<View style={styles.loader}><Loader loading={this.state.loading} /></View>) : (<View />)}
                         {this.renderMentees()}
                     </View>
                 </ScrollView>
@@ -126,23 +138,22 @@ const styles = StyleSheet.create({
     },
     bothButtonContainer: {
         flexDirection: 'row',
-        justifyContent: 'center',
-        backgroundColor: '#f2f2f2',
-        margin: 5,
-        height: 35,
+        width,
     },
     buttonContainer: {
         alignItems: 'center',
         justifyContent: 'center',
         backgroundColor: '#307ecc',
-        width: '50%',
+        width: '100%',
+        height: 35,
         margin: 2,
     },
     buttonText: {
         flex: 1,
         alignSelf: 'center',
+        marginVertical: 5,
         color: '#fff',
-        fontSize: 15,
+        fontSize: 20,
     },
     midTextContainer: {
         height: 35,
@@ -166,6 +177,12 @@ const styles = StyleSheet.create({
         width: '99%',
         backgroundColor: '#f8fbfd',
     },
+    menteesMap: {
+        width: width * 0.75,
+    },
+    menteesPhoto: {
+        width: width * 0.2,
+    },
     appLowerMap: {
         margin: 5,
         width: '50%',
@@ -177,5 +194,9 @@ const styles = StyleSheet.create({
         backgroundColor: '#e2e2e2',
         marginTop: 2,
         marginBottom: 2,
+    },
+    loader: {
+        alignContent: 'center',
+        alignSelf: 'center',
     },
 })

@@ -2,9 +2,12 @@ import React, { Component } from 'react';
 import { AsyncStorage, Button, Dimensions, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Constants from 'expo-constants';
 import * as DocumentPicker from 'expo-document-picker';
+import { TextInput } from 'react-native-gesture-handler';
 
 import { fetchAcceptEngagement, fetchRejectEngagement, fectchUploadReport } from '../Backend/API';
-import { TextInput } from 'react-native-gesture-handler';
+import Loader from '../components/Loader';
+
+const baseUrl = "https://hillcityapp.herokuapp.com";
 
 const { width, height } = Dimensions.get('window');
 const getToken = async () => AsyncStorage.getItem("token");
@@ -18,6 +21,7 @@ export default class SingleEngagement extends Component {
         comment: '',
         role: '',
         file: null,
+        loading: false,
     }
 
     async componentDidMount() {
@@ -28,12 +32,13 @@ export default class SingleEngagement extends Component {
     }
 
     fetchSingleEngagement = async () => {
+        this.setState({ loading: true })
         const token = await getToken()
         const role = await getUserRole()
         const id = await getEngID()
         console.log("IDD:", id)
         try {
-            const response = await fetch(`http://localhost:3400/api/v1/get/engagements/${id}`, {
+            const response = await fetch(`${baseUrl}/api/v1/get/engagements/${id}`, {
                 method: "GET",
                 headers: {
                     "content-type": "application/json",
@@ -42,15 +47,17 @@ export default class SingleEngagement extends Component {
             })
             const { data } = await response.json()
             console.log(data)
-            this.setState({ engagement: data, role })
+            this.setState({ engagement: data, role, loading: false })
             console.log("Single Engagement State:", this.state)
             return data
         } catch (err) {
+            this.setState({ loading: false })
             throw new Error(err);
         }
     }
 
     acceptEngagement = async () => {
+        this.setState({ loading: true })
         // const { navigation } = this.props;
         // const id = navigation.getParam('id')
         const id = await getEngID()
@@ -61,10 +68,12 @@ export default class SingleEngagement extends Component {
             this.fetchSingleEngagement(id)
         } catch (err) {
             console.log(err)
+            this.setState({ loading: false })
         }
     }
 
     rejectEngagement = async () => {
+        this.setState({ loading: true })
         // const { navigation } = this.props;
         // const id = navigation.getParam('id')
         const id = await getEngID()
@@ -84,6 +93,7 @@ export default class SingleEngagement extends Component {
     }
 
     uploadReport = async () => {
+        this.setState({ loading: true })
         const id = await getEngID()
         console.log("Confirm ID:", id)
         if (this.state.file === null) {
@@ -95,12 +105,14 @@ export default class SingleEngagement extends Component {
             console.log("Upload response:", response)
             this.fetchSingleEngagement(id)
         } catch (err) {
+            this.setState({ loading: false })
             console.log(err)
         }
 
     }
 
     selectFile = async () => {
+        this.setState({ loading: true })
         try {
             const response = await DocumentPicker.getDocumentAsync({
                 type: "*/*",
@@ -110,12 +122,12 @@ export default class SingleEngagement extends Component {
             // consolog what was found
             console.log("Response:", response);
             if (!response.cancelled) {
-                this.setState({ file: response })
+                this.setState({ file: response, loading: false })
                 return
             }
         } catch (error) {
             console.log("Error", error);
-            this.setState({ file: null })
+            this.setState({ file: null, loading: false })
 
         }
     };
@@ -153,9 +165,10 @@ export default class SingleEngagement extends Component {
             return (
                 <ScrollView key={index}>
                     <ScrollView style={styles.mainContainer}>
-                        <View style={{ flex: 1, height }}>
-                            <View style={{ marginBottom: 2 }}>
-                                <View style={{ alignContent: 'center', justifyContent: 'center', marginVertical: 2, height: '7%', backgroundColor: '#307ecc' }}>
+                        {this.state.loading ? (<View style={styles.loader}><Loader loading={this.state.loading} /></View>) : (<View />)}
+                        <View style={{ flex: 1, height, paddingTop: 2 }}>
+                            <View style={{ margin: 2 }}>
+                                <View style={{ alignContent: 'center', justifyContent: 'center', marginVertical: 2, height: '7%', backgroundColor: '#307ecc', }}>
                                     <Text style={{ alignSelf: 'center', color: '#fff', fontSize: 20, fontFamily: 'sans-serif' }}>{val.engagement_type.toUpperCase()}</Text>
                                 </View>
 
@@ -261,7 +274,7 @@ export default class SingleEngagement extends Component {
                             </View>
 
                             {this.state.role !== "mentee" ? (
-                                <View>
+                                <View style={{ marginVertical: 4, }}>
                                     <View style={styles.textAreaContainer}>
                                         <TextInput
                                             style={styles.textArea}
@@ -272,14 +285,14 @@ export default class SingleEngagement extends Component {
                                             multiline={true}
                                         />
                                     </View>
-                                    <View style={{ flexDirection: 'row' }}>
+                                    <View style={{ flexDirection: 'row', backgroundColor: '#f2f2f2', }}>
                                         <TouchableOpacity onPress={this.acceptEngagement}
-                                            style={{ margin: 5, backgroundColor: 'green', borderRadius: 10 }} >
-                                            <Text style={{ fontSize: 15, color: "#fff", margin: 2, }}>Accept</Text>
+                                            style={{ margin: 5, backgroundColor: '#307ecc', width: '20%' }} >
+                                            <Text style={{ fontSize: 15, color: "#fff", margin: 2, alignSelf: 'center' }}>Accept</Text>
                                         </TouchableOpacity>
                                         <TouchableOpacity onPress={this.rejectEngagement}
-                                            style={{ margin: 5, backgroundColor: 'red', borderRadius: 10 }} >
-                                            <Text style={{ fontSize: 15, color: "#fff", margin: 2, }}>Reject</Text>
+                                            style={{ margin: 5, backgroundColor: 'red', width: '20%', }} >
+                                            <Text style={{ fontSize: 15, color: "#fff", margin: 2, alignSelf: 'center' }}>Reject</Text>
                                         </TouchableOpacity>
                                     </View>
                                 </View>) : (<View>
@@ -301,6 +314,7 @@ const styles = StyleSheet.create({
     mainContainer: {
         paddingTop: Constants.statusBarHeight,
         flex: 1,
+        paddingTop: 0.4,
         alignContent: 'center',
         backgroundColor: '#e5e5e5',
         height: '100%',
@@ -325,9 +339,11 @@ const styles = StyleSheet.create({
         paddingRight: 5,
         margin: 5,
         borderRadius: 5,
+        backgroundColor: '#f2f2f2',
     },
     textArea: {
         height: 75,
+        width: '60%',
         justifyContent: 'flex-start',
     },
     uploadReport: {
@@ -346,5 +362,9 @@ const styles = StyleSheet.create({
         width: '120%',
         height: '100%',
         margin: 4,
+    },
+    loader: {
+        alignContent: 'center',
+        alignSelf: 'center',
     },
 })

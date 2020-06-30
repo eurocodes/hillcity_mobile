@@ -43,6 +43,20 @@ const itemsMentee = [
     },
 ];
 
+const itemsAdminMenu = [
+    {
+        navOptionName: "Manage Engagements",
+        screenToNavigate: "ManageEngagements",
+    },
+    {
+        navOptionName: 'Manage Mentors',
+        screenToNavigate: 'ManageMentors',
+    },
+    {
+        navOptionName: 'Manage Mentees',
+        screenToNavigate: 'ManageMentees',
+    },
+];
 
 const time = new Date().toTimeString().split(":");
 
@@ -59,13 +73,13 @@ class SideBarMenu extends Component {
         const role = await this.getUserRole()
         this.setState({ name, role })
         if (time[0] <= "02" || time[0] > "22") {
-            this.setState({ greeting: "You should be sleeping now", })
+            this.setState({ greeting: "You should be in bed by now", })
             return
         } else if (time[0] <= "11") {
-            this.setState({ greeting: "Good morning", })
+            this.setState({ greeting: "Good morning! Hope you had a great night", })
             return
         } else if (time[0] <= "18") {
-            this.setState({ greeting: "Good day", })
+            this.setState({ greeting: "How's your day going?", })
             return
         }
         this.setState({ greeting: "Good evening", })
@@ -126,7 +140,6 @@ class SideBarMenu extends Component {
                     </View>
                 </View>
                 <View style={{ width: '100%', flex: 1 }}>
-                    {/* {this.state.role === "mentee" ? this.renderMenteeSideBar() : this.renderMentorSideBar()} */}
                     {items.map((item, key) => (
                         <View key={key}>
                             <View
@@ -152,6 +165,38 @@ class SideBarMenu extends Component {
                         </View>
                     ))}
                 </View>
+                {this.state.role === "adminmember" ? (
+                    <View style={{ width: '100%', flex: 1 }}>
+                        <View>
+                            <Text style={{ fontSize: 15, color: 'white', marginLeft: 15, }}>ADMIN MANAGEMENT BOARD</Text>
+                        </View>
+                        <View style={styles.profileHeaderLine} />
+                        {itemsAdminMenu.map((item, key) => (
+                            <View key={key}>
+                                <View
+                                    style={{
+                                        flexDirection: 'row',
+                                        alignItems: 'center',
+                                        padding: 5,
+                                        marginLeft: 12,
+                                        backgroundColor:
+                                            global.currentScreenIndex === item.screenToNavigate
+                                                ? '#4b9ff2'
+                                                : '#307ecc',
+                                    }}
+                                    key={key}
+                                    onStartShouldSetResponder={() =>
+                                        this.handleClick(key, item.screenToNavigate)
+                                    }>
+                                    <Text style={{ fontSize: 15, color: 'white' }}>
+                                        {item.navOptionName}
+                                    </Text>
+                                </View>
+                                <View style={styles.profileHeaderLine} />
+                            </View>
+                        ))}
+                    </View>
+                ) : (<View />)}
             </View>
         );
     }
@@ -181,14 +226,14 @@ const styles = StyleSheet.create({
         color: 'white',
         alignSelf: 'center',
         paddingHorizontal: 10,
-        fontSize: '130%',
+        fontSize: 20,
         fontWeight: 'bold',
     },
     profileHeaderText2: {
         color: 'white',
         alignSelf: 'flex-start',
         paddingHorizontal: 10,
-        fontWeight: 'bold',
+        fontSize: 15,
     },
     profileHeaderLine: {
         height: 1,

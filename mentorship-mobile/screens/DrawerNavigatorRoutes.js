@@ -12,6 +12,9 @@ import NavigationDrawerHeader from '../components/NavigationDrawerHeader';
 import SingleEngagement from './SingleEngagementScreen';
 import NewEngagement from './NewEngagementScreen';
 import AdminPanel from './AdminPanelScreen';
+import ManageEngagementsScreen from '../screensAdmin/ManageEngagementsScreen';
+import ManageMentorsScreen from '../screensAdmin/ManageMentorsScreen';
+import ManageMenteesScreen from '../screensAdmin/ManageMenteesScreen';
 
 const DashBoardStack = createStackNavigator({
     DashBoard: {
@@ -28,12 +31,75 @@ const DashBoardStack = createStackNavigator({
     },
 });
 
+const ManageEngagementsStack = createStackNavigator({
+    ManageEngagements: {
+        screen: ManageEngagementsScreen,
+        navigationOptions: {
+            header: null,
+        }
+
+    },
+});
+
+const ManageMentorsStack = createStackNavigator({
+    ManageMentors: {
+        screen: ManageMentorsScreen,
+        navigationOptions: {
+            header: null,
+        }
+
+    },
+});
+
+const ManageMenteesStack = createStackNavigator({
+    ManageMentees: {
+        screen: ManageMenteesScreen,
+        navigationOptions: {
+            header: null,
+        }
+
+    },
+});
+
 const AdminDasboardStack = createStackNavigator({
     AdminDashboard: {
         screen: AdminPanel,
         navigationOptions: ({ navigation }) => ({
             title: "Admin Dashboard",
             headerLeft: () => <NavigationDrawerHeader navigationProps={navigation} />,
+            headerStyle: {
+                backgroundColor: '#307ecc',
+            },
+            headerTintColor: '#fff',
+            headerTitleAlign: 'center',
+        }),
+    },
+    ManageEngagemente: {
+        screen: ManageEngagementsStack,
+        navigationOptions: ({ navigation }) => ({
+            title: 'Manage All Engagement',
+            headerStyle: {
+                backgroundColor: '#307ecc',
+            },
+            headerTintColor: '#fff',
+            headerTitleAlign: 'center',
+        }),
+    },
+    ManageMentors: {
+        screen: ManageMentorsStack,
+        navigationOptions: ({ navigation }) => ({
+            title: 'Manage Mentors',
+            headerStyle: {
+                backgroundColor: '#307ecc',
+            },
+            headerTintColor: '#fff',
+            headerTitleAlign: 'center',
+        }),
+    },
+    ManageMentees: {
+        screen: ManageMenteesStack,
+        navigationOptions: ({ navigation }) => ({
+            title: 'Manage Mentees',
             headerStyle: {
                 backgroundColor: '#307ecc',
             },
