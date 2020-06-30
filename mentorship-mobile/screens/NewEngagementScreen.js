@@ -56,14 +56,16 @@ export default class NewEngagement extends Component {
     }
 
     handleConfirmDate = date => {
-        this.setState({ date: date })
-        alert("Click OK to confirm", date)
+        const chosen = date.split("T")[0]
+        alert("Click OK to confirm", chosen)
+        this.setState({ date: chosen })
         this.hideDatePicker()
     }
 
     handleConfirmTime = time => {
-        this.setState({ time: time })
-        alert("Click OK to confirm", time)
+        const chosen = time.split("T")[1]
+        alert("Click OK to confirm", chosen)
+        this.setState({ time: chosen })
         this.hideTimePicker()
     }
 

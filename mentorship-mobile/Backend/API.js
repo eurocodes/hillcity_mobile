@@ -4,13 +4,14 @@ import { getScureUserToken } from './Storage';
 // Get token
 // const getToken = async => getScureUserToken("token")
 const getToken = async () => AsyncStorage.getItem("token");
+const baseUrl = "https://hillcityapp.herokuapp.com";
 
 
 // Fetch User Details
 export const fetchUsersMentor = async () => {
     const token = await getToken()
     try {
-        const response = await fetch("http://localhost:3400/api/v1/auth/mentor/dashboard", {
+        const response = await fetch(`${baseUrl}/api/v1/auth/mentor/dashboard`, {
             method: "GET",
             headers: {
                 "content-type": "application/json",
@@ -35,7 +36,7 @@ export const fetchUsersMentor = async () => {
 export const fetchUsersMentee = async () => {
     const token = await getToken()
     try {
-        const response = await fetch("http://localhost:3400/api/v1/auth/mentee/dashboard", {
+        const response = await fetch(`${baseUrl}/api/v1/auth/mentee/dashboard`, {
             method: "GET",
             headers: {
                 "content-type": "application/json",
@@ -54,7 +55,7 @@ export const fetchUsersMentee = async () => {
 export const fetchEngagementsMentor = async () => {
     const token = await getToken()
     try {
-        const response = await fetch("http://localhost:3400/api/v1/get/mentor/engagements", {
+        const response = await fetch(`${baseUrl}/api/v1/get/mentor/engagements`, {
             method: "GET",
             headers: {
                 "content-type": "application/json",
@@ -72,7 +73,7 @@ export const fetchEngagementsMentor = async () => {
 export const fetchEngagementsMentee = async () => {
     const token = await getToken()
     try {
-        const response = await fetch("http://localhost:3400/api/v1/get/mentee/engagements", {
+        const response = await fetch(`${baseUrl}/api/v1/get/mentee/engagements`, {
             method: "GET",
             headers: {
                 "content-type": "application/json",
@@ -90,7 +91,7 @@ export const fetchEngagementsMentee = async () => {
 export const createEngagement = async (engagementType, modeOfEngagement, reasonForEngagement, proposedDate, proposedTime) => {
     const token = await getToken()
     try {
-        const response = await fetch("http://localhost:3400/api/v1/post/engagement/create/new", {
+        const response = await fetch(`${baseUrl}/api/v1/post/engagement/create/new`, {
             method: "POST",
             headers: {
                 "content-type": "application/json",
@@ -109,7 +110,7 @@ export const createEngagement = async (engagementType, modeOfEngagement, reasonF
 export const fetchAcceptEngagement = async (id, comment) => {
     const token = await getToken()
     try {
-        const response = await fetch(`http://localhost:3400/api/v1/update/accepted/engagements/${id}`, {
+        const response = await fetch(`${baseUrl}/api/v1/update/accepted/engagements/${id}`, {
             method: "PUT",
             headers: {
                 "content-type": "application/json",
@@ -128,7 +129,7 @@ export const fetchAcceptEngagement = async (id, comment) => {
 export const fetchRejectEngagement = async (id, comment) => {
     const token = await getToken()
     try {
-        const response = await fetch(`http://localhost:3400/api/v1/update/rejected/engagements/${id}`, {
+        const response = await fetch(`${baseUrl}/api/v1/update/rejected/engagements/${id}`, {
             method: "PUT",
             headers: {
                 "content-type": "application/json",
@@ -169,7 +170,7 @@ export const fectchUploadReport = async (id, file) => {
                 "Authorization": token,
             },
         };
-        await fetch(`http://localhost:3400/api/v1/update/report/engagements/${id}`, options)
+        await fetch(`${baseUrl}/api/v1/update/report/engagements/${id}`, options)
     } catch (err) {
         throw new Error(err)
     }

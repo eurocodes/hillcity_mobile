@@ -73,13 +73,13 @@ class SideBarMenu extends Component {
         const role = await this.getUserRole()
         this.setState({ name, role })
         if (time[0] <= "02" || time[0] > "22") {
-            this.setState({ greeting: "You should be sleeping now", })
+            this.setState({ greeting: "You should be in bed by now", })
             return
         } else if (time[0] <= "11") {
-            this.setState({ greeting: "Good morning", })
+            this.setState({ greeting: "Good morning! Hope you had a great night", })
             return
         } else if (time[0] <= "18") {
-            this.setState({ greeting: "Good day", })
+            this.setState({ greeting: "How's your day going?", })
             return
         }
         this.setState({ greeting: "Good evening", })
@@ -233,7 +233,7 @@ const styles = StyleSheet.create({
         color: 'white',
         alignSelf: 'flex-start',
         paddingHorizontal: 10,
-        fontWeight: 'bold',
+        fontSize: 15,
     },
     profileHeaderLine: {
         height: 1,

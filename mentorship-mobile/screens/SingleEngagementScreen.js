@@ -7,6 +7,8 @@ import { TextInput } from 'react-native-gesture-handler';
 import { fetchAcceptEngagement, fetchRejectEngagement, fectchUploadReport } from '../Backend/API';
 import Loader from '../components/Loader';
 
+const baseUrl = "https://hillcityapp.herokuapp.com";
+
 const { width, height } = Dimensions.get('window');
 const getToken = async () => AsyncStorage.getItem("token");
 const getUserRole = async () => AsyncStorage.getItem("role");
@@ -36,7 +38,7 @@ export default class SingleEngagement extends Component {
         const id = await getEngID()
         console.log("IDD:", id)
         try {
-            const response = await fetch(`http://localhost:3400/api/v1/get/engagements/${id}`, {
+            const response = await fetch(`${baseUrl}/api/v1/get/engagements/${id}`, {
                 method: "GET",
                 headers: {
                     "content-type": "application/json",
@@ -161,10 +163,11 @@ export default class SingleEngagement extends Component {
 
         return this.state.engagement.map((val, index) => {
             return (
-                <ScrollView key={index}>{this.state.loading ? (<View style={styles.loader}><Loader loading={this.state.loading} /></View>) : (<View />)}
+                <ScrollView key={index}>
                     <ScrollView style={styles.mainContainer}>
-                        <View style={{ flex: 1, height, }}>
-                            <View style={{ marginBottom: 2 }}>
+                        {this.state.loading ? (<View style={styles.loader}><Loader loading={this.state.loading} /></View>) : (<View />)}
+                        <View style={{ flex: 1, height, paddingTop: 2 }}>
+                            <View style={{ margin: 2 }}>
                                 <View style={{ alignContent: 'center', justifyContent: 'center', marginVertical: 2, height: '7%', backgroundColor: '#307ecc', }}>
                                     <Text style={{ alignSelf: 'center', color: '#fff', fontSize: 20, fontFamily: 'sans-serif' }}>{val.engagement_type.toUpperCase()}</Text>
                                 </View>
@@ -311,6 +314,7 @@ const styles = StyleSheet.create({
     mainContainer: {
         paddingTop: Constants.statusBarHeight,
         flex: 1,
+        paddingTop: 0.4,
         alignContent: 'center',
         backgroundColor: '#e5e5e5',
         height: '100%',

@@ -8,6 +8,7 @@ import IMG_2 from '../assets/IMG_20.jpg';
 import Loader from '../components/Loader';
 
 const { width, height } = Dimensions.get('window');
+const baseUrl = "https://hillcityapp.herokuapp.com";
 
 export default class SigninScreen extends Component {
 
@@ -24,7 +25,7 @@ export default class SigninScreen extends Component {
     signin = async () => {
 
         if (this.state.email && this.state.password) {
-            const response = await fetch("http://localhost:3400/api/v1/auth/login", {
+            const response = await fetch(`${baseUrl}/api/v1/auth/login`, {
                 method: "POST",
                 headers: { "content-type": "application/json" },
                 body: JSON.stringify({ email: this.state.email, password: this.state.password })

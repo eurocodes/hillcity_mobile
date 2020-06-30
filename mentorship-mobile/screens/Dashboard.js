@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Alert, AsyncStorage, Dimensions, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Alert, AsyncStorage, Dimensions, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Constants from 'expo-constants';
 
 // import { getUserRole } from '../Backend/Storage';
@@ -131,7 +131,8 @@ const styles = StyleSheet.create({
     },
     appTop: {
         flex: 1,
-        margin: 2,
+        marginBottom: 2,
+        paddingTop: 0.2,
         backgroundColor: '#307ecc',
     },
     topText: {
