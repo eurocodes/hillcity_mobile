@@ -201,7 +201,6 @@ export default class NewEngagement extends Component {
 const styles = StyleSheet.create({
     mainContainer: {
         flex: 1,
-        paddingTop: Constants.statusBarHeight,
         alignContent: 'center',
         backgroundColor: '#e5e5e5',
         height: '100%',
@@ -232,11 +231,11 @@ const styles = StyleSheet.create({
         borderColor: 'gray',
         borderWidth: 1,
         paddingRight: 5,
+        height: 100,
         margin: 5,
         borderRadius: 5,
     },
     textArea: {
-        height: 100,
         justifyContent: 'flex-start',
     },
     loader: {

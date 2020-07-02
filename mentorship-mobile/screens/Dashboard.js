@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { Alert, AsyncStorage, Dimensions, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Constants from 'expo-constants';
+import Entypo from '@expo/vector-icons/Entypo';
+// import Icon from 'react-native-vector-icons/FontAwesome';
 
 // import { getUserRole } from '../Backend/Storage';
 import { fetchUsersMentor, fetchUsersMentee } from '../Backend/API';
@@ -17,6 +19,7 @@ export default class Dashboard extends Component {
     }
 
     async componentDidMount() {
+        
         const role = await this.getUserRole()
         console.log("My Role:", role);
 
@@ -74,17 +77,30 @@ export default class Dashboard extends Component {
     }
 
     renderConnection() {
+        
         return this.state.myConnections.map((val, index) => {
             return (
                 <View  key={index}>
                 <View style={{ flexDirection: 'row' }}>
                     <View style={styles.appLowerMap}>
-                        <Text>Name: {`${val.firstName} ${val.lastName}`}</Text>
-                        <Text>Email Address: {val.email}</Text>
-                        <Text>Phone: {val.phone}</Text>
+                        <View style={{flexDirection: 'row'}}>
+                            <Entypo name='v-card' size={20} />
+                        <Text> {`${val.firstName} ${val.lastName}`}</Text>
+                        </View>
+
+                        <View style={{flexDirection: 'row'}}>
+                            <Entypo name='mail' size={20} />
+                        <Text> {val.email}</Text>
+                        </View>
+
+                        <View style={{flexDirection: 'row'}}>
+                            <Entypo name='mobile' size={20} />
+                        <Text> {val.phone}</Text>
+                        </View>
                     </View>
                     <View style={styles.appLowerMapPhoto}>
-                        <Text>Photo: {val.photo}</Text>
+                        <Entypo name='user' size={40} />
+                        {/* <Text>Photo: {val.photo}</Text> */}
                     </View>
                 </View>
                 <View style={styles.connectioDivider} />
@@ -123,7 +139,6 @@ export default class Dashboard extends Component {
 
 const styles = StyleSheet.create({
     mainContainer: {
-        paddingTop: Constants.statusBarHeight,
         height: '100%',
         width: '100%',
         backgroundColor: '#e5e5e5',
@@ -131,8 +146,7 @@ const styles = StyleSheet.create({
     },
     appTop: {
         flex: 1,
-        marginBottom: 2,
-        paddingTop: 0.2,
+        marginVertical: 2,
         backgroundColor: '#307ecc',
     },
     topText: {
@@ -142,8 +156,7 @@ const styles = StyleSheet.create({
         fontFamily: 'sans-serif',
     },
     appMid: {
-        marginTop: 2,
-        backgroundColor: '#b2b2b2',
+        backgroundColor: '#f2f2f2',
         height: 35,
         alignContent: 'center',
         justifyContent: 'center',
@@ -161,14 +174,14 @@ const styles = StyleSheet.create({
         width: '99%',
         margin: 2,
         marginVertical: 2,
-        backgroundColor: '#f8fbfd',
+        backgroundColor: '#807acd',
     },
     appLowerMap: {
         margin: 5,
         width: width * 0.75,
     },
     appLowerMapPhoto: {
-        margin: 5,
+        margin: 2,
         width: width * 0.2,
     },
     button: {

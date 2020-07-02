@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { AsyncStorage, Dimensions, ScrollView, StyleSheet, Text, View, } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import Constants from 'expo-constants';
+import Entypo from '@expo/vector-icons/Entypo';
 
 const { width, height } = Dimensions.get('window');
 import { fetchUsersMentor } from '../Backend/API';
@@ -59,12 +60,24 @@ export default class AdminPanel extends Component {
                     <View style={styles.appLowerMap}>
                         <View style={{ flexDirection: 'row' }}>
                             <View style={styles.menteesMap}>
-                                <Text>Name: {`${val.firstName} ${val.lastName}`}</Text>
-                                <Text>Email Address: {val.email}</Text>
-                                <Text>Phone: {val.phone}</Text>
+                                <View style={{ flexDirection: 'row' }}>
+                                    <Entypo name='v-card' size={20} />
+                                    <Text> {`${val.firstName} ${val.lastName}`}</Text>
+                                </View>
+
+                                <View style={{ flexDirection: 'row' }}>
+                                    <Entypo name='mail' size={20} />
+                                    <Text> {val.email}</Text>
+                                </View>
+
+                                <View style={{ flexDirection: 'row' }}>
+                                    <Entypo name='mobile' size={20} />
+                                    <Text> {val.phone}</Text>
+                                </View>
                             </View>
                             <View style={styles.menteesPhoto}>
-                                <Text>{val.photo}</Text>
+                                <Entypo name='user' size={40} />
+                                {/* <Text>{val.photo}</Text> */}
                             </View>
                         </View>
                     </View>
@@ -119,7 +132,6 @@ export default class AdminPanel extends Component {
 
 const styles = StyleSheet.create({
     mainContainer: {
-        paddingTop: Constants.statusBarHeight,
         height,
         width: '100%',
         backgroundColor: '#e5e5e5'
@@ -157,9 +169,8 @@ const styles = StyleSheet.create({
     },
     midTextContainer: {
         height: 35,
-        backgroundColor: '#b2b2b2',
+        backgroundColor: '#f2f2f2',
         marginHorizontal: 2,
-        marginVertical: 5,
         alignContent: 'center',
         justifyContent: 'center',
         width: '100%',
@@ -175,7 +186,7 @@ const styles = StyleSheet.create({
         marginHorizontal: 2,
         height: '100%',
         width: '99%',
-        backgroundColor: '#f8fbfd',
+        backgroundColor: '#807acd',
     },
     menteesMap: {
         width: width * 0.75,

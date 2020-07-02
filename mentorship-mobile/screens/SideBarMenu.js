@@ -224,8 +224,8 @@ const styles = StyleSheet.create({
     },
     profileHeaderText: {
         color: 'white',
-        alignSelf: 'center',
         paddingHorizontal: 10,
+        marginRight: 2,
         fontSize: 20,
         fontWeight: 'bold',
     },
@@ -233,6 +233,7 @@ const styles = StyleSheet.create({
         color: 'white',
         alignSelf: 'flex-start',
         paddingHorizontal: 10,
+        marginRight: 2,
         fontSize: 15,
     },
     profileHeaderLine: {

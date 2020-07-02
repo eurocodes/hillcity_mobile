@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { Dimensions, Image, ImageBackground, KeyboardAvoidingView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import Constants from 'expo-constants'
-import { setUserToken, setName, setUserRole } from '../Backend/Storage';
+import Feather from '@expo/vector-icons/Feather';
 
+import { setUserToken, setName, setUserRole } from '../Backend/Storage';
 import logo from '../assets/logo.png';
 import IMG_2 from '../assets/IMG_20.jpg';
 import Loader from '../components/Loader';
@@ -71,19 +72,28 @@ export default class SigninScreen extends Component {
                         </View>
                         <View style={{ width: '100%', marginBottom: '5%', marginTop: '40%' }}>
                             {this.state.loading ? (<View style={styles.loader}><Loader loading={this.state.loading} /></View>) : (<View />)}
-                            <TextInput style={styles.inputField}
-                                placeholder='Email Address'
-                                onChangeText={this.handleInput('email')}
-                                value={this.state.email}
-                                autoCapitalize='none' />
+
+                            <View style={styles.inputField}>
+                                <Feather name="user" size={20} color='#fff' />
+                                <TextInput style={styles.inputTextArea}
+                                    placeholder='Email Address'
+                                    onChangeText={this.handleInput('email')}
+                                    value={this.state.email}
+                                    autoCapitalize='none'
+                                    underlineColorAndroid='transparent' />
+                            </View>
                             <Text style={styles.errText}>{this.state.noEmail}</Text>
 
-                            <TextInput style={styles.inputField}
-                                placeholder='Password'
-                                onChangeText={this.handleInput('password')}
-                                value={this.state.password}
-                                autoCapitalize='none'
-                                secureTextEntry />
+                            <View style={styles.inputField}>
+                                <Feather name="key" size={20} color='#fff' />
+                                <TextInput style={styles.inputTextArea}
+                                    placeholder='Password'
+                                    onChangeText={this.handleInput('password')}
+                                    value={this.state.password}
+                                    autoCapitalize='none'
+                                    secureTextEntry
+                                    underlineColorAndroid='transparent' />
+                            </View>
                             <Text style={styles.errText}>{this.state.noPassword}</Text>
 
                             <TouchableOpacity style={styles.button} onPress={this.signin} >
@@ -115,7 +125,6 @@ const styles = StyleSheet.create({
     },
     inputField: {
         height: 35,
-        color: '#fff',
         borderColor: '#fff',
         borderWidth: 2,
         borderRadius: 20,
@@ -123,6 +132,12 @@ const styles = StyleSheet.create({
         marginBottom: 0,
         paddingLeft: 15,
         marginHorizontal: 10,
+        flexDirection: 'row',
+    },
+    inputTextArea: {
+        color: '#fff',
+        width: '100%',
+        paddingLeft: 10,
     },
     button: {
         backgroundColor: '#2859b8',

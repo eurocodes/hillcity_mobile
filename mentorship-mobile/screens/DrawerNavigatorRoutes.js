@@ -20,7 +20,7 @@ const DashBoardStack = createStackNavigator({
     DashBoard: {
         screen: DashBoard,
         navigationOptions: ({ navigation }) => ({
-            title: 'My Dash Board',
+            title: `My Dashboard`,
             headerLeft: () => <NavigationDrawerHeader navigationProps={navigation} />,
             headerStyle: {
                 backgroundColor: '#307ecc',
@@ -35,7 +35,7 @@ const ManageEngagementsStack = createStackNavigator({
     ManageEngagements: {
         screen: ManageEngagementsScreen,
         navigationOptions: {
-            header: null,
+            headerShown: false,
         }
 
     },
@@ -45,7 +45,7 @@ const ManageMentorsStack = createStackNavigator({
     ManageMentors: {
         screen: ManageMentorsScreen,
         navigationOptions: {
-            header: null,
+            headerShown: false,
         }
 
     },
@@ -55,7 +55,7 @@ const ManageMenteesStack = createStackNavigator({
     ManageMentees: {
         screen: ManageMenteesScreen,
         navigationOptions: {
-            header: null,
+            headerShown: false,
         }
 
     },
@@ -113,7 +113,7 @@ const EngagementsStack = createStackNavigator({
     Engagements: {
         screen: Engagements,
         navigationOptions: {
-            header: null,
+            headerShown: false,
         }
 
     },
@@ -123,7 +123,7 @@ const SingleEngagementStack = createStackNavigator({
     SingleEngagement: {
         screen: SingleEngagement,
         navigationOptions: {
-            header: null,
+            headerShown: false,
         }
 
     }
@@ -133,7 +133,7 @@ const NewEngagementStack = createStackNavigator({
     SingleEngagement: {
         screen: NewEngagement,
         navigationOptions: {
-            header: null,
+            headerShown: false,
         }
 
     }
