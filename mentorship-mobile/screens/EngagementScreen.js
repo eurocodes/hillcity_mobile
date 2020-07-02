@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { Alert, AsyncStorage, Dimensions, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Constants from 'expo-constants'
+import Entypo from '@expo/vector-icons/Entypo';
+// import Entypo from 'react-native-vector-icons/Entypo';
 
 import { setEngID } from '../Backend/Storage';
 import { fetchEngagementsMentor, fetchEngagementsMentee } from '../Backend/API';
@@ -37,16 +39,13 @@ export default class EngagementScreen extends Component {
         this.setState({ loading: true })
         try {
             const results = await fetchEngagementsMentor()
-            console.log("Mentor Result:", results)
             if (results[0]) {
                 this.setState({ engagements: results, role: "mentor" })
                 this.setState({ loading: false })
-                console.log("STATE:", this.state)
                 return
             } else {
                 this.setState({ engagements: "You don't have any engagements", role: "mentor" })
                 this.setState({ loading: false })
-                console.log("STATE:", this.state)
             }
         } catch (err) {
             this.setState({ loading: false })
@@ -59,16 +58,13 @@ export default class EngagementScreen extends Component {
         this.setState({ loading: true })
         try {
             const results = await fetchEngagementsMentee()
-            console.log("Mentor Result:", results)
             if (results[0]) {
                 this.setState({ engagements: results, role: "mentee" })
                 this.setState({ loading: false })
-                console.log("STATE:", this.state)
                 return
             } else {
                 this.setState({ engagements: "You don't have any engagements", role: "mentee" })
                 this.setState({ loading: false })
-                console.log("STATE:", this.state)
             }
 
         } catch (err) {
@@ -88,9 +84,10 @@ export default class EngagementScreen extends Component {
         return this.state.engagements.map((val, index) => {
             return (
                 <View key={val.engagement_ID}>
-                    <View style={{ flexDirection: 'row' }}>
-                        <View style={{ height: '30%', width: '12%', backgroundColor: '#4d5870', borderRadius: 30, marginLeft: 5, alignSelf: 'center', }}>
-                            <Text style={{ height: 40, width: 75 }}>{val.photo}</Text>
+                    <View style={{ flexDirection: 'row', backgroundColor: '#807acd' }}>
+                        <View style={{ height: '30%', width: '12%', marginLeft: 5, alignSelf: 'center', }}>
+                            {/* <Text style={{ height: 40, width: 75 }}>{val.photo}</Text> */}
+                            <Entypo name='user' size={40} />
                         </View>
                         <View style={styles.mapContainerMentor}>
                             <Text style={{ marginLeft: 8 }}>{`${val.First_Name} ${val.Last_Name}`}</Text>
@@ -111,30 +108,45 @@ export default class EngagementScreen extends Component {
     }
 
     renderMenteeEngagements() {
-        if (this.state.engagements === "You don't have any engagements") {
-            return (
-                <View style={styles.mapContainerMentor}>
-                    <Text>{this.state.engagements}</Text>
-                </View>
-            )
-        }
-        return this.state.engagements.map((val, index) => {
-            return (
-                <View style={styles.mapContainerMentee} key={val.engagement_ID}>
-                    <View style={{ margin: 5 }}>
-                        <Text>{val.engagement_type}</Text>
-                        <Text>{val.reason_for_engagement}</Text>
-                        <Text>{val.status}</Text>
-                        <Text>{val.proposed_date}</Text>
-                    </View>
-                    <TouchableOpacity style={{ margin: 5, width: '25%', }} onPress={() => this.props.navigation.navigate("SingleEngagement", setEngID(val.engagement_ID))}>
-                        <Text style={{ color: "#03396c" }}>VIEW DETAILS</Text>
-                    </TouchableOpacity>
-                    <View style={styles.engagementBottomLine} />
-                </View>
-            )
-        })
 
+        return (
+            <View>
+                <TouchableOpacity
+                    style={{
+                        alignSelf: 'flex-end',
+                        marginHorizontal: 30,
+                        marginVertical: 10,
+                        borderRadius: 10,
+                        backgroundColor: '#011f4b'
+                    }}
+                    onPress={() => this.props.navigation.navigate("NewEngagement")}>
+                    <Text style={{ fontSize: 15, padding: 5, color: "#e9eaec" }}>Start New Engagement</Text>
+                </TouchableOpacity>
+                {this.state.engagements === "You don't have any engagements" ?
+                    (
+                        <View style={styles.mapContainerMentor}>
+                            <Text>{this.state.engagements}</Text>
+                        </View>
+                    ) :
+                    this.state.engagements.map((val, index) => {
+                        return (
+                            <View style={styles.mapContainerMentee} key={val.engagement_ID}>
+                                <View style={{ margin: 5 }}>
+                                    <Text>{val.engagement_type}</Text>
+                                    <Text>{val.reason_for_engagement}</Text>
+                                    <Text>{val.status}</Text>
+                                    <Text>{val.proposed_date}</Text>
+                                </View>
+                                <TouchableOpacity style={{ margin: 5, width: '25%', }} onPress={() => this.props.navigation.navigate("SingleEngagement", setEngID(val.engagement_ID))}>
+                                    <Text style={{ color: "#03396c" }}>VIEW DETAILS</Text>
+                                </TouchableOpacity>
+                                <View style={styles.engagementBottomLine} />
+                            </View>
+                        )
+                    })
+                }
+            </View>
+        )
     }
 
     render() {
@@ -144,17 +156,6 @@ export default class EngagementScreen extends Component {
                 {this.state.role === "mentor" ? (<View>{this.renderMentorEngagements()}</View>) :
                     (
                         <View>
-                            <TouchableOpacity
-                                style={{
-                                    alignSelf: 'flex-end',
-                                    marginHorizontal: 30,
-                                    marginVertical: 10,
-                                    borderRadius: 10,
-                                    backgroundColor: '#011f4b'
-                                }}
-                                onPress={() => this.props.navigation.navigate("NewEngagement")}>
-                                <Text style={{ fontSize: 15, padding: 5, color: "#e9eaec" }}>Start New Engagement</Text>
-                            </TouchableOpacity>
                             {this.state.loading ? (<View style={styles.loader}><Loader loading={this.state.loading} /></View>) : (<View />)}
                             <View>{this.renderMenteeEngagements()}</View>
                         </View>
@@ -167,7 +168,6 @@ export default class EngagementScreen extends Component {
 const styles = StyleSheet.create({
     mainContainer: {
         flex: 1,
-        paddingTop: Constants.statusBarHeight,
         alignContent: 'center',
         backgroundColor: '#eee',
     },

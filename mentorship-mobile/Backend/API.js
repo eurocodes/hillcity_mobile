@@ -21,11 +21,9 @@ export const fetchUsersMentor = async () => {
 
         if (response.ok) {
             const { data } = await response.json()
-            console.log(data)
             return data
         } else {
             const { message } = await response.json()
-            console.log(message)
             return message
         }
     } catch (err) {
@@ -44,7 +42,6 @@ export const fetchUsersMentee = async () => {
             }
         })
         const { data } = await response.json()
-        console.log(data)
         return data
     } catch (err) {
         throw new Error(err);
@@ -63,7 +60,6 @@ export const fetchEngagementsMentor = async () => {
             }
         })
         const { data } = await response.json()
-        console.log(data)
         return data
     } catch (err) {
         throw new Error(err);
@@ -81,7 +77,6 @@ export const fetchEngagementsMentee = async () => {
             }
         })
         const { data } = await response.json()
-        console.log(data)
         return data
     } catch (err) {
         throw new Error(err);
@@ -100,7 +95,6 @@ export const createEngagement = async (engagementType, modeOfEngagement, reasonF
             body: JSON.stringify({ engagementType, modeOfEngagement, reasonForEngagement, proposedDate, proposedTime })
         })
         const { data } = await response.json()
-        console.log(data)
         return data
     } catch (err) {
         throw new Error(err);
@@ -119,7 +113,6 @@ export const fetchAcceptEngagement = async (id, comment) => {
             body: JSON.stringify({ comment })
         })
         const { data } = await response.json()
-        console.log(data)
         return data
     } catch (err) {
         throw new Error(err);
@@ -138,7 +131,6 @@ export const fetchRejectEngagement = async (id, comment) => {
             body: JSON.stringify({ comment })
         })
         const { data } = await response.json()
-        console.log(data)
         return data
     } catch (err) {
         throw new Error(err);

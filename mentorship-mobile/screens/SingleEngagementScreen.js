@@ -46,9 +46,7 @@ export default class SingleEngagement extends Component {
                 }
             })
             const { data } = await response.json()
-            console.log(data)
             this.setState({ engagement: data, role, loading: false })
-            console.log("Single Engagement State:", this.state)
             return data
         } catch (err) {
             this.setState({ loading: false })
@@ -64,7 +62,6 @@ export default class SingleEngagement extends Component {
         console.log("Confirm ID:", id)
         try {
             const response = await fetchAcceptEngagement(id, this.state.comment)
-            console.log("Accept response:", response)
             this.fetchSingleEngagement(id)
         } catch (err) {
             console.log(err)
@@ -80,7 +77,6 @@ export default class SingleEngagement extends Component {
         console.log("Confirm ID:", id)
         try {
             const response = await fetchRejectEngagement(id, this.state.comment)
-            console.log("Accept response:", response)
             this.fetchSingleEngagement(id)
         } catch (err) {
             console.log(err)
@@ -163,12 +159,12 @@ export default class SingleEngagement extends Component {
 
         return this.state.engagement.map((val, index) => {
             return (
-                <ScrollView key={index}>
+                <ScrollView key={index} style={{ flex: 1, height: '100%' }}>
                     <ScrollView style={styles.mainContainer}>
                         {this.state.loading ? (<View style={styles.loader}><Loader loading={this.state.loading} /></View>) : (<View />)}
-                        <View style={{ flex: 1, height, paddingTop: 2 }}>
+                        <View style={{ flex: 1, paddingTop: 2 }}>
                             <View style={{ margin: 2 }}>
-                                <View style={{ alignContent: 'center', justifyContent: 'center', marginVertical: 2, height: '7%', backgroundColor: '#307ecc', }}>
+                                <View style={{ alignContent: 'center', justifyContent: 'center', marginVertical: 2, height: 'auto', backgroundColor: '#307ecc', }}>
                                     <Text style={{ alignSelf: 'center', color: '#fff', fontSize: 20, fontFamily: 'sans-serif' }}>{val.engagement_type.toUpperCase()}</Text>
                                 </View>
 
@@ -285,13 +281,13 @@ export default class SingleEngagement extends Component {
                                             multiline={true}
                                         />
                                     </View>
-                                    <View style={{ flexDirection: 'row', backgroundColor: '#f2f2f2', }}>
+                                    <View style={{ flexDirection: 'row', backgroundColor: '#f2f2f2', alignContent: 'center', justifyContent: 'center' }}>
                                         <TouchableOpacity onPress={this.acceptEngagement}
-                                            style={{ margin: 5, backgroundColor: '#307ecc', width: '20%' }} >
+                                            style={{ margin: 5, backgroundColor: '#307ecc', width: '40%' }} >
                                             <Text style={{ fontSize: 15, color: "#fff", margin: 2, alignSelf: 'center' }}>Accept</Text>
                                         </TouchableOpacity>
                                         <TouchableOpacity onPress={this.rejectEngagement}
-                                            style={{ margin: 5, backgroundColor: 'red', width: '20%', }} >
+                                            style={{ margin: 5, backgroundColor: 'red', width: '40%', }} >
                                             <Text style={{ fontSize: 15, color: "#fff", margin: 2, alignSelf: 'center' }}>Reject</Text>
                                         </TouchableOpacity>
                                     </View>
@@ -312,9 +308,6 @@ export default class SingleEngagement extends Component {
 
 const styles = StyleSheet.create({
     mainContainer: {
-        paddingTop: Constants.statusBarHeight,
-        flex: 1,
-        paddingTop: 0.4,
         alignContent: 'center',
         backgroundColor: '#e5e5e5',
         height: '100%',
@@ -323,7 +316,6 @@ const styles = StyleSheet.create({
         margin: 2,
         flexDirection: 'row',
         backgroundColor: '#f2f2f2',
-        height: 'auto',
     },
     mapNameDetails: {
         margin: 2,
@@ -342,7 +334,6 @@ const styles = StyleSheet.create({
         backgroundColor: '#f2f2f2',
     },
     textArea: {
-        height: 75,
         width: '60%',
         justifyContent: 'flex-start',
     },
