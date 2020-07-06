@@ -1,4 +1,5 @@
 import React from 'react';
+import { Image } from 'react-native';
 
 //Import Navigators
 import { createStackNavigator } from 'react-navigation-stack';
@@ -6,8 +7,8 @@ import { createDrawerNavigator } from 'react-navigation-drawer';
 
 //Import External Screens
 import SideBarMenu from './SideBarMenu';
-import DashBoard from './Dashboard';
-import Engagements from './EngagementScreen';
+import DashBoardScreen from './Dashboard';
+import UserDetailsScreen from './UserDetailsScreen';
 import NavigationDrawerHeader from '../components/NavigationDrawerHeader';
 import SingleEngagement from './SingleEngagementScreen';
 import NewEngagement from './NewEngagementScreen';
@@ -15,13 +16,81 @@ import AdminPanel from './AdminPanelScreen';
 import ManageEngagementsScreen from '../screensAdmin/ManageEngagementsScreen';
 import ManageMentorsScreen from '../screensAdmin/ManageMentorsScreen';
 import ManageMenteesScreen from '../screensAdmin/ManageMenteesScreen';
+import ModifyAcceptEngagement from './ModifyAcceptEng';
+
+import logo from '../assets/logo.png';
+
+const SingleEngagementStack = createStackNavigator({
+    SingleEngagement: {
+        screen: SingleEngagement,
+        navigationOptions: {
+            headerShown: false,
+        }
+
+    }
+});
+
+const NewEngagementStack = createStackNavigator({
+    NewEngagement: {
+        screen: NewEngagement,
+        navigationOptions: {
+            headerShown: false,
+        }
+
+    }
+});
+
+const ModifyAcceptEngagementStack = createStackNavigator({
+    ModifyAccept: {
+        screen: ModifyAcceptEngagement,
+        navigationOptions: {
+            headerShown: false,
+        }
+
+    }
+});
 
 const DashBoardStack = createStackNavigator({
     DashBoard: {
-        screen: DashBoard,
+        screen: DashBoardScreen,
         navigationOptions: ({ navigation }) => ({
-            title: `My Dashboard`,
+            title: 'My Engagements',
             headerLeft: () => <NavigationDrawerHeader navigationProps={navigation} />,
+            headerRight: () => <Image style={{ width: 80, height: 50 }}
+                source={logo} />,
+            headerStyle: {
+                backgroundColor: '#fff',
+            },
+            headerTintColor: '#000',
+            headerTitleAlign: 'center',
+        }),
+    },
+    SingleEngagement: {
+        screen: SingleEngagementStack,
+        navigationOptions: ({ navigation }) => ({
+            title: 'Engagement',
+            headerStyle: {
+                backgroundColor: '#307ecc',
+            },
+            headerTintColor: '#fff',
+            headerTitleAlign: 'center',
+        }),
+    },
+    NewEngagement: {
+        screen: NewEngagementStack,
+        navigationOptions: ({ navigation }) => ({
+            title: 'Start New Engagement',
+            headerStyle: {
+                backgroundColor: '#307ecc',
+            },
+            headerTintColor: '#fff',
+            headerTitleAlign: 'center',
+        }),
+    },
+    ModifyAccept: {
+        screen: ModifyAcceptEngagementStack,
+        navigationOptions: ({ navigation }) => ({
+            title: 'Modify Engagement',
             headerStyle: {
                 backgroundColor: '#307ecc',
             },
@@ -67,6 +136,19 @@ const AdminDasboardStack = createStackNavigator({
         navigationOptions: ({ navigation }) => ({
             title: "Admin Dashboard",
             headerLeft: () => <NavigationDrawerHeader navigationProps={navigation} />,
+            headerRight: () => <Image style={{ width: 80, height: 50 }}
+                source={logo} />,
+            headerStyle: {
+                backgroundColor: '#fff',
+            },
+            headerTintColor: '#000',
+            headerTitleAlign: 'center',
+        }),
+    },
+    SingleEngagement: {
+        screen: SingleEngagementStack,
+        navigationOptions: ({ navigation }) => ({
+            title: 'Engagement',
             headerStyle: {
                 backgroundColor: '#307ecc',
             },
@@ -109,9 +191,9 @@ const AdminDasboardStack = createStackNavigator({
     },
 })
 
-const EngagementsStack = createStackNavigator({
-    Engagements: {
-        screen: Engagements,
+const ProfileStack = createStackNavigator({
+    UserDetails: {
+        screen: UserDetailsScreen,
         navigationOptions: {
             headerShown: false,
         }
@@ -119,58 +201,18 @@ const EngagementsStack = createStackNavigator({
     },
 });
 
-const SingleEngagementStack = createStackNavigator({
-    SingleEngagement: {
-        screen: SingleEngagement,
-        navigationOptions: {
-            headerShown: false,
-        }
-
-    }
-});
-
-const NewEngagementStack = createStackNavigator({
-    SingleEngagement: {
-        screen: NewEngagement,
-        navigationOptions: {
-            headerShown: false,
-        }
-
-    }
-});
-
-const EngagementsNavigatorStack = createStackNavigator({
-    Engagements: {
-        screen: EngagementsStack,
+const ProfileNavigatorStack = createStackNavigator({
+    Profile: {
+        screen: ProfileStack,
         navigationOptions: ({ navigation }) => ({
-            title: 'My Engagements',
+            title: 'Profile',
             headerLeft: () => <NavigationDrawerHeader navigationProps={navigation} />,
+            headerRight: () => <Image style={{ width: 80, height: 50 }}
+                source={logo} />,
             headerStyle: {
-                backgroundColor: '#307ecc',
+                backgroundColor: '#fff',
             },
-            headerTintColor: '#fff',
-            headerTitleAlign: 'center',
-        }),
-    },
-    SingleEngagement: {
-        screen: SingleEngagementStack,
-        navigationOptions: ({ navigation }) => ({
-            title: 'Engagement',
-            headerStyle: {
-                backgroundColor: '#307ecc',
-            },
-            headerTintColor: '#fff',
-            headerTitleAlign: 'center',
-        }),
-    },
-    NewEngagement: {
-        screen: NewEngagementStack,
-        navigationOptions: ({ navigation }) => ({
-            title: 'Start New Engagement',
-            headerStyle: {
-                backgroundColor: '#307ecc',
-            },
-            headerTintColor: '#fff',
+            headerTintColor: '#000',
             headerTitleAlign: 'center',
         }),
     },
@@ -183,7 +225,7 @@ const DrawerNavigatorRoutes = createDrawerNavigator({
             drawerLabel: 'DashBoard',
         },
     },
-    Engage: EngagementsNavigatorStack,
+    Profile: ProfileNavigatorStack,
 },
     {
         contentComponent: SideBarMenu,
@@ -200,7 +242,7 @@ const AdminDrawerNavigatorRoutes = createDrawerNavigator({
             drawerLabel: 'Admin DashBoard',
         },
     },
-    Engage: EngagementsNavigatorStack,
+    Profile: ProfileNavigatorStack,
 },
     {
         contentComponent: SideBarMenu,

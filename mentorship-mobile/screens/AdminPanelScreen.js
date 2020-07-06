@@ -4,8 +4,9 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import Constants from 'expo-constants';
 import Entypo from '@expo/vector-icons/Entypo';
 
+import { setEngID } from '../Backend/Storage';
 const { width, height } = Dimensions.get('window');
-import { fetchUsersMentor } from '../Backend/API';
+import { fetchEngagementsMentor } from '../Backend/API';
 import Loader from '../components/Loader';
 
 const getUserName = async () => AsyncStorage.getItem("name")
@@ -13,8 +14,8 @@ const getUserName = async () => AsyncStorage.getItem("name")
 export default class AdminPanel extends Component {
 
     state = {
-        name: '',
-        mentees: [],
+        engagements: [],
+        role: "",
         loading: false,
     }
 
@@ -28,60 +29,50 @@ export default class AdminPanel extends Component {
     getAdminDashboard = async () => {
         this.setState({ loading: true })
         try {
-            const results = await fetchUsersMentor()
-            if (results.myConnections) {
-                this.setState({ mentees: results.myConnections, })
+            const results = await fetchEngagementsMentor()
+            if (results[0]) {
+                this.setState({ engagements: results, role: "mentor" })
                 this.setState({ loading: false })
-                console.log("STATE:", this.state)
                 return
+            } else {
+                this.setState({ engagements: "You don't have any engagements", role: "mentor" })
+                this.setState({ loading: false })
             }
-            this.setState({ mentees: [results], loading: false })
-            console.log("STATE Ugee:", this.state)
-            return
-
         } catch (err) {
-            console.log(err)
             this.setState({ loading: false })
+            console.log(err)
             return
         }
     }
 
-    renderMentees() {
-        return this.state.mentees.map((val, index) => {
-            if (!val.firstName) {
-                return (
-                    <View>
-                        <Text>{val}</Text>
-                    </View>
-                )
-            }
+    renderEngagements() {
+        if (this.state.engagements === "You don't have any engagements") {
             return (
-                <View key={index} >
-                    <View style={styles.appLowerMap}>
-                        <View style={{ flexDirection: 'row' }}>
-                            <View style={styles.menteesMap}>
-                                <View style={{ flexDirection: 'row' }}>
-                                    <Entypo name='v-card' size={20} />
-                                    <Text> {`${val.firstName} ${val.lastName}`}</Text>
-                                </View>
-
-                                <View style={{ flexDirection: 'row' }}>
-                                    <Entypo name='mail' size={20} />
-                                    <Text> {val.email}</Text>
-                                </View>
-
-                                <View style={{ flexDirection: 'row' }}>
-                                    <Entypo name='mobile' size={20} />
-                                    <Text> {val.phone}</Text>
-                                </View>
-                            </View>
-                            <View style={styles.menteesPhoto}>
-                                <Entypo name='user' size={40} />
-                                {/* <Text>{val.photo}</Text> */}
-                            </View>
+                <View style={styles.mapContainerMentor}>
+                    <Text>{this.state.engagements}</Text>
+                </View>
+            )
+        }
+        return this.state.engagements.map((val, index) => {
+            return (
+                <View key={val.engagement_ID}>
+                    <View style={{ flexDirection: 'row', backgroundColor: '#aaa' }}>
+                        <View style={{ height: '30%', width: '12%', marginLeft: 5, alignSelf: 'center', }}>
+                            {/* <Text style={{ height: 40, width: 75 }}>{val.photo}</Text> */}
+                            <Entypo name='user' size={40} />
+                        </View>
+                        <View style={styles.mapContainerMentor}>
+                            <Text style={{ marginLeft: 8 }}>{`${val.First_Name} ${val.Last_Name}`}</Text>
+                            <Text style={{ marginLeft: 8 }}>Engagement Type: {val.engagement_type}</Text>
+                            <Text style={{ marginLeft: 8 }}>Reason for Engagement: {`${val.reason_for_engagement.slice(0, 20)}...`}</Text>
+                            <Text style={{ marginLeft: 8 }}>Status: {val.status}</Text>
+                            <Text style={{ marginLeft: 8 }}>Proposed date & time: {`${val.proposed_date} at ${val.proposed_time}`}</Text>
+                            <TouchableOpacity style={{ marginLeft: 8, width: '25%', }} onPress={() => this.props.navigation.navigate("SingleEngagement", setEngID(val.engagement_ID))}>
+                                <Text style={{ color: "#03396c" }}>VIEW DETAILS</Text>
+                            </TouchableOpacity>
                         </View>
                     </View>
-                    <View style={styles.connectionDivider} />
+                    <View style={styles.engagementBottomLine} />
                 </View>
             )
         })
@@ -91,13 +82,6 @@ export default class AdminPanel extends Component {
         return (
             <View style={{ flex: 1, height, }}>
                 <ScrollView style={styles.mainContainer}>
-                    <View style={styles.topDesc}>
-                        <Text style={styles.topDescText}>{this.state.name}, </Text>
-                        <Text style={styles.topDescText}>Welcome to Admin dashboard, you can manage people and other activities from here</Text>
-                    </View>
-
-                    <View />
-
                     <View >
                         <TouchableOpacity onPress={() => this.props.navigation.navigate("ManageEngagements")} style={styles.buttonContainer}>
                             <Text style={styles.buttonText}>Manage Engagements</Text>
@@ -105,24 +89,24 @@ export default class AdminPanel extends Component {
                     </View>
 
                     <View style={styles.bothButtonContainer}>
-                        <View style={{ width: '50%' }}>
+                        <View style={{ width: '50%', marginRight: 2 }}>
                             <TouchableOpacity onPress={() => this.props.navigation.navigate("ManageMentors")} style={styles.buttonContainer}>
                                 <Text style={styles.buttonText}>Manage Mentors</Text>
                             </TouchableOpacity>
                         </View>
-                        <View style={{ width: '50%' }}>
+                        <View style={{ width: '50%', marginLeft: 2 }}>
                             <TouchableOpacity onPress={() => this.props.navigation.navigate("ManageMentees")} style={styles.buttonContainer}>
                                 <Text style={styles.buttonText}>Manage Mentees</Text>
                             </TouchableOpacity>
                         </View>
                     </View>
                     <View style={styles.midTextContainer}>
-                        <Text style={styles.midText}>My Mentees</Text>
+                        <Text style={styles.midText}>My Engagements</Text>
                     </View>
 
-                    <View style={styles.mentees}>
+                    <View >
                         {this.state.loading ? (<View style={styles.loader}><Loader loading={this.state.loading} /></View>) : (<View />)}
-                        {this.renderMentees()}
+                        {this.renderEngagements()}
                     </View>
                 </ScrollView>
             </View>
@@ -136,21 +120,10 @@ const styles = StyleSheet.create({
         width: '100%',
         backgroundColor: '#e5e5e5'
     },
-    topDesc: {
-        alignContent: 'flex-start',
-        margin: 2,
-        backgroundColor: '#307ecc',
-        height: 'auto',
-    },
-    topDescText: {
-        fontFamily: 'sans-serif',
-        fontSize: 20,
-        color: '#fff',
-        margin: 2,
-    },
     bothButtonContainer: {
         flexDirection: 'row',
-        width,
+        marginHorizontal: 2,
+        width: '100%',
     },
     buttonContainer: {
         alignItems: 'center',
@@ -176,38 +149,26 @@ const styles = StyleSheet.create({
         width: '100%',
     },
     midText: {
-        fontSize: 15,
+        fontSize: 20,
+        fontWeight: '600',
         alignSelf: 'center',
-        color: '#307ecc',
-    },
-    mentees: {
-        alignContent: 'flex-start',
-        marginVertical: 5,
-        marginHorizontal: 2,
-        height: '100%',
-        width: '99%',
-        backgroundColor: '#807acd',
-    },
-    menteesMap: {
-        width: width * 0.75,
-    },
-    menteesPhoto: {
-        width: width * 0.2,
-    },
-    appLowerMap: {
-        margin: 5,
-        width: '50%',
-    },
-    connectionDivider: {
-        height: 1,
-        width: '100%',
-        marginLeft: 5,
-        backgroundColor: '#e2e2e2',
-        marginTop: 2,
-        marginBottom: 2,
+        color: '#000',
     },
     loader: {
         alignContent: 'center',
         alignSelf: 'center',
+    },
+
+    mapContainerMentor: {
+        flex: 1,
+        alignSelf: 'flex-start',
+        height: 'auto',
+        width: '98%',
+        backgroundColor: '#f2f2f2',
+        margin: 2,
+    },
+    engagementBottomLine: {
+        height: 2,
+        backgroundColor: '#e2e2e2',
     },
 })

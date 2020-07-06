@@ -11,8 +11,8 @@ const itemsMentor = [
         screenToNavigate: "DashBoard",
     },
     {
-        navOptionName: 'My Engagements',
-        screenToNavigate: 'Engagements',
+        navOptionName: 'My Mentees',
+        screenToNavigate: 'Profile',
     },
     {
         navOptionName: 'Logout',
@@ -30,8 +30,8 @@ const itemsMentee = [
         screenToNavigate: "DashBoard",
     },
     {
-        navOptionName: 'My Engagements',
-        screenToNavigate: 'Engagements',
+        navOptionName: 'My Mentor',
+        screenToNavigate: 'Profile',
     },
     {
         navOptionName: 'Start New Engagement',
@@ -92,11 +92,9 @@ class SideBarMenu extends Component {
 
     handleClick = (index, screenToNavigate) => {
         if (screenToNavigate === "logout") {
-            AsyncStorage.clear();
-            this.props.navigation.navigate("Signin")
-            // this.props.navigation.toggleDrawer();
-            Alert.alert(
-                "Logout",
+            this.props.navigation.toggleDrawer();
+            alert(
+                "Logged out",
                 "Are you sure?", "You want to logout?",
                 [
                     {
@@ -116,6 +114,8 @@ class SideBarMenu extends Component {
                 ],
                 { cancelable: false }
             );
+            AsyncStorage.clear();
+            this.props.navigation.navigate("Signin")
         } else {
             this.props.navigation.toggleDrawer();
             global.currentScreenIndex = screenToNavigate;
@@ -130,7 +130,7 @@ class SideBarMenu extends Component {
             <View style={styles.sideMenuContainer}>
                 <View style={styles.profileHeader}>
                     <View style={styles.profileHeaderPicCircle}>
-                        <Text style={{ fontSize: 25, color: '#307ecc' }}>
+                        <Text style={{ fontSize: 25, color: 'gray' }}>
                             {this.state.name.charAt(0)}
                         </Text>
                     </View>
@@ -150,8 +150,8 @@ class SideBarMenu extends Component {
                                     marginLeft: 12,
                                     backgroundColor:
                                         global.currentScreenIndex === item.screenToNavigate
-                                            ? '#4b9ff2'
-                                            : '#307ecc',
+                                            ? '#aaa'
+                                            : 'gray',
                                 }}
                                 key={key}
                                 onStartShouldSetResponder={() =>
@@ -181,8 +181,8 @@ class SideBarMenu extends Component {
                                         marginLeft: 12,
                                         backgroundColor:
                                             global.currentScreenIndex === item.screenToNavigate
-                                                ? '#4b9ff2'
-                                                : '#307ecc',
+                                                ? '#aaa'
+                                                : 'gray',
                                     }}
                                     key={key}
                                     onStartShouldSetResponder={() =>
@@ -206,12 +206,12 @@ const styles = StyleSheet.create({
     sideMenuContainer: {
         width: '100%',
         height: '100%',
-        backgroundColor: '#307ecc',
+        backgroundColor: 'gray',
         paddingTop: 20,
     },
     profileHeader: {
         flexDirection: 'row',
-        backgroundColor: '#307ecc',
+        backgroundColor: 'gray',
         padding: 5,
     },
     profileHeaderPicCircle: {
