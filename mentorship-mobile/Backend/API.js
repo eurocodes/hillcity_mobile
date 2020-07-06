@@ -119,16 +119,16 @@ export const fetchAcceptEngagement = async (id, comment) => {
     }
 }
 
-export const fetchRejectEngagement = async (id, comment) => {
+export const fetchModifyAcceptEngagement = async (id, date, time, comment) => {
     const token = await getToken()
     try {
-        const response = await fetch(`${baseUrl}/api/v1/update/rejected/engagements/${id}`, {
+        const response = await fetch(`${baseUrl}/api/v1/update/modify-accept/engagements/${id}`, {
             method: "PUT",
             headers: {
                 "content-type": "application/json",
                 "Authorization": token
             },
-            body: JSON.stringify({ comment })
+            body: JSON.stringify({ proposedDate: date, proposedTime: time, comment: comment })
         })
         const { data } = await response.json()
         return data

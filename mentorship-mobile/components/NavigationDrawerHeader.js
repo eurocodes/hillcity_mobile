@@ -1,6 +1,6 @@
 import React from 'react';
 import { Image, View, TouchableOpacity } from 'react-native';
-import drawer from '../assets/drawerWhite.png';
+import Entypo from '@expo/vector-icons/Entypo';
 
 const NavigationDrawerHeader = props => {
     const toggleDrawer = () => {
@@ -10,9 +10,8 @@ const NavigationDrawerHeader = props => {
     return (
         <View style={{ flexDirection: 'row' }}>
             <TouchableOpacity onPress={toggleDrawer}>
-                <Image
-                    source={drawer}
-                    style={{ width: 20, height: 25, marginLeft: 5, }}
+                <Entypo
+                    name='menu' size={40}
                 />
             </TouchableOpacity>
         </View>

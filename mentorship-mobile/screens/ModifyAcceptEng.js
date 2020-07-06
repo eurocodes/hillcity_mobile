@@ -1,37 +1,19 @@
 import React, { Component, useState } from 'react';
 import { AsyncStorage, Button, Dimensions, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
-import { Dropdown } from 'react-native-material-dropdown';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import Constants from 'expo-constants';
 
-import { createEngagement } from '../Backend/API';
+import { fetchModifyAcceptEngagement } from '../Backend/API';
 import Loader from '../components/Loader';
 
-let engagementType = [{
-    value: "GENERAL WELL BEING",
-}, {
-    value: "LIFE GOAL AND VISION",
-}, {
-    value: "ACADEMICS",
-},
-]
 
-let engagementMode = [{
-    value: "Technology Enabled",
-}, {
-    value: "Face to face",
-}, {
-    value: "Phone call",
-},
-]
+const getEngID = async () => AsyncStorage.getItem("id");
 
-export default class NewEngagement extends Component {
+export default class ModifyAcceptEngagement extends Component {
 
     state = {
-        engagementType: '',
-        reasonForEngagement: '',
-        engagementMode: '',
+        comment: '',
         date: '',
         time: '',
         isDatePickerVisible: false,
@@ -67,16 +49,15 @@ export default class NewEngagement extends Component {
         this.hideTimePicker()
     }
 
-    createNewEngagement = async () => {
+    modifyAcceptEng = async () => {
+        const id = await getEngID()
+        console.log("Confirm ID:", id)
         this.setState({ loading: true })
         try {
-            if (this.state.engagementType !== "" && this.state.engagementMode !== "" &&
-                this.state.reasonForEngagement !== "" && this.state.date !== "" &&
-                this.state.time !== "") {
-                await createEngagement(this.state.engagementType, this.state.engagementMode,
-                    this.state.reasonForEngagement, this.state.date, this.state.time)
+            if (this.state.date !== "" && this.state.time !== "") {
+                await fetchModifyAcceptEngagement(id, this.state.date, this.state.time, this.state.comment)
                 this.setState({ loading: false })
-                this.props.navigation.navigate("Engagements")
+                this.props.navigation.navigate("SingleEngagement")
                 return
             }
             alert("You haven't properly filled all fields")
@@ -96,8 +77,9 @@ export default class NewEngagement extends Component {
         this.setState({ engagementMode: value })
     }
 
-    handleInputText = key => val => {
-        this.setState({ [key]: val })
+    handleInputText = comment => {
+        this.setState({ comment })
+        console.log("Comment:", this.state.comment)
     }
 
     render() {
@@ -105,59 +87,12 @@ export default class NewEngagement extends Component {
             <ScrollView style={styles.mainContainer}>
                 <View>
                     <View style={styles.header}>
-                        <Text style={styles.headerText}>Create a new engagement with your mentor</Text>
-                    </View>
-                    <View style={styles.selectMenu}>
-                        <View>
-                            <Text style={styles.selectMenuText}>Select Engagement type</Text>
-                        </View>
-                        <View>
-                            <Dropdown
-                                data={engagementType}
-                                value={this.state.engagementType}
-                                itemColor={"red"}
-                                useNativeDriver={true}
-                                onChangeText={(value, index, data) => this.setEngagementType(value)}
-                            />
-                        </View>
+                        <Text style={styles.headerText}>Modify And Accept this Engagement</Text>
                     </View>
 
                     <View style={styles.selectMenu}>
                         <View>
-                            <Text style={styles.selectMenuText}>Reason for this Engagement</Text>
-                        </View>
-                        <View style={styles.textAreaContainer}>
-                            <TextInput
-                                style={styles.textArea}
-                                placeholder='In not less than 100 words, why do you need this engagement'
-                                placeholderTextColor='gray'
-                                value={this.state.reasonForEngagement}
-                                onChangeText={this.handleInputText("reasonForEngagement")}
-                                multiline={true}
-                            />
-
-                        </View>
-                    </View>
-
-                    <View style={styles.selectMenu}>
-                        {this.state.loading ? (<View style={styles.loader}><Loader loading={this.state.loading} /></View>) : (<View />)}
-                        <View>
-                            <Text style={styles.selectMenuText}>Mode of Engagement</Text>
-                        </View>
-                        <View>
-                            <Dropdown
-                                data={engagementMode}
-                                value={this.state.engagementMode}
-                                itemColor={"red"}
-                                useNativeDriver={true}
-                                onChangeText={(value, index, data) => this.setEngagementMode(value)}
-                            />
-                        </View>
-                    </View>
-
-                    <View style={styles.selectMenu}>
-                        <View>
-                            <Text style={styles.selectMenuText}>Proposed Date</Text>
+                            <Text style={styles.selectMenuText}>New Date</Text>
                         </View>
                         <View>
                             <Button title="Choose Date" onPress={this.showDatePicker} />
@@ -170,9 +105,11 @@ export default class NewEngagement extends Component {
                         </View>
                     </View>
 
+                    {this.state.loading ? (<View style={styles.loader}><Loader loading={this.state.loading} /></View>) : (<View />)}
+
                     <View style={styles.selectMenu}>
                         <View>
-                            <Text style={styles.selectMenuText}>Proposed time</Text>
+                            <Text style={styles.selectMenuText}>New time</Text>
                         </View>
                         <View >
                             <View>
@@ -187,7 +124,26 @@ export default class NewEngagement extends Component {
                         </View>
                     </View>
 
-                    <TouchableOpacity style={{ justifyContent: 'center', alignSelf: 'center', width: '98%', height: 35, marginVertical: 20, borderRadius: 10, backgroundColor: '#011f4b' }} onPress={this.createNewEngagement}>
+                    <View style={styles.textAreaContainer}>
+                        <TextInput
+                            style={styles.textArea}
+                            value={this.state.comment}
+                            onChangeText={this.handleInputText}
+                            placeholder='Please write comment'
+                            placeholderTextColor='gray'
+                            multiline={true}
+                        />
+                    </View>
+
+                    <TouchableOpacity style={{
+                        justifyContent: 'center',
+                        alignSelf: 'center',
+                        width: '98%',
+                        height: 35,
+                        marginVertical: 20,
+                        borderRadius: 10,
+                        backgroundColor: '#011f4b'
+                    }} onPress={this.modifyAcceptEng}>
                         <Text style={{ fontSize: 15, alignSelf: 'center', padding: 5, color: "#e9eaec" }}>SUBMIT</Text>
                     </TouchableOpacity>
                 </View>
@@ -215,25 +171,17 @@ const styles = StyleSheet.create({
         fontSize: 15,
         fontFamily: 'sans-serif',
     },
-    selectMenu: {
-        margin: 5,
-        backgroundColor: '#f2f2f2',
-    },
-    selectMenuText: {
-        marginVertical: 2,
-        fontSize: 15,
-        fontFamily: 'sans-serif',
-        color: '#307ecc',
-    },
     textAreaContainer: {
         borderColor: 'gray',
         borderWidth: 1,
         paddingRight: 5,
-        height: 100,
         margin: 5,
         borderRadius: 5,
+        height: 60,
+        backgroundColor: '#f2f2f2',
     },
     textArea: {
+        width: '60%',
         justifyContent: 'flex-start',
     },
     loader: {

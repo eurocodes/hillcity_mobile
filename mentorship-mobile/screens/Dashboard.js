@@ -1,206 +1,197 @@
 import React, { Component } from 'react';
 import { Alert, AsyncStorage, Dimensions, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import Constants from 'expo-constants';
+import Constants from 'expo-constants'
 import Entypo from '@expo/vector-icons/Entypo';
-// import Icon from 'react-native-vector-icons/FontAwesome';
+// import Entypo from 'react-native-vector-icons/Entypo';
 
-// import { getUserRole } from '../Backend/Storage';
-import { fetchUsersMentor, fetchUsersMentee } from '../Backend/API';
+import { setEngID } from '../Backend/Storage';
+import { fetchEngagementsMentor, fetchEngagementsMentee } from '../Backend/API';
 import Loader from '../components/Loader';
 
-const { width, height } = Dimensions.get('window');
+export default class EngagementsScreen extends Component {
 
-export default class Dashboard extends Component {
     state = {
-        myDetails: '',
-        myConnections: [],
-        role: '',
+        engagements: [],
+        role: "",
         loading: false,
     }
 
     async componentDidMount() {
-        
         const role = await this.getUserRole()
         console.log("My Role:", role);
 
         if (role === "mentor") {
-            this.getMentorDashboard()
+            this.getMentorEngagements()
+            return
+        } else if (role === "mentee") {
+            this.getMenteeEngagements()
             return
         } else if (role === "adminmember") {
-            this.getMentorDashboard()
+            this.getMentorEngagements()
             return
         }
-        this.getMenteeDashboard()
-        return
     }
 
     // Get user Role
     // getRole = async () => getUserRole("role");
     getUserRole = async () => AsyncStorage.getItem("role");
 
-    getMentorDashboard = async () => {
-        this.setState({loading: true})
+    getMentorEngagements = async () => {
+        this.setState({ loading: true })
         try {
-            const results = await fetchUsersMentor()
-            if (results.myConnections && results.myDetails) {
-                this.setState({ myDetails: results.myDetails, myConnections: results.myConnections, role: "mentor" })
-                this.setState({loading: false})
+            const results = await fetchEngagementsMentor()
+            if (results[0]) {
+                this.setState({ engagements: results, role: "mentor" })
+                this.setState({ loading: false })
                 return
+            } else {
+                this.setState({ engagements: "You don't have any engagements", role: "mentor" })
+                this.setState({ loading: false })
             }
-            this.setState({ err: results })
-            alert(this.state.err)
-            this.setState({loading: false})
-            this.props.navigation.navigate('Signin');
-            return
-            
         } catch (err) {
+            this.setState({ loading: false })
             console.log(err)
-            this.setState({loading: false})
-            this.props.navigation.navigate('Signin');
             return
         }
     }
 
-    getMenteeDashboard = async () => {
-        this.setState({loading: true})
+    getMenteeEngagements = async () => {
+        this.setState({ loading: true })
         try {
-            const results = await fetchUsersMentee()
-            this.setState({ myDetails: results.myDetails, myConnections: results.myConnections, role: "mentee" })
-            this.setState({loading: false})
-            return
+            const results = await fetchEngagementsMentee()
+            if (results[0]) {
+                this.setState({ engagements: results, role: "mentee" })
+                this.setState({ loading: false })
+                return
+            } else {
+                this.setState({ engagements: "You don't have any engagements", role: "mentee" })
+                this.setState({ loading: false })
+            }
+
         } catch (err) {
+            this.setState({ loading: false })
             console.log(err)
-            this.setState({loading: false})
-            this.props.navigation.navigate('Signin');
-            return
         }
     }
 
-    renderConnection() {
-        
-        return this.state.myConnections.map((val, index) => {
+    renderMentorEngagements() {
+        if (this.state.engagements === "You don't have any engagements") {
             return (
-                <View  key={index}>
-                <View style={{ flexDirection: 'row' }}>
-                    <View style={styles.appLowerMap}>
-                        <View style={{flexDirection: 'row'}}>
-                            <Entypo name='v-card' size={20} />
-                        <Text> {`${val.firstName} ${val.lastName}`}</Text>
-                        </View>
-
-                        <View style={{flexDirection: 'row'}}>
-                            <Entypo name='mail' size={20} />
-                        <Text> {val.email}</Text>
-                        </View>
-
-                        <View style={{flexDirection: 'row'}}>
-                            <Entypo name='mobile' size={20} />
-                        <Text> {val.phone}</Text>
-                        </View>
-                    </View>
-                    <View style={styles.appLowerMapPhoto}>
-                        <Entypo name='user' size={40} />
-                        {/* <Text>Photo: {val.photo}</Text> */}
-                    </View>
+                <View style={styles.mapContainerMentor}>
+                    <Text>{this.state.engagements}</Text>
                 </View>
-                <View style={styles.connectioDivider} />
+            )
+        }
+        return this.state.engagements.map((val, index) => {
+            return (
+                <View key={val.engagement_ID}>
+                    <View style={{ flexDirection: 'row', backgroundColor: '#aaa' }}>
+                        <View style={{ height: '30%', width: '12%', marginLeft: 5, alignSelf: 'center', }}>
+                            {/* <Text style={{ height: 40, width: 75 }}>{val.photo}</Text> */}
+                            <Entypo name='user' size={40} />
+                        </View>
+                        <View style={styles.mapContainerMentor}>
+                            <Text style={{ marginLeft: 8 }}>{`${val.First_Name} ${val.Last_Name}`}</Text>
+                            <Text style={{ marginLeft: 8 }}>Engagement Type: {val.engagement_type}</Text>
+                            <Text style={{ marginLeft: 8 }}>Reason for Engagement: {`${val.reason_for_engagement.slice(0, 20)}...`}</Text>
+                            <Text style={{ marginLeft: 8 }}>Status: {val.status}</Text>
+                            <Text style={{ marginLeft: 8 }}>Proposed date & time: {`${val.proposed_date} at ${val.proposed_time}`}</Text>
+                            <TouchableOpacity style={{ marginLeft: 8, width: '25%', }} onPress={() => this.props.navigation.navigate("SingleEngagement", setEngID(val.engagement_ID))}>
+                                <Text style={{ color: "#03396c" }}>VIEW DETAILS</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                    <View style={styles.engagementBottomLine} />
                 </View>
             )
         })
+
+    }
+
+    renderMenteeEngagements() {
+
+        return (
+            <View>
+                <TouchableOpacity
+                    style={{
+                        alignSelf: 'flex-end',
+                        marginHorizontal: 30,
+                        marginVertical: 10,
+                        borderRadius: 10,
+                        backgroundColor: '#011f4b'
+                    }}
+                    onPress={() => this.props.navigation.navigate("NewEngagement")}>
+                    <Entypo name='circle-with-plus' color="#e9eaec" size={30} />
+                    {/* <Text style={{ fontSize: 15, padding: 5, color: "#e9eaec" }}>Start New Engagement</Text> */}
+                </TouchableOpacity>
+                {this.state.engagements === "You don't have any engagements" ?
+                    (
+                        <View style={styles.mapContainerMentor}>
+                            <Text>{this.state.engagements}</Text>
+                        </View>
+                    ) :
+                    this.state.engagements.map((val, index) => {
+                        return (
+                            <View style={styles.mapContainerMentee} key={val.engagement_ID}>
+                                <View style={{ margin: 5 }}>
+                                    <Text>{val.engagement_type}</Text>
+                                    <Text>{val.reason_for_engagement}</Text>
+                                    <Text>{val.status}</Text>
+                                    <Text>{val.proposed_date}</Text>
+                                </View>
+                                <TouchableOpacity style={{ margin: 5, width: '25%', }} onPress={() => this.props.navigation.navigate("SingleEngagement", setEngID(val.engagement_ID))}>
+                                    <Text style={{ color: "#03396c" }}>VIEW DETAILS</Text>
+                                </TouchableOpacity>
+                                <View style={styles.engagementBottomLine} />
+                            </View>
+                        )
+                    })
+                }
+            </View>
+        )
     }
 
     render() {
+
         return (
-            <View style={{flex: 1, height}}>
             <ScrollView style={styles.mainContainer}>
-                <View style={styles.appTop}>
-                    <Text style={styles.topText}>{this.state.myDetails.firstName} {this.state.myDetails.lastName}</Text>
-                    {this.state.role === "mentor" ? (<Text style={styles.topText}>You currently have {this.state.myConnections.length} mentee(s) </Text>) : null}
-                    <Text style={styles.topText}>Your are doing very well</Text>
-                    <TouchableOpacity style={styles.button} onPress={() => this.props.navigation.navigate("Engagements")}>
-                        <View >
-                            <Text style={styles.buttonText}>View My Engagements</Text>
+                {this.state.role === "mentor" ? (<View>{this.renderMentorEngagements()}</View>) :
+                    (
+                        <View>
+                            {this.state.loading ? (<View style={styles.loader}><Loader loading={this.state.loading} /></View>) : (<View />)}
+                            <View>{this.renderMenteeEngagements()}</View>
                         </View>
-                    </TouchableOpacity>
-                </View>
-                <View style={styles.appMid}>
-                {this.state.role === "mentor" ? (<Text style={styles.appMidText}>My mentees</Text>) :
-                    (<Text style={styles.appMidText}>My Mentor's Details</Text>)}
-                    </View>
-                {this.state.loading ? (<View style={styles.loader}><Loader loading={this.state.loading} /></View>) : (<View />)}
-                <View style={styles.appLower}>
-                    {this.renderConnection()}
-                </View>
+                    )}
             </ScrollView>
-            </View>
         )
     }
 }
 
 const styles = StyleSheet.create({
     mainContainer: {
-        height: '100%',
-        width: '100%',
-        backgroundColor: '#e5e5e5',
-
-    },
-    appTop: {
         flex: 1,
-        marginVertical: 2,
-        backgroundColor: '#307ecc',
-    },
-    topText: {
-        margin: 2,
-        color: '#f8fbfd',
-        fontSize: 20,
-        fontFamily: 'sans-serif',
-    },
-    appMid: {
-        backgroundColor: '#f2f2f2',
-        height: 35,
         alignContent: 'center',
-        justifyContent: 'center',
+        backgroundColor: '#eee',
     },
-    appMidText: {
-        margin: 2,
-        fontSize: 20,
-        color: '#307ecc',
-        alignSelf: 'center',
-    },
-    appLower: {
-        alignContent: 'center',
+    mapContainerMentee: {
+        flex: 1,
         alignSelf: 'center',
         height: 'auto',
-        width: '99%',
+        width: '98%',
+        backgroundColor: '#f2f2f2',
         margin: 2,
-        marginVertical: 2,
-        backgroundColor: '#807acd',
     },
-    appLowerMap: {
-        margin: 5,
-        width: width * 0.75,
-    },
-    appLowerMapPhoto: {
+    mapContainerMentor: {
+        flex: 1,
+        alignSelf: 'flex-start',
+        height: 'auto',
+        width: '98%',
+        backgroundColor: '#f2f2f2',
         margin: 2,
-        width: width * 0.2,
     },
-    button: {
-        backgroundColor: '#307ecc',
-        paddingVertical: 5,
-        margin: 5,
-        alignSelf: 'flex-end',
-    },
-    buttonText: {
-        color: '#fff',
-        fontSize: 20,
-        alignSelf: 'center',
-        padding: 2,
-    },
-    connectioDivider: {
-        height: 4,
+    engagementBottomLine: {
+        height: 2,
         backgroundColor: '#e2e2e2',
-        marginTop: 2,
-        marginBottom: 2,
     },
     loader: {
         alignContent: 'center',

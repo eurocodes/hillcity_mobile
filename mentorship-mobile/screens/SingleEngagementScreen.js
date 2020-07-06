@@ -4,7 +4,8 @@ import Constants from 'expo-constants';
 import * as DocumentPicker from 'expo-document-picker';
 import { TextInput } from 'react-native-gesture-handler';
 
-import { fetchAcceptEngagement, fetchRejectEngagement, fectchUploadReport } from '../Backend/API';
+import { setEngID } from '../Backend/Storage';
+import { fetchAcceptEngagement, fectchUploadReport } from '../Backend/API';
 import Loader from '../components/Loader';
 
 const baseUrl = "https://hillcityapp.herokuapp.com";
@@ -61,7 +62,7 @@ export default class SingleEngagement extends Component {
         const id = await getEngID()
         console.log("Confirm ID:", id)
         try {
-            const response = await fetchAcceptEngagement(id, this.state.comment)
+            await fetchAcceptEngagement(id, this.state.comment)
             this.fetchSingleEngagement(id)
         } catch (err) {
             console.log(err)
@@ -69,19 +70,6 @@ export default class SingleEngagement extends Component {
         }
     }
 
-    rejectEngagement = async () => {
-        this.setState({ loading: true })
-        // const { navigation } = this.props;
-        // const id = navigation.getParam('id')
-        const id = await getEngID()
-        console.log("Confirm ID:", id)
-        try {
-            const response = await fetchRejectEngagement(id, this.state.comment)
-            this.fetchSingleEngagement(id)
-        } catch (err) {
-            console.log(err)
-        }
-    }
 
     handleInputText = comment => {
         this.setState({ comment })
@@ -94,6 +82,7 @@ export default class SingleEngagement extends Component {
         console.log("Confirm ID:", id)
         if (this.state.file === null) {
             alert("Please select file first")
+            this.setState({ loading: false })
             return
         }
         try {
@@ -283,12 +272,12 @@ export default class SingleEngagement extends Component {
                                     </View>
                                     <View style={{ flexDirection: 'row', backgroundColor: '#f2f2f2', alignContent: 'center', justifyContent: 'center' }}>
                                         <TouchableOpacity onPress={this.acceptEngagement}
-                                            style={{ margin: 5, backgroundColor: '#307ecc', width: '40%' }} >
+                                            style={{ margin: 5, backgroundColor: '#307ecc', width: '40%', }} >
                                             <Text style={{ fontSize: 15, color: "#fff", margin: 2, alignSelf: 'center' }}>Accept</Text>
                                         </TouchableOpacity>
-                                        <TouchableOpacity onPress={this.rejectEngagement}
-                                            style={{ margin: 5, backgroundColor: 'red', width: '40%', }} >
-                                            <Text style={{ fontSize: 15, color: "#fff", margin: 2, alignSelf: 'center' }}>Reject</Text>
+                                        <TouchableOpacity onPress={() => this.props.navigation.navigate("ModifyAccept", setEngID(val.engagement_ID))}
+                                            style={{ margin: 5, backgroundColor: 'gray', width: '40%', }} >
+                                            <Text style={{ fontSize: 15, color: "#fff", margin: 2, alignSelf: 'center' }}>Modify & Accept</Text>
                                         </TouchableOpacity>
                                     </View>
                                 </View>) : (<View>
@@ -331,6 +320,7 @@ const styles = StyleSheet.create({
         paddingRight: 5,
         margin: 5,
         borderRadius: 5,
+        height: 60,
         backgroundColor: '#f2f2f2',
     },
     textArea: {
