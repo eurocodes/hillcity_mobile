@@ -57,7 +57,7 @@ export default class ModifyAcceptEngagement extends Component {
             if (this.state.date !== "" && this.state.time !== "") {
                 await fetchModifyAcceptEngagement(id, this.state.date, this.state.time, this.state.comment)
                 this.setState({ loading: false })
-                this.props.navigation.navigate("SingleEngagement")
+                this.props.navigation.navigate("DashBoard")
                 return
             }
             alert("You haven't properly filled all fields")

@@ -4,6 +4,7 @@ import { Image } from 'react-native';
 //Import Navigators
 import { createStackNavigator } from 'react-navigation-stack';
 import { createDrawerNavigator } from 'react-navigation-drawer';
+import { createBottomTabNavigator } from 'react-navigation-tabs';
 
 //Import External Screens
 import SideBarMenu from './SideBarMenu';
@@ -17,6 +18,7 @@ import ManageEngagementsScreen from '../screensAdmin/ManageEngagementsScreen';
 import ManageMentorsScreen from '../screensAdmin/ManageMentorsScreen';
 import ManageMenteesScreen from '../screensAdmin/ManageMenteesScreen';
 import ModifyAcceptEngagement from './ModifyAcceptEng';
+import MyProfileScreen from './MyProfileScreen';
 
 import logo from '../assets/logo.png';
 
@@ -191,11 +193,44 @@ const AdminDasboardStack = createStackNavigator({
     },
 })
 
-const ProfileStack = createStackNavigator({
+const ProfileStack = createBottomTabNavigator({
     UserDetails: {
+        screen: MyProfileScreen,
+        navigationOptions: {
+            tabBarLabel: 'My Profile',
+            tabBarOptions: {
+                activeBackgroundColor: '#307ecc',
+                inactiveBackgroundColor: '#f0edf6',
+                activeTintColor: '#fff',
+                labelStyle: {
+                    fontSize: 15,
+                    marginBottom: 10,
+                },
+                tabStyle: {
+                    width: 100,
+                },
+                style: { backgroundColor: '#aaa' },
+            },
+        }
+
+    },
+    UserProfile: {
         screen: UserDetailsScreen,
         navigationOptions: {
-            headerShown: false,
+            tabBarLabel: 'My Mentor/Mentee(s)',
+            tabBarOptions: {
+                activeBackgroundColor: '#307ecc',
+                inactiveBackgroundColor: '#f0edf6',
+                activeTintColor: '#fff',
+                labelStyle: {
+                    fontSize: 15,
+                    marginBottom: 10,
+                },
+                tabStyle: {
+                    width: 100,
+                },
+                style: { backgroundColor: '#aaa' },
+            },
         }
 
     },

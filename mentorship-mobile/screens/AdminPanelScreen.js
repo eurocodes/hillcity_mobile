@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { AsyncStorage, Dimensions, ScrollView, StyleSheet, Text, View, } from 'react-native';
+import { AsyncStorage, Dimensions, RefreshControl, ScrollView, StyleSheet, Text, View, } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import Constants from 'expo-constants';
 import Entypo from '@expo/vector-icons/Entypo';
@@ -17,12 +17,22 @@ export default class AdminPanel extends Component {
         engagements: [],
         role: "",
         loading: false,
+        refreshing: true,
     }
 
     async componentDidMount() {
         const name = await getUserName()
         this.setState({ name })
         this.getAdminDashboard()
+        this.setState({ refreshing: false })
+        return
+    }
+
+    refreshScreen = async () => {
+        const name = await getUserName()
+        this.setState({ name })
+        this.getAdminDashboard()
+        this.setState({ refreshing: false })
         return
     }
 
@@ -81,7 +91,10 @@ export default class AdminPanel extends Component {
     render() {
         return (
             <View style={{ flex: 1, height, }}>
-                <ScrollView style={styles.mainContainer}>
+                <ScrollView refreshControl={
+                    <RefreshControl refreshing={this.state.refreshing} onRefresh={this.refreshScreen} />
+                }
+                    style={styles.mainContainer}>
                     <View >
                         <TouchableOpacity onPress={() => this.props.navigation.navigate("ManageEngagements")} style={styles.buttonContainer}>
                             <Text style={styles.buttonText}>Manage Engagements</Text>

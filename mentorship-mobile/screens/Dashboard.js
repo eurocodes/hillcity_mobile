@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Alert, AsyncStorage, Dimensions, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Alert, AsyncStorage, Dimensions, RefreshControl, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Constants from 'expo-constants'
 import Entypo from '@expo/vector-icons/Entypo';
 // import Entypo from 'react-native-vector-icons/Entypo';
@@ -14,6 +14,7 @@ export default class EngagementsScreen extends Component {
         engagements: [],
         role: "",
         loading: false,
+        refreshing: true,
     }
 
     async componentDidMount() {
@@ -22,12 +23,34 @@ export default class EngagementsScreen extends Component {
 
         if (role === "mentor") {
             this.getMentorEngagements()
+            this.setState({ refreshing: false })
             return
         } else if (role === "mentee") {
             this.getMenteeEngagements()
+            this.setState({ refreshing: false })
             return
         } else if (role === "adminmember") {
             this.getMentorEngagements()
+            this.setState({ refreshing: false })
+            return
+        }
+    }
+
+    refreshScreen = async () => {
+        const role = await this.getUserRole()
+        console.log("My Role:", role);
+
+        if (role === "mentor") {
+            this.getMentorEngagements()
+            this.setState({ refreshing: false })
+            return
+        } else if (role === "mentee") {
+            this.getMenteeEngagements()
+            this.setState({ refreshing: false })
+            return
+        } else if (role === "adminmember") {
+            this.getMentorEngagements()
+            this.setState({ refreshing: false })
             return
         }
     }
@@ -83,6 +106,7 @@ export default class EngagementsScreen extends Component {
             )
         }
         return this.state.engagements.map((val, index) => {
+
             return (
                 <View key={val.engagement_ID}>
                     <View style={{ flexDirection: 'row', backgroundColor: '#aaa' }}>
@@ -96,7 +120,7 @@ export default class EngagementsScreen extends Component {
                             <Text style={{ marginLeft: 8 }}>Reason for Engagement: {`${val.reason_for_engagement.slice(0, 20)}...`}</Text>
                             <Text style={{ marginLeft: 8 }}>Status: {val.status}</Text>
                             <Text style={{ marginLeft: 8 }}>Proposed date & time: {`${val.proposed_date} at ${val.proposed_time}`}</Text>
-                            <TouchableOpacity style={{ marginLeft: 8, width: '25%', }} onPress={() => this.props.navigation.navigate("SingleEngagement", setEngID(val.engagement_ID))}>
+                            <TouchableOpacity style={{ marginLeft: 8, width: '25%', }} onPress={() => this.props.navigation.navigate("SingleEngagement", setEngID(val.engagement_ID), { refreshScreen: this.refreshScreen })}>
                                 <Text style={{ color: "#03396c" }}>VIEW DETAILS</Text>
                             </TouchableOpacity>
                         </View>
@@ -112,18 +136,7 @@ export default class EngagementsScreen extends Component {
 
         return (
             <View>
-                <TouchableOpacity
-                    style={{
-                        alignSelf: 'flex-end',
-                        marginHorizontal: 30,
-                        marginVertical: 10,
-                        borderRadius: 10,
-                        backgroundColor: '#011f4b'
-                    }}
-                    onPress={() => this.props.navigation.navigate("NewEngagement")}>
-                    <Entypo name='circle-with-plus' color="#e9eaec" size={30} />
-                    {/* <Text style={{ fontSize: 15, padding: 5, color: "#e9eaec" }}>Start New Engagement</Text> */}
-                </TouchableOpacity>
+
                 {this.state.engagements === "You don't have any engagements" ?
                     (
                         <View style={styles.mapContainerMentor}>
@@ -139,7 +152,7 @@ export default class EngagementsScreen extends Component {
                                     <Text>{val.status}</Text>
                                     <Text>{val.proposed_date}</Text>
                                 </View>
-                                <TouchableOpacity style={{ margin: 5, width: '25%', }} onPress={() => this.props.navigation.navigate("SingleEngagement", setEngID(val.engagement_ID))}>
+                                <TouchableOpacity style={{ margin: 5, width: '100%', }} onPress={() => this.props.navigation.navigate("SingleEngagement", setEngID(val.engagement_ID), { refreshScreen: this.refreshScreen })}>
                                     <Text style={{ color: "#03396c" }}>VIEW DETAILS</Text>
                                 </TouchableOpacity>
                                 <View style={styles.engagementBottomLine} />
@@ -154,12 +167,31 @@ export default class EngagementsScreen extends Component {
     render() {
 
         return (
-            <ScrollView style={styles.mainContainer}>
-                {this.state.role === "mentor" ? (<View>{this.renderMentorEngagements()}</View>) :
+            <ScrollView refreshControl={
+                <RefreshControl refreshing={this.state.refreshing} onRefresh={this.refreshScreen} />
+            }
+                style={styles.mainContainer}>
+                {this.state.loading ? (<View style={styles.loader}><Loader loading={this.state.loading} /></View>) : <View />}
+                {this.state.role === "mentee" ? (
+                    <View>
+                        <TouchableOpacity
+                            style={{
+                                alignSelf: 'flex-end',
+                                marginHorizontal: 30,
+                                marginVertical: 10,
+                                borderRadius: 10,
+                                backgroundColor: '#011f4b'
+                            }}
+                            onPress={() => this.props.navigation.navigate("NewEngagement")}>
+                            <Entypo name='circle-with-plus' color="#e9eaec" size={30} />
+                            {/* <Text style={{ fontSize: 15, padding: 5, color: "#e9eaec" }}>Start New Engagement</Text> */}
+                        </TouchableOpacity>
+                        {this.renderMenteeEngagements()}
+                    </View>
+                ) :
                     (
                         <View>
-                            {this.state.loading ? (<View style={styles.loader}><Loader loading={this.state.loading} /></View>) : (<View />)}
-                            <View>{this.renderMenteeEngagements()}</View>
+                            <View>{this.renderMentorEngagements()}</View>
                         </View>
                     )}
             </ScrollView>

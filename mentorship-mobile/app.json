@@ -22,7 +22,8 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "usesIcloudStorage": true
     },
     "description": "Hillcity Mentorship Mobile",
     "githubUrl": "https://github.com/eurocodes/hillcity_mobile"
