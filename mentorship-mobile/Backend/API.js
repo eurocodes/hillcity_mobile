@@ -5,6 +5,7 @@ import { getScureUserToken } from './Storage';
 // const getToken = async => getScureUserToken("token")
 const getToken = async () => AsyncStorage.getItem("token");
 const baseUrl = "https://hillcityapp.herokuapp.com";
+const localBaseUrl = "http://localhost:3400";
 
 
 // Fetch User Details
@@ -141,11 +142,10 @@ export const fectchUploadReport = async (id, file) => {
     const token = await getToken()
     try {
         const { name, uri } = file;
-        console.log("Name is", name)
         const uriParts = name.split(".");
         const fileType = uriParts[uriParts.length - 1];
-        console.log("Type is", fileType)
-        console.log("Uri is", uri)
+        console.log("Uri:", uri)
+
 
         const formData = new FormData()
         formData.append("file", {
@@ -153,6 +153,7 @@ export const fectchUploadReport = async (id, file) => {
             name,
             type: `application/${fileType}`,
         });
+        console.log("FormData:", formData)
 
         const options = {
             method: "PUT",

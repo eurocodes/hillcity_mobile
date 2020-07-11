@@ -11,7 +11,7 @@ const itemsMentor = [
         screenToNavigate: "DashBoard",
     },
     {
-        navOptionName: 'My Mentees',
+        navOptionName: 'Profile',
         screenToNavigate: 'Profile',
     },
     {
@@ -30,7 +30,7 @@ const itemsMentee = [
         screenToNavigate: "DashBoard",
     },
     {
-        navOptionName: 'My Mentor',
+        navOptionName: 'Profile',
         screenToNavigate: 'Profile',
     },
     {
@@ -134,7 +134,7 @@ class SideBarMenu extends Component {
                             {this.state.name.charAt(0)}
                         </Text>
                     </View>
-                    <View>
+                    <View style={{ width: '100%' }}>
                         <Text style={styles.profileHeaderText}>Hi, {this.state.name}</Text>
                         <Text style={styles.profileHeaderText2}>{this.state.greeting}</Text>
                     </View>
@@ -233,7 +233,7 @@ const styles = StyleSheet.create({
         color: 'white',
         alignSelf: 'flex-start',
         paddingHorizontal: 10,
-        marginRight: 2,
+        width: '90%',
         fontSize: 15,
     },
     profileHeaderLine: {

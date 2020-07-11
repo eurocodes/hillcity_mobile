@@ -12,8 +12,7 @@ const { width, height } = Dimensions.get('window');
 
 export default class UserDetailsScreen extends Component {
     state = {
-        myDetails: '',
-        myConnections: [],
+        data: [],
         role: '',
         loading: false,
     }
@@ -21,7 +20,6 @@ export default class UserDetailsScreen extends Component {
     async componentDidMount() {
 
         const role = await this.getUserRole()
-        console.log("My Role:", role);
 
         if (role === "mentor") {
             this.getMentorUserDetails()
@@ -43,7 +41,8 @@ export default class UserDetailsScreen extends Component {
         try {
             const results = await fetchUsersMentor()
             if (results.myConnections && results.myDetails) {
-                this.setState({ myDetails: results.myDetails, myConnections: results.myConnections, role: "mentor" })
+                const data = new Array(results.myDetails);
+                this.setState({ data: data, role: "mentor" })
                 this.setState({ loading: false })
                 return
             }
@@ -64,7 +63,8 @@ export default class UserDetailsScreen extends Component {
         this.setState({ loading: true })
         try {
             const results = await fetchUsersMentee()
-            this.setState({ myDetails: results.myDetails, myConnections: results.myConnections, role: "mentee" })
+            const data = new Array(results.myDetails);
+            this.setState({ data: data, role: "mentee" })
             this.setState({ loading: false })
             return
         } catch (err) {
@@ -75,16 +75,8 @@ export default class UserDetailsScreen extends Component {
         }
     }
 
-    renderConnection() {
-        if (this.state.err) {
-            return (
-                <View>
-                    <Text>No Assignment Yet</Text>
-                </View>
-            )
-        }
-
-        return this.state.myConnections.map((val, index) => {
+    renderDetails() {
+        return this.state.data.map((val, index) => {
             return (
                 <View key={index}>
                     <View style={{ flex: 1, flexDirection: 'row' }}>
@@ -104,7 +96,7 @@ export default class UserDetailsScreen extends Component {
                                 <Entypo name='mobile' size={25} color='#0a6ebd' />
                                 <Text style={styles.connectionText}> {`${val.phone}`}</Text>
                                 <TouchableOpacity style={{ flex: 1, width: '100%', }}>
-                                    <Entypo name='phone' color='#0a6ebd' size={25} style={{ alignSelf: 'flex-end', paddingRight: 4, }} />
+                                    <Entypo name='edit' color='#0a6ebd' size={25} style={{ alignSelf: 'flex-end', paddingRight: 4, }} />
                                 </TouchableOpacity>
                             </View>
                         </View>
@@ -121,7 +113,7 @@ export default class UserDetailsScreen extends Component {
                 <ScrollView style={styles.mainContainer}>
                     {this.state.loading ? (<View style={styles.loader}><Loader loading={this.state.loading} /></View>) : (<View />)}
                     <View style={styles.appLower}>
-                        {this.renderConnection()}
+                        {this.renderDetails()}
                     </View>
                 </ScrollView>
             </View>

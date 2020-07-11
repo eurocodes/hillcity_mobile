@@ -9,6 +9,7 @@ import { fetchAcceptEngagement, fectchUploadReport } from '../Backend/API';
 import Loader from '../components/Loader';
 
 const baseUrl = "https://hillcityapp.herokuapp.com";
+const localBaseUrl = "http://localhost:3400";
 
 const { width, height } = Dimensions.get('window');
 const getToken = async () => AsyncStorage.getItem("token");
@@ -21,7 +22,6 @@ export default class SingleEngagement extends Component {
         engagement: [],
         comment: '',
         role: '',
-        file: null,
         loading: false,
     }
 
@@ -80,15 +80,16 @@ export default class SingleEngagement extends Component {
         this.setState({ loading: true })
         const id = await getEngID()
         console.log("Confirm ID:", id)
-        if (this.state.file === null) {
+        if (!this.state.file) {
             alert("Please select file first")
             this.setState({ loading: false })
             return
         }
         try {
+            // const doc = JSON.stringify(this.state.file)
+            // console.log("Doc:", doc)
             const response = await fectchUploadReport(id, this.state.file)
-            console.log("Upload response:", response)
-            this.fetchSingleEngagement(id)
+            return this.fetchSingleEngagement(id)
         } catch (err) {
             this.setState({ loading: false })
             console.log(err)
@@ -99,11 +100,7 @@ export default class SingleEngagement extends Component {
     selectFile = async () => {
         this.setState({ loading: true })
         try {
-            const response = await DocumentPicker.getDocumentAsync({
-                type: "*/*",
-                copyToCacheDirectory: false,
-                multiple: false,
-            });
+            const response = await DocumentPicker.getDocumentAsync({});
             // consolog what was found
             console.log("Response:", response);
             if (!response.cancelled) {
@@ -112,7 +109,7 @@ export default class SingleEngagement extends Component {
             }
         } catch (error) {
             console.log("Error", error);
-            this.setState({ file: null, loading: false })
+            this.setState({ loading: false })
 
         }
     };
@@ -129,7 +126,7 @@ export default class SingleEngagement extends Component {
                     </View>
                 </View>
                 <View>
-                    {this.state.file !== null ? (
+                    {this.state.file ? (
                         <View style={styles.fileText}>
                             <Text style={{ marginVertical: 4 }}>
                                 Name: {this.state.file.name ? this.state.file.name : ""}
