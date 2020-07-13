@@ -1,5 +1,6 @@
 import React from 'react';
 import { Image } from 'react-native';
+import Entypo from '@expo/vector-icons/Entypo';
 
 //Import Navigators
 import { createStackNavigator } from 'react-navigation-stack';
@@ -19,6 +20,8 @@ import ManageMentorsScreen from '../screensAdmin/ManageMentorsScreen';
 import ManageMenteesScreen from '../screensAdmin/ManageMenteesScreen';
 import ModifyAcceptEngagement from './ModifyAcceptEng';
 import MyProfileScreen from './MyProfileScreen';
+import SettingsScreen from './SettingsScreen';
+import NotificationScreen from './NotificationScreen';
 
 import logo from '../assets/logo.png';
 
@@ -52,9 +55,91 @@ const ModifyAcceptEngagementStack = createStackNavigator({
     }
 });
 
-const DashBoardStack = createStackNavigator({
+const SettingsStack = createStackNavigator({
+    Settings: {
+        screen: SettingsScreen,
+        navigationOptions: {
+            headerShown: false,
+        }
+
+    }
+});
+
+// const SettingsNavigator = createStackNavigator({
+//     Settings: {
+//         screen: SettingsStack,
+//         navigationOptions: ({ navigation }) => ({
+//             title: 'Settings',
+//             headerStyle: {
+//                 backgroundColor: '#307ecc',
+//             },
+//             headerTintColor: '#fff',
+//             headerTitleAlign: 'center',
+//         }),
+//     }
+// });
+
+const NotificationStack = createStackNavigator({
+    Notifications: {
+        screen: NotificationScreen,
+        navigationOptions: ({ navigation }) => ({
+            title: 'Notifications',
+            headerStyle: {
+                backgroundColor: '#307ecc',
+            },
+            headerTintColor: '#fff',
+            headerTitleAlign: 'center',
+        }),
+    }
+});
+
+const DashBoardNavigator = createBottomTabNavigator({
     DashBoard: {
         screen: DashBoardScreen,
+        navigationOptions: {
+            tabBarIcon: () => <Entypo name='home' size={25} />,
+            tabBarOptions: {
+                showLabel: false,
+                activeBackgroundColor: '#fff',
+                inactiveBackgroundColor: '#f0edf6',
+                activeTintColor: '#307ecc',
+                labelStyle: {
+                    fontSize: 15,
+                    marginBottom: 10,
+                },
+                tabStyle: {
+                    width: 100,
+                },
+                style: { backgroundColor: '#aaa' },
+            },
+        }
+    },
+    UserProfile: {
+        screen: NotificationScreen,
+        navigationOptions: {
+            tabBarIcon: () => <Entypo name='bell' size={25} />,
+            tabBarOptions: {
+                showLabel: false,
+                activeBackgroundColor: '#fff',
+                inactiveBackgroundColor: '#f0edf6',
+                activeTintColor: '#307ecc',
+                labelStyle: {
+                    fontSize: 15,
+                    marginBottom: 10,
+                },
+                tabStyle: {
+                    width: 100,
+                },
+                style: { backgroundColor: '#aaa' },
+            },
+        }
+
+    },
+});
+
+const DashBoardStack = createStackNavigator({
+    DashBoard: {
+        screen: DashBoardNavigator,
         navigationOptions: ({ navigation }) => ({
             title: 'My Engagements',
             headerLeft: () => <NavigationDrawerHeader navigationProps={navigation} />,
@@ -100,6 +185,28 @@ const DashBoardStack = createStackNavigator({
             headerTitleAlign: 'center',
         }),
     },
+    Notifications: {
+        screen: NotificationStack,
+        navigationOptions: ({ navigation }) => ({
+            title: 'Notifications',
+            headerStyle: {
+                backgroundColor: '#307ecc',
+            },
+            headerTintColor: '#fff',
+            headerTitleAlign: 'center',
+        }),
+    },
+    Settings: {
+        screen: SettingsStack,
+        navigationOptions: ({ navigation }) => ({
+            title: 'Settings',
+            headerStyle: {
+                backgroundColor: '#307ecc',
+            },
+            headerTintColor: '#fff',
+            headerTitleAlign: 'center',
+        }),
+    }
 });
 
 const ManageEngagementsStack = createStackNavigator({
@@ -132,9 +239,53 @@ const ManageMenteesStack = createStackNavigator({
     },
 });
 
+const AdminDashBoardNavigator = createBottomTabNavigator({
+    DashBoard: {
+        screen: AdminPanel,
+        navigationOptions: {
+            tabBarIcon: () => <Entypo name='home' size={25} />,
+            tabBarOptions: {
+                showLabel: false,
+                activeBackgroundColor: '#fff',
+                inactiveBackgroundColor: '#f0edf6',
+                activeTintColor: '#307ecc',
+                labelStyle: {
+                    fontSize: 15,
+                    marginBottom: 10,
+                },
+                tabStyle: {
+                    width: 100,
+                },
+                style: { backgroundColor: '#aaa' },
+            },
+        }
+    },
+    Notifications: {
+        screen: NotificationScreen,
+        navigationOptions: {
+            tabBarIcon: () => <Entypo name='bell' size={25} />,
+            tabBarOptions: {
+                showLabel: false,
+                activeBackgroundColor: '#fff',
+                inactiveBackgroundColor: '#f0edf6',
+                activeTintColor: '#307ecc',
+                labelStyle: {
+                    fontSize: 15,
+                    marginBottom: 10,
+                },
+                tabStyle: {
+                    width: 100,
+                },
+                style: { backgroundColor: '#aaa' },
+            },
+        }
+
+    },
+});
+
 const AdminDasboardStack = createStackNavigator({
     AdminDashboard: {
-        screen: AdminPanel,
+        screen: AdminDashBoardNavigator,
         navigationOptions: ({ navigation }) => ({
             title: "Admin Dashboard",
             headerLeft: () => <NavigationDrawerHeader navigationProps={navigation} />,
@@ -191,7 +342,29 @@ const AdminDasboardStack = createStackNavigator({
             headerTitleAlign: 'center',
         }),
     },
-})
+    Notifications: {
+        screen: NotificationStack,
+        navigationOptions: ({ navigation }) => ({
+            title: 'Notifications',
+            headerStyle: {
+                backgroundColor: '#307ecc',
+            },
+            headerTintColor: '#fff',
+            headerTitleAlign: 'center',
+        }),
+    },
+    Settings: {
+        screen: SettingsStack,
+        navigationOptions: ({ navigation }) => ({
+            title: 'Settings',
+            headerStyle: {
+                backgroundColor: '#307ecc',
+            },
+            headerTintColor: '#fff',
+            headerTitleAlign: 'center',
+        }),
+    }
+});
 
 const ProfileStack = createBottomTabNavigator({
     UserDetails: {
