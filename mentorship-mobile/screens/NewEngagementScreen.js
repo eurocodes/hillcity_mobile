@@ -26,6 +26,8 @@ let engagementMode = [{
 },
 ]
 
+const expoPushToken = 'ExponentPushToken[yrgo07JkPGQ_FoSKbCjqVw]';
+
 export default class NewEngagement extends Component {
 
     state = {
@@ -75,6 +77,7 @@ export default class NewEngagement extends Component {
                 this.state.time !== "") {
                 await createEngagement(this.state.engagementType, this.state.engagementMode,
                     this.state.reasonForEngagement, this.state.date, this.state.time)
+                this.sendPushNotification;
                 this.setState({ loading: false })
                 this.props.navigation.navigate("Engagements")
                 return
@@ -98,6 +101,27 @@ export default class NewEngagement extends Component {
 
     handleInputText = key => val => {
         this.setState({ [key]: val })
+    }
+
+    // Can use this function below, OR use Expo's Push Notification Tool-> https://expo.io/dashboard/notifications
+    sendPushNotification = async (expoPushToken) => {
+        const message = {
+            to: expoPushToken,
+            sound: 'default',
+            title: 'Original Title',
+            body: 'And here is the body!',
+            data: { data: 'goes here' },
+        };
+
+        await fetch('https://exp.host/--/api/v2/push/send', {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Accept-encoding': 'gzip, deflate',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(message),
+        });
     }
 
     render() {

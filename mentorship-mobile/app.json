@@ -25,6 +25,9 @@
       "supportsTablet": true,
       "usesIcloudStorage": true
     },
+    "android": {
+      "useNextNotificationsApi": true
+    },
     "description": "Hillcity Mentorship Mobile",
     "githubUrl": "https://github.com/eurocodes/hillcity_mobile"
   }

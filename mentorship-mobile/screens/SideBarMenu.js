@@ -15,6 +15,10 @@ const itemsMentor = [
         screenToNavigate: 'Profile',
     },
     {
+        navOptionName: 'Settings',
+        screenToNavigate: 'Settings',
+    },
+    {
         navOptionName: 'Logout',
         screenToNavigate: 'logout',
     },
@@ -36,6 +40,10 @@ const itemsMentee = [
     {
         navOptionName: 'Start New Engagement',
         screenToNavigate: 'NewEngagement',
+    },
+    {
+        navOptionName: 'Settings',
+        screenToNavigate: 'Settings',
     },
     {
         navOptionName: 'Logout',
