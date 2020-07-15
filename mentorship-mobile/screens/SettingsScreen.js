@@ -26,7 +26,7 @@ export default class SettingsScreen extends React.Component {
 
     state = {
         checked: false,
-        token: '',
+        expoPushToken: '',
     }
 
     registerForPushNotificationsAsync = async () => {
@@ -43,8 +43,8 @@ export default class SettingsScreen extends React.Component {
                 return;
             }
             token = (await Notifications.getExpoPushTokenAsync()).data;
-            this.setState({ token })
-            console.log(this.state.token);
+            this.setState({ expoPushToken: token })
+            console.log(this.state.expoPushToken);
         } else {
             alert('Must use physical device for Push Notifications');
         }
