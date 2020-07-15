@@ -115,14 +115,31 @@ export default class EngagementsScreen extends Component {
                             <Entypo name='user' size={40} />
                         </View>
                         <View style={styles.mapContainerMentor}>
-                            <Text style={{ marginLeft: 8 }}>{`${val.First_Name} ${val.Last_Name}`}</Text>
-                            <Text style={{ marginLeft: 8 }}>Engagement Type: {val.engagement_type}</Text>
-                            <Text style={{ marginLeft: 8 }}>Reason for Engagement: {`${val.reason_for_engagement.slice(0, 20)}...`}</Text>
-                            <Text style={{ marginLeft: 8 }}>Status: {val.status}</Text>
-                            <Text style={{ marginLeft: 8 }}>Proposed date & time: {`${val.proposed_date} at ${val.proposed_time}`}</Text>
-                            <TouchableOpacity style={{ marginLeft: 8, width: '25%', }} onPress={() => this.props.navigation.navigate("SingleEngagement", setEngID(val.engagement_ID), { refreshScreen: this.refreshScreen })}>
-                                <Text style={{ color: "#03396c" }}>VIEW DETAILS</Text>
-                            </TouchableOpacity>
+                            <View style={{ alignSelf: 'flex-start', marginLeft: 8, marginVertical: 5, borderRadius: 5, }}>
+                                <Text style={{ fontWeight: 'bold', color: '#307ecc' }}>{`${val.First_Name.toUpperCase()} ${val.Last_Name.toUpperCase()}`}</Text>
+                            </View>
+                            <View style={{ flexDirection: 'row', marginVertical: 5, width: '100%', }}>
+                                <View>
+                                    <View style={{ marginLeft: 8, borderRadius: 5, paddingHorizontal: 4, backgroundColor: '#b3cde0', width: 'auto', }} >
+                                        <Text style={{ color: '#005b96' }}>{val.engagement_type}</Text>
+                                    </View>
+                                </View>
+                                <View style={{ flex: 1, alignItems: 'flex-end', paddingHorizontal: 4, marginRight: 4, }}>
+                                    <Text>{val.proposed_date}</Text>
+                                    <Text> at {val.proposed_time}</Text>
+                                </View>
+                            </View>
+                            <Text style={styles.reasonForEngagement}>{`${val.reason_for_engagement.slice(0, 80)}...`}</Text>
+                            <View style={{ flex: 1, flexDirection: 'row', width: 'auto', marginVertical: 5, }}>
+                                <TouchableOpacity style={{ marginLeft: 8, width: 'auto', }} onPress={() => this.props.navigation.navigate("SingleEngagement", setEngID(val.engagement_ID))}>
+                                    <Text style={{ color: "#03396c" }}>VIEW DETAILS</Text>
+                                </TouchableOpacity>
+                                <View style={{ width: '70%', }}>
+                                    <Text style={{ paddingHorizontal: 4, borderRadius: 5, alignSelf: 'flex-end', textTransform: 'capitalize', marginRight: 4, }}>
+                                        {val.status}
+                                    </Text>
+                                </View>
+                            </View>
                         </View>
                     </View>
                     <View style={styles.engagementBottomLine} />
@@ -146,15 +163,28 @@ export default class EngagementsScreen extends Component {
                     this.state.engagements.map((val, index) => {
                         return (
                             <View style={styles.mapContainerMentee} key={val.engagement_ID}>
-                                <View style={{ margin: 5 }}>
-                                    <Text>{val.engagement_type}</Text>
-                                    <Text>{val.reason_for_engagement}</Text>
-                                    <Text>{val.status}</Text>
-                                    <Text>{val.proposed_date}</Text>
+                                <View style={{ flexDirection: 'row', marginVertical: 5, width: '100%', }}>
+                                    <View>
+                                        <View style={{ marginLeft: 8, borderRadius: 5, paddingHorizontal: 4, backgroundColor: '#b3cde0', width: 'auto', }} >
+                                            <Text style={{ color: '#005b96' }}>{val.engagement_type}</Text>
+                                        </View>
+                                    </View>
+                                    <View style={{ flex: 1, alignItems: 'flex-end', paddingHorizontal: 4, marginRight: 4, }}>
+                                        <Text>{val.proposed_date}</Text>
+                                        <Text> at {val.proposed_time}</Text>
+                                    </View>
                                 </View>
-                                <TouchableOpacity style={{ margin: 5, width: '100%', }} onPress={() => this.props.navigation.navigate("SingleEngagement", setEngID(val.engagement_ID), { refreshScreen: this.refreshScreen })}>
-                                    <Text style={{ color: "#03396c" }}>VIEW DETAILS</Text>
-                                </TouchableOpacity>
+                                <Text style={styles.reasonForEngagement}>{`${val.reason_for_engagement.slice(0, 80)}...`}</Text>
+                                <View style={{ flex: 1, flexDirection: 'row', width: 'auto', marginVertical: 5, }}>
+                                    <TouchableOpacity style={{ marginLeft: 8, width: 'auto', }} onPress={() => this.props.navigation.navigate("SingleEngagement", setEngID(val.engagement_ID))}>
+                                        <Text style={{ color: "#03396c" }}>VIEW DETAILS</Text>
+                                    </TouchableOpacity>
+                                    <View style={{ width: '70%', }}>
+                                        <Text style={{ paddingHorizontal: 4, borderRadius: 5, alignSelf: 'flex-end', textTransform: 'capitalize', marginRight: 4, }}>
+                                            {val.status}
+                                        </Text>
+                                    </View>
+                                </View>
                                 <View style={styles.engagementBottomLine} />
                             </View>
                         )
@@ -183,8 +213,10 @@ export default class EngagementsScreen extends Component {
                                 backgroundColor: '#011f4b'
                             }}
                             onPress={() => this.props.navigation.navigate("NewEngagement")}>
-                            <Entypo name='circle-with-plus' color="#e9eaec" size={30} />
-                            {/* <Text style={{ fontSize: 15, padding: 5, color: "#e9eaec" }}>Start New Engagement</Text> */}
+                            <View style={{ flexDirection: 'row', backgroundColor: '#011f4b', borderRadius: 5 }}>
+                                <Text style={{ fontSize: 15, padding: 5, color: "#e9eaec" }}>Start New Engagement</Text>
+                                <Entypo name='circle-with-plus' color="#e9eaec" size={30} />
+                            </View>
                         </TouchableOpacity>
                         {this.renderMenteeEngagements()}
                     </View>
@@ -212,6 +244,7 @@ const styles = StyleSheet.create({
         width: '98%',
         backgroundColor: '#f2f2f2',
         margin: 2,
+        marginVertical: 5,
     },
     mapContainerMentor: {
         flex: 1,
@@ -221,8 +254,13 @@ const styles = StyleSheet.create({
         backgroundColor: '#f2f2f2',
         margin: 2,
     },
+    reasonForEngagement: {
+        marginLeft: 8,
+        fontSize: 15,
+        fontFamily: 'sans-serif',
+    },
     engagementBottomLine: {
-        height: 2,
+        height: 4,
         backgroundColor: '#e2e2e2',
     },
     loader: {

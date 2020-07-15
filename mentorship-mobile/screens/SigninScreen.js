@@ -6,6 +6,7 @@ import Feather from '@expo/vector-icons/Feather';
 import { setUserToken, setName, setUserRole } from '../Backend/Storage';
 import logo from '../assets/logo.png';
 import IMG_2 from '../assets/IMG_20.jpg';
+import Mentoring from '../assets/IMG-MENTOR.jpg';
 import Loader from '../components/Loader';
 
 const { width, height } = Dimensions.get('window');
@@ -60,54 +61,62 @@ export default class SigninScreen extends Component {
         return (
             <KeyboardAvoidingView style={styles.mainContainer}>
                 <ImageBackground
-                    style={{ alignSelf: 'center', justifyContent: 'center', height: '100%', width: '100%' }}
-                    source={IMG_2}>
-                    <View style={{ alignSelf: 'center', alignContent: 'center', justifyContent: 'center', width: '100%' }} >
-                        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', }}>
-                            <Image source={logo} style={{ width: width * 0.3, height: height * 0.08, marginBottom: 10, }} />
-                            <View style={{ alignItems: 'center', justifyContent: 'center', marginBottom: '35%', }}>
-                                <Text style={{ color: '#fff', fontSize: 20, fontWeight: 'bold' }}>HILLCITY MENTORSHIP On Mobile</Text>
-                                <Text style={{ color: '#fff' }}>Adding value to lives</Text>
-                            </View>
-                        </View>
-                        <View style={{ width: '100%', marginBottom: '5%', marginTop: '40%' }}>
-                            {this.state.loading ? (<View style={styles.loader}><Loader loading={this.state.loading} /></View>) : (<View />)}
+                    style={{ padding: 0, margin: 0, alignSelf: 'flex-start', height: height * 0.4, width }}
+                    source={Mentoring}>
 
-                            <View style={styles.inputField}>
-                                <Feather name="user" size={20} color='#fff' />
-                                <TextInput style={styles.inputTextArea}
-                                    placeholder='Email Address'
-                                    onChangeText={this.handleInput('email')}
-                                    value={this.state.email}
-                                    autoCapitalize='none'
-                                    underlineColorAndroid='transparent' />
-                            </View>
-                            <Text style={styles.errText}>{this.state.noEmail}</Text>
-
-                            <View style={styles.inputField}>
-                                <Feather name="key" size={20} color='#fff' />
-                                <TextInput style={styles.inputTextArea}
-                                    placeholder='Password'
-                                    onChangeText={this.handleInput('password')}
-                                    value={this.state.password}
-                                    autoCapitalize='none'
-                                    secureTextEntry
-                                    underlineColorAndroid='transparent' />
-                            </View>
-                            <Text style={styles.errText}>{this.state.noPassword}</Text>
-
-                            <TouchableOpacity style={styles.button} onPress={this.signin} >
-                                <View>
-                                    <Text style={styles.buttonText}>Sign in</Text>
-                                </View>
-                            </TouchableOpacity>
-
-                        </View>
-                        <View style={{ height: 'auto', marginTop: '5%', }}>
-                            <Text style={{ alignSelf: 'center', color: '#fff' }}>Forgot Password? Click here!</Text>
+                    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', }}>
+                        <View style={{ alignItems: 'center', justifyContent: 'center', marginBottom: '30%', }}>
+                            <Text style={{ color: '#fff', fontSize: 20, fontWeight: 'bold' }}>HILLCITY MENTORSHIP On Mobile</Text>
+                            <Text style={{ color: '#fff' }}>Adding value to lives</Text>
                         </View>
                     </View>
+
                 </ImageBackground>
+                <View style={{ paddingTop: '20%', alignContent: 'center', justifyContent: 'center', width: '100%', }} >
+
+
+                    <KeyboardAvoidingView >
+                        {this.state.loading ? (<View style={styles.loader}><Loader loading={this.state.loading} /></View>) : (<View />)}
+
+                        <View style={styles.inputField}>
+                            <Feather name="mail" size={20} color='#aaa' />
+                            <TextInput style={styles.inputTextArea}
+                                placeholder='Email Address'
+                                onChangeText={this.handleInput('email')}
+                                value={this.state.email}
+                                autoCapitalize='none'
+                                underlineColorAndroid='transparent' />
+                        </View>
+                        <Text style={styles.errText}>{this.state.noEmail}</Text>
+
+                        <View style={styles.inputField}>
+                            <Feather name="key" size={20} color='#aaa' />
+                            <TextInput style={styles.inputTextArea}
+                                placeholder='Password'
+                                onChangeText={this.handleInput('password')}
+                                value={this.state.password}
+                                autoCapitalize='none'
+                                secureTextEntry
+                                underlineColorAndroid='transparent' />
+                            <Feather name="eye" size={20} color='#aaa' />
+                        </View>
+                        <Text style={styles.errText}>{this.state.noPassword}</Text>
+
+                        <TouchableOpacity style={styles.button} onPress={this.signin} >
+                            <View>
+                                <Text style={styles.buttonText}>Sign in</Text>
+                            </View>
+                        </TouchableOpacity>
+
+                    </KeyboardAvoidingView>
+                    <View style={{ flexDirection: 'row', marginTop: 5, alignContent: 'center', justifyContent: 'center', width: '100%', }}>
+                        <Text style={{ alignSelf: 'center', }}>Forgot Password?</Text>
+                        <TouchableOpacity style={{ alignSelf: 'center', marginLeft: 5, }}>
+                            <Text style={{ color: 'blue', }}>Click here!</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+
             </KeyboardAvoidingView>
         );
     }
@@ -116,18 +125,17 @@ export default class SigninScreen extends Component {
 const styles = StyleSheet.create({
     mainContainer: {
         flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
+        alignItems: 'flex-start',
+        justifyContent: 'flex-start',
         backgroundColor: '#fff',
         paddingTop: Constants.statusBarHeight,
-        height: '100%',
+        height,
         width: '100%',
     },
     inputField: {
         height: 35,
-        borderColor: '#fff',
-        borderWidth: 2,
-        borderRadius: 20,
+        borderColor: '#aaa',
+        borderBottomWidth: 2,
         marginTop: 10,
         marginBottom: 0,
         paddingLeft: 15,
@@ -135,29 +143,30 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
     },
     inputTextArea: {
-        color: '#fff',
+        color: '#000',
         width: '100%',
         paddingLeft: 10,
+        marginBottom: 4,
     },
     button: {
         backgroundColor: '#2859b8',
-        paddingVertical: 5,
         paddingHorizontal: 0,
-        borderRadius: 20,
-        margin: 10,
-        marginTop: 50,
+        borderRadius: 5,
+        marginHorizontal: 15,
+        marginVertical: height * 0.1,
     },
     buttonText: {
         color: '#fff',
         fontSize: 20,
-        alignSelf: 'center'
+        alignSelf: 'center',
+        marginVertical: 10,
     },
     loader: {
         alignContent: 'center',
         alignSelf: 'center',
     },
     errText: {
-        color: '#fff',
+        color: 'red',
         fontSize: 15,
         marginTop: 0,
         marginLeft: 20,

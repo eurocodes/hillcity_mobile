@@ -26,6 +26,8 @@
       "usesIcloudStorage": true
     },
     "android": {
+      "package": "com.hillcity.mentorship_mobile",
+      "googleServicesFile": "./google-services.json",
       "useNextNotificationsApi": true
     },
     "description": "Hillcity Mentorship Mobile",
