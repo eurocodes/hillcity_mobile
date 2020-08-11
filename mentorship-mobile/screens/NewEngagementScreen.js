@@ -11,9 +11,11 @@ import Loader from '../components/Loader';
 let engagementType = [{
     value: "GENERAL WELL BEING",
 }, {
-    value: "LIFE GOAL AND VISION",
+    value: "LIFE GOALS & VISION",
 }, {
-    value: "ACADEMICS",
+    value: "ACADEMIC COUNSELLING",
+}, {
+    value: "PRINCIPLES & VALUES",
 },
 ]
 

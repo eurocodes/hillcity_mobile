@@ -11,7 +11,7 @@ import Loader from '../components/Loader';
 
 const getUserName = async () => AsyncStorage.getItem("name")
 
-export default class AdminPanel extends Component {
+export default class AdminCompletedScreen extends Component {
 
     state = {
         engagements: [],
@@ -80,13 +80,13 @@ export default class AdminPanel extends Component {
                 backgroundColor = styles.choco_background
             }
 
-            if (val.status == 'Pending' || val.status == 'Accepted') {
+            if (val.status == 'Completed' || val.status == 'Task Assigned') {
 
                 let statusColor;
-                if (val.status == 'Pending') {
-                    statusColor = styles.pending;
+                if (val.status == 'Completed') {
+                    statusColor = styles.completed;
                 } else {
-                    statusColor = styles.accepted;
+                    statusColor = styles.task_assigned;
                 }
                 return (
                     <View key={val.engagement_ID}>
@@ -299,15 +299,15 @@ const styles = StyleSheet.create({
         width: 'auto',
     },
 
-    pending: {
-        color: '#ee2c2c',
+    completed: {
+        color: '#698b22',
         paddingHorizontal: 2,
         alignSelf: 'flex-end',
         textTransform: 'capitalize',
         marginRight: 2,
     },
-    accepted: {
-        color: '#307ecc',
+    task_assigned: {
+        color: '#ffa500',
         paddingHorizontal: 2,
         alignSelf: 'flex-end',
         textTransform: 'capitalize',

@@ -24,6 +24,9 @@ import SettingsScreen from './SettingsScreen';
 import NotificationScreen from './NotificationScreen';
 
 import logo from '../assets/logo.png';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import AdminCompletedScreen from './AdminCompletedScreen';
+import CompletedScreen from './CompletedScreen';
 
 const SingleEngagementStack = createStackNavigator({
     SingleEngagement: {
@@ -97,9 +100,8 @@ const DashBoardNavigator = createBottomTabNavigator({
     DashBoard: {
         screen: DashBoardScreen,
         navigationOptions: {
-            tabBarIcon: () => <Entypo name='home' size={25} />,
+            tabBarLabel: 'Active',
             tabBarOptions: {
-                showLabel: false,
                 activeBackgroundColor: '#fff',
                 inactiveBackgroundColor: '#f0edf6',
                 activeTintColor: '#307ecc',
@@ -115,11 +117,10 @@ const DashBoardNavigator = createBottomTabNavigator({
         }
     },
     UserProfile: {
-        screen: NotificationScreen,
+        screen: CompletedScreen,
         navigationOptions: {
-            tabBarIcon: () => <Entypo name='bell' size={25} />,
+            tabBarLabel: 'Completed',
             tabBarOptions: {
-                showLabel: false,
                 activeBackgroundColor: '#fff',
                 inactiveBackgroundColor: '#f0edf6',
                 activeTintColor: '#307ecc',
@@ -143,12 +144,10 @@ const DashBoardStack = createStackNavigator({
         navigationOptions: ({ navigation }) => ({
             title: 'My Engagements',
             headerLeft: () => <NavigationDrawerHeader navigationProps={navigation} />,
-            headerRight: () => <Image style={{ width: 80, height: 50 }}
-                source={logo} />,
             headerStyle: {
                 backgroundColor: '#fff',
             },
-            headerTintColor: '#000',
+            headerTintColor: '#307ecc',
             headerTitleAlign: 'center',
         }),
     },
@@ -243,9 +242,8 @@ const AdminDashBoardNavigator = createBottomTabNavigator({
     DashBoard: {
         screen: AdminPanel,
         navigationOptions: {
-            tabBarIcon: () => <Entypo name='home' size={25} />,
+            tabBarLabel: 'Active',
             tabBarOptions: {
-                showLabel: false,
                 activeBackgroundColor: '#fff',
                 inactiveBackgroundColor: '#f0edf6',
                 activeTintColor: '#307ecc',
@@ -260,12 +258,11 @@ const AdminDashBoardNavigator = createBottomTabNavigator({
             },
         }
     },
-    Notifications: {
-        screen: NotificationScreen,
+    UserProfile: {
+        screen: AdminCompletedScreen,
         navigationOptions: {
-            tabBarIcon: () => <Entypo name='bell' size={25} />,
+            tabBarLabel: 'Completed',
             tabBarOptions: {
-                showLabel: false,
                 activeBackgroundColor: '#fff',
                 inactiveBackgroundColor: '#f0edf6',
                 activeTintColor: '#307ecc',
@@ -289,12 +286,10 @@ const AdminDasboardStack = createStackNavigator({
         navigationOptions: ({ navigation }) => ({
             title: "Admin Dashboard",
             headerLeft: () => <NavigationDrawerHeader navigationProps={navigation} />,
-            headerRight: () => <Image style={{ width: 80, height: 50 }}
-                source={logo} />,
             headerStyle: {
                 backgroundColor: '#fff',
             },
-            headerTintColor: '#000',
+            headerTintColor: '#307ecc',
             headerTitleAlign: 'center',
         }),
     },
@@ -372,9 +367,9 @@ const ProfileStack = createBottomTabNavigator({
         navigationOptions: {
             tabBarLabel: 'My Profile',
             tabBarOptions: {
-                activeBackgroundColor: '#307ecc',
+                activeBackgroundColor: '#fff',
                 inactiveBackgroundColor: '#f0edf6',
-                activeTintColor: '#fff',
+                activeTintColor: '#307ecc',
                 labelStyle: {
                     fontSize: 15,
                     marginBottom: 10,
@@ -392,9 +387,9 @@ const ProfileStack = createBottomTabNavigator({
         navigationOptions: {
             tabBarLabel: 'My Mentor/Mentee(s)',
             tabBarOptions: {
-                activeBackgroundColor: '#307ecc',
+                activeBackgroundColor: '#fff',
                 inactiveBackgroundColor: '#f0edf6',
-                activeTintColor: '#fff',
+                activeTintColor: '#307ecc',
                 labelStyle: {
                     fontSize: 15,
                     marginBottom: 10,
@@ -415,12 +410,10 @@ const ProfileNavigatorStack = createStackNavigator({
         navigationOptions: ({ navigation }) => ({
             title: 'Profile',
             headerLeft: () => <NavigationDrawerHeader navigationProps={navigation} />,
-            headerRight: () => <Image style={{ width: 80, height: 50 }}
-                source={logo} />,
             headerStyle: {
                 backgroundColor: '#fff',
             },
-            headerTintColor: '#000',
+            headerTintColor: '#307ecc',
             headerTitleAlign: 'center',
         }),
     },
@@ -434,6 +427,7 @@ const DrawerNavigatorRoutes = createDrawerNavigator({
         },
     },
     Profile: ProfileNavigatorStack,
+    Notifications: NotificationStack,
 },
     {
         contentComponent: SideBarMenu,
@@ -451,6 +445,7 @@ const AdminDrawerNavigatorRoutes = createDrawerNavigator({
         },
     },
     Profile: ProfileNavigatorStack,
+    Notifications: NotificationStack,
 },
     {
         contentComponent: SideBarMenu,
