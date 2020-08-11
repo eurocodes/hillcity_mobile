@@ -10,7 +10,7 @@ import Loader from '../components/Loader';
 
 const { height, width } = Dimensions.get('window');
 
-export default class EngagementsScreen extends Component {
+export default class CompletedScreen extends Component {
 
     state = {
         engagements: [],
@@ -124,15 +124,14 @@ export default class EngagementsScreen extends Component {
                 backgroundColor = styles.choco_background
             }
 
-            if (val.status == 'Pending' || val.status == 'Accepted') {
+            if (val.status == 'Completed' || val.status == 'Task Assigned') {
 
                 let statusColor;
-                if (val.status == 'Pending') {
-                    statusColor = styles.pending;
+                if (val.status == 'Completed') {
+                    statusColor = styles.completed;
                 } else {
-                    statusColor = styles.accepted;
+                    statusColor = styles.task_assigned;
                 }
-
                 return (
                     <View key={val.engagement_ID}>
                         <View style={{ flexDirection: 'row', backgroundColor: '#aaa' }}>
@@ -205,15 +204,14 @@ export default class EngagementsScreen extends Component {
                             backgroundColor = styles.choco_background
                         }
 
-                        if (val.status == 'Pending' || val.status == 'Accepted') {
+                        if (val.status == 'Completed' || val.status == 'Task Assigned') {
 
                             let statusColor;
-                            if (val.status == 'Pending') {
-                                statusColor = styles.pending;
+                            if (val.status == 'Completed') {
+                                statusColor = styles.completed;
                             } else {
-                                statusColor = styles.accepted;
+                                statusColor = styles.task_assigned;
                             }
-
                             return (
                                 <View style={styles.mapContainerMentee} key={val.engagement_ID}>
                                     <View style={{ flexDirection: 'row', marginVertical: 5, width: '100%', }}>
@@ -233,7 +231,7 @@ export default class EngagementsScreen extends Component {
                                             <Text style={{ color: "#03396c" }}>VIEW DETAILS</Text>
                                         </TouchableOpacity>
                                         <View style={{ width: '75%', }}>
-                                            <Text style={statusColor}>
+                                            <Text style={{ paddingHorizontal: 2, alignSelf: 'flex-end', textTransform: 'capitalize', marginRight: 2, }}>
                                                 {val.status}
                                             </Text>
                                         </View>
@@ -391,15 +389,15 @@ const styles = StyleSheet.create({
         width: 'auto',
     },
 
-    pending: {
-        color: '#ee2c2c',
+    completed: {
+        color: '#698b22',
         paddingHorizontal: 2,
         alignSelf: 'flex-end',
         textTransform: 'capitalize',
         marginRight: 2,
     },
-    accepted: {
-        color: '#307ecc',
+    task_assigned: {
+        color: '#ffa500',
         paddingHorizontal: 2,
         alignSelf: 'flex-end',
         textTransform: 'capitalize',

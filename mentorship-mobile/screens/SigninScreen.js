@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Dimensions, Image, ImageBackground, KeyboardAvoidingView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Dimensions, Image, ImageBackground, StyleSheet, Text, TextInput, TouchableOpacity, View, KeyboardAvoidingView } from 'react-native';
 import Constants from 'expo-constants'
 import Feather from '@expo/vector-icons/Feather';
 
@@ -59,23 +59,26 @@ export default class SigninScreen extends Component {
 
     render() {
         return (
-            <KeyboardAvoidingView style={styles.mainContainer}>
+            <View style={styles.mainContainer}>
                 <ImageBackground
-                    style={{ padding: 0, margin: 0, alignSelf: 'flex-start', height: height * 0.4, width }}
+                    style={{ alignSelf: 'flex-start', height: height * 0.4, width, }}
                     source={Mentoring}>
+                    <Image
+                        style={{ alignSelf: 'center', width: width * 0.3, height: height * 0.08, }}
+                        source={logo} />
 
                     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', }}>
-                        <View style={{ alignItems: 'center', justifyContent: 'center', marginBottom: '30%', }}>
+                        <View style={{ alignItems: 'center', justifyContent: 'center', }}>
                             <Text style={{ color: '#fff', fontSize: 20, fontWeight: 'bold' }}>HILLCITY MENTORSHIP On Mobile</Text>
-                            <Text style={{ color: '#fff' }}>Adding value to lives</Text>
+                            <Text style={{ color: '#fff', fontWeight: 'bold' }}>Adding value to lives</Text>
                         </View>
                     </View>
 
                 </ImageBackground>
-                <View style={{ paddingTop: '20%', alignContent: 'center', justifyContent: 'center', width: '100%', }} >
+                <KeyboardAvoidingView style={{ paddingTop: '20%', alignContent: 'center', justifyContent: 'center', width: '100%', }} >
 
 
-                    <KeyboardAvoidingView >
+                    <View >
                         {this.state.loading ? (<View style={styles.loader}><Loader loading={this.state.loading} /></View>) : (<View />)}
 
                         <View style={styles.inputField}>
@@ -108,16 +111,16 @@ export default class SigninScreen extends Component {
                             </View>
                         </TouchableOpacity>
 
-                    </KeyboardAvoidingView>
+                    </View>
                     <View style={{ flexDirection: 'row', marginTop: 5, alignContent: 'center', justifyContent: 'center', width: '100%', }}>
                         <Text style={{ alignSelf: 'center', }}>Forgot Password?</Text>
                         <TouchableOpacity style={{ alignSelf: 'center', marginLeft: 5, }}>
                             <Text style={{ color: 'blue', }}>Click here!</Text>
                         </TouchableOpacity>
                     </View>
-                </View>
+                </KeyboardAvoidingView>
 
-            </KeyboardAvoidingView>
+            </View>
         );
     }
 }
@@ -146,7 +149,7 @@ const styles = StyleSheet.create({
         color: '#000',
         width: '100%',
         paddingLeft: 10,
-        marginBottom: 4,
+        marginBottom: 10,
     },
     button: {
         backgroundColor: '#2859b8',

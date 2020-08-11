@@ -107,6 +107,9 @@ export default class SettingsScreen extends React.Component {
                         }}
                             title='Sign Out'
                         />
+
+                        <Text>This Device token is:</Text>
+                        <Text> {this.state.expoPushToken} </Text>
                     </View>
                 </ScrollView>
             </View>
