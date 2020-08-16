@@ -3,7 +3,7 @@ import { StyleSheet } from 'react-native';
 import { createAppContainer, createSwitchNavigator } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
 
-import HomeScreen from './screens/HomeScreen';
+import SplashScreen from './screens/SplashScreen';
 import SigninScreen from './screens/SigninScreen';
 import { DrawerNavigatorRoutes, AdminDrawerNavigatorRoutes } from './screens/DrawerNavigatorRoutes';
 
@@ -16,12 +16,12 @@ const AdminMainNavigator = createSwitchNavigator({
 });
 
 const AppNavigator = createSwitchNavigator({
-  Home: HomeScreen,
+  Splash: SplashScreen,
   Signin: SigninScreen,
   Main: UserMainNavigator,
   Admin: AdminMainNavigator,
 },
-  { initialRouteName: 'Home' }
+  { initialRouteName: 'Splash' }
 );
 
 const AppContainer = createAppContainer(AppNavigator);

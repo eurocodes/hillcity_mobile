@@ -5,8 +5,7 @@ import Feather from '@expo/vector-icons/Feather';
 
 import { setUserToken, setName, setUserRole } from '../Backend/Storage';
 import logo from '../assets/logo.png';
-import IMG_2 from '../assets/IMG_20.jpg';
-import Mentoring from '../assets/IMG-MENTOR.jpg';
+import Mentoring from '../assets/mentoring.jpeg';
 import Loader from '../components/Loader';
 
 const { width, height } = Dimensions.get('window');
@@ -22,6 +21,12 @@ export default class SigninScreen extends Component {
 
     handleInput = key => val => {
         this.setState({ [key]: val })
+        if (key === 'email') {
+            this.setState({ noEmail: null, })
+        }
+        else {
+            this.setState({ noPassword: null })
+        }
     }
 
     signin = async () => {
@@ -59,23 +64,22 @@ export default class SigninScreen extends Component {
 
     render() {
         return (
-            <View style={styles.mainContainer}>
+            <KeyboardAvoidingView style={styles.mainContainer}>
                 <ImageBackground
                     style={{ alignSelf: 'flex-start', height: height * 0.4, width, }}
                     source={Mentoring}>
                     <Image
-                        style={{ alignSelf: 'center', width: width * 0.3, height: height * 0.08, }}
+                        style={{ alignSelf: 'center', width: width * 0.3, height: height * 0.08, marginTop: 5, }}
                         source={logo} />
 
                     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', }}>
-                        <View style={{ alignItems: 'center', justifyContent: 'center', }}>
-                            <Text style={{ color: '#fff', fontSize: 20, fontWeight: 'bold' }}>HILLCITY MENTORSHIP On Mobile</Text>
-                            <Text style={{ color: '#fff', fontWeight: 'bold' }}>Adding value to lives</Text>
+                        <View style={{ alignItems: 'center', justifyContent: 'center', position: 'absolute', bottom: 0, }}>
+                            <Text style={{ color: '#fff', fontWeight: 'bold', }}>Adding value to lives</Text>
                         </View>
                     </View>
 
                 </ImageBackground>
-                <KeyboardAvoidingView style={{ paddingTop: '20%', alignContent: 'center', justifyContent: 'center', width: '100%', }} >
+                <View style={{ paddingTop: '20%', alignContent: 'center', justifyContent: 'center', width: '100%', }} >
 
 
                     <View >
@@ -90,7 +94,7 @@ export default class SigninScreen extends Component {
                                 autoCapitalize='none'
                                 underlineColorAndroid='transparent' />
                         </View>
-                        <Text style={styles.errText}>{this.state.noEmail}</Text>
+                        {this.state.noEmail ? <Text style={styles.errText}>{this.state.noEmail}</Text> : <View />}
 
                         <View style={styles.inputField}>
                             <Feather name="key" size={20} color='#aaa' />
@@ -103,7 +107,7 @@ export default class SigninScreen extends Component {
                                 underlineColorAndroid='transparent' />
                             <Feather name="eye" size={20} color='#aaa' />
                         </View>
-                        <Text style={styles.errText}>{this.state.noPassword}</Text>
+                        {this.state.noPassword ? <Text style={styles.errText}>{this.state.noPassword}</Text> : <View />}
 
                         <TouchableOpacity style={styles.button} onPress={this.signin} >
                             <View>
@@ -112,15 +116,15 @@ export default class SigninScreen extends Component {
                         </TouchableOpacity>
 
                     </View>
-                    <View style={{ flexDirection: 'row', marginTop: 5, alignContent: 'center', justifyContent: 'center', width: '100%', }}>
+                    <View style={{ flexDirection: 'row', justifyContent: 'center', width: '100%', position: 'absolute', bottom: 0, }}>
                         <Text style={{ alignSelf: 'center', }}>Forgot Password?</Text>
                         <TouchableOpacity style={{ alignSelf: 'center', marginLeft: 5, }}>
                             <Text style={{ color: 'blue', }}>Click here!</Text>
                         </TouchableOpacity>
                     </View>
-                </KeyboardAvoidingView>
+                </View>
 
-            </View>
+            </KeyboardAvoidingView>
         );
     }
 }
