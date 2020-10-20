@@ -95,7 +95,7 @@ export default class ModifyAcceptEngagement extends Component {
                             <Text style={styles.selectMenuText}>New Date</Text>
                         </View>
                         <View>
-                            <Button title="Choose Date" onPress={this.showDatePicker} />
+                            <Button title="Choose Date" onPress={this.showDatePicker} color="#252757" />
                             <DateTimePickerModal
                                 isVisible={this.state.isDatePickerVisible}
                                 mode="date"
@@ -113,7 +113,7 @@ export default class ModifyAcceptEngagement extends Component {
                         </View>
                         <View >
                             <View>
-                                <Button title="Choose Time" onPress={this.showTimePicker} />
+                                <Button title="Choose Time" onPress={this.showTimePicker} color="#252757" />
                                 <DateTimePickerModal
                                     isVisible={this.state.isTimePickerVisible}
                                     mode="time"
@@ -144,7 +144,7 @@ export default class ModifyAcceptEngagement extends Component {
                         borderRadius: 10,
                         backgroundColor: '#011f4b'
                     }} onPress={this.modifyAcceptEng}>
-                        <Text style={{ fontSize: 15, alignSelf: 'center', padding: 5, color: "#e9eaec" }}>SUBMIT</Text>
+                        <Text style={{ fontSize: 20, alignSelf: 'center', padding: 5, color: "#e9eaec" }}>SUBMIT</Text>
                     </TouchableOpacity>
                 </View>
             </ScrollView>
@@ -161,14 +161,14 @@ const styles = StyleSheet.create({
     },
     header: {
         marginVertical: 2,
-        height: 40,
+        height: 60,
         justifyContent: 'center',
-        backgroundColor: '#307ecc',
+        backgroundColor: '#252757',
     },
     headerText: {
         alignSelf: 'center',
         color: '#fff',
-        fontSize: 15,
+        fontSize: 20,
         fontFamily: 'sans-serif',
     },
     textAreaContainer: {
@@ -177,8 +177,12 @@ const styles = StyleSheet.create({
         paddingRight: 5,
         margin: 5,
         borderRadius: 5,
-        height: 60,
+        height: 120,
         backgroundColor: '#f2f2f2',
+    },
+    selectMenu: {},
+    selectMenuText: {
+        fontSize: 20,
     },
     textArea: {
         width: '60%',

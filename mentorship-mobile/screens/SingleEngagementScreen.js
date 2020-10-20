@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { AsyncStorage, Button, Dimensions, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { AsyncStorage, Button, Dimensions, ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Constants from 'expo-constants';
 import * as DocumentPicker from 'expo-document-picker';
 import { TextInput } from 'react-native-gesture-handler';
@@ -37,7 +37,6 @@ export default class SingleEngagement extends Component {
         const token = await getToken()
         const role = await getUserRole()
         const id = await getEngID()
-        console.log("IDD:", id)
         try {
             const response = await fetch(`${baseUrl}/api/v1/get/engagements/${id}`, {
                 method: "GET",
@@ -119,10 +118,10 @@ export default class SingleEngagement extends Component {
             <View style={styles.uploadReport}>
                 <View style={styles.reportButton}>
                     <View style={{ margin: 2 }}>
-                        <Button title="Attach file" onPress={this.selectFile} />
+                        <Button color="#252757" title="Attach file" onPress={this.selectFile} />
                     </View>
                     <View style={{ margin: 2 }}>
-                        <Button title="Upload" onPress={this.uploadReport} />
+                        <Button color="#252757" title="Upload" onPress={this.uploadReport} />
                     </View>
                 </View>
                 <View>
@@ -145,148 +144,116 @@ export default class SingleEngagement extends Component {
 
         return this.state.engagement.map((val, index) => {
             return (
-                <ScrollView key={index} style={{ flex: 1, height: '100%' }}>
-                    <ScrollView style={styles.mainContainer}>
+                <View key={index} style={{ flex: 1, height: '100%' }}>
+                    <StatusBar backgroundColor="#252757" barStyle="light-content" />
+                    <View style={styles.mainContainer}>
                         {this.state.loading ? (<View style={styles.loader}><Loader loading={this.state.loading} /></View>) : (<View />)}
-                        <View style={{ flex: 1, paddingTop: 2 }}>
-                            <View style={{ margin: 2 }}>
-                                <View style={{ alignContent: 'center', justifyContent: 'center', marginVertical: 2, height: 'auto', backgroundColor: '#307ecc', }}>
-                                    <Text style={{ alignSelf: 'center', color: '#fff', fontSize: 20, fontFamily: 'sans-serif' }}>{val.engagement_type.toUpperCase()}</Text>
-                                </View>
+                        <View style={{ flex: 1, }}>
 
-                                <View style={styles.engDetailsContainer}>
-                                    <View style={styles.mapNameDetails}>
-                                        <Text style={{ margin: 10, }}>Reason for Engagement </Text>
-                                    </View>
-                                    <View style={styles.mapDetails}>
-                                        <Text style={{ margin: 10 }}>{val.reason_for_engagement}</Text>
-                                    </View>
-                                </View>
-
-                                <View style={styles.engDetailsContainer}>
-                                    <View style={styles.mapNameDetails}>
-                                        <Text style={{ margin: 10, }}>Mode of Engagement </Text>
-                                    </View>
-                                    <View style={styles.mapDetails}>
-                                        <Text style={{ margin: 10 }}>{val.mode_of_engagement}</Text>
-                                    </View>
-                                </View>
-
-                                <View style={styles.engDetailsContainer}>
-                                    <View style={styles.mapNameDetails}>
-                                        <Text style={{ margin: 10, }}>Status </Text>
-                                    </View>
-                                    <View style={styles.mapDetails}>
-                                        <Text style={{ margin: 10 }}>{val.status}</Text>
-                                    </View>
-                                </View>
-
-                                <View style={styles.engDetailsContainer}>
-                                    <View style={styles.mapNameDetails}>
-                                        <Text style={{ margin: 10, }}>Comment </Text>
-                                    </View>
-                                    <View style={styles.mapDetails}>
-                                        <Text style={{ margin: 10 }}>{val.mentor_reject_comment}</Text>
-                                    </View>
-                                </View>
-
-                                <View style={styles.engDetailsContainer}>
-                                    <View style={styles.mapNameDetails}>
-                                        <Text style={{ margin: 10, }}>Proposed date </Text>
-                                    </View>
-                                    <View style={styles.mapDetails}>
-                                        <Text style={{ margin: 10 }}> {val.proposed_date}</Text>
-                                    </View>
-                                </View>
-
-                                <View style={styles.engDetailsContainer}>
-                                    <View style={styles.mapNameDetails}>
-                                        <Text style={{ margin: 10, }}>Proposed time </Text>
-                                    </View>
-                                    <View style={styles.mapDetails}>
-                                        <Text style={{ margin: 10 }}> {val.proposed_time}</Text>
-                                    </View>
-                                </View>
-
-                                <View style={styles.engDetailsContainer}>
-                                    <View style={styles.mapNameDetails}>
-                                        <Text style={{ margin: 10, }}>Task </Text>
-                                    </View>
-                                    <View style={styles.mapDetails}>
-                                        <Text style={{ margin: 10 }}>{val.engagement_task}</Text>
-                                    </View>
-                                </View>
-
-                                <View style={styles.engDetailsContainer}>
-                                    <View style={styles.mapNameDetails}>
-                                        <Text style={{ margin: 10, }}>Type </Text>
-                                    </View>
-                                    <View style={styles.mapDetails}>
-                                        <Text style={{ margin: 10 }}>{val.task_type}</Text>
-                                    </View>
-                                </View>
-
-                                <View style={styles.engDetailsContainer}>
-                                    <View style={styles.mapNameDetails}>
-                                        <Text style={{ margin: 10, }}>Engagement Reported </Text>
-                                    </View>
-                                    <View style={styles.mapDetails}>
-                                        <Text style={{ margin: 10 }}>{val.is_report_up} {val.report_date_submitted}</Text>
-                                    </View>
-                                </View>
-
-                                <View style={styles.engDetailsContainer}>
-                                    <View style={styles.mapNameDetails}>
-                                        <Text style={{ margin: 10, }}>Engagement Report </Text>
-                                    </View>
-                                    <View style={styles.mapDetails}>
-                                        <Text style={{ margin: 10 }}>{val.report_uploaded}</Text>
-                                    </View>
-                                </View>
-
-                                <View style={styles.engDetailsContainer}>
-                                    <View style={styles.mapNameDetails}>
-                                        <Text style={{ margin: 10, }}>Closure comment </Text>
-                                    </View>
-                                    <View style={styles.mapDetails}>
-                                        <Text style={{ margin: 10 }}>{val.Mentor_Closure_Comment}</Text>
-                                    </View>
-                                </View>
-
+                            <View style={{ alignContent: 'center', justifyContent: 'center', height: 50, backgroundColor: '#252757', borderColor: '#307ecc' }}>
+                                <Text style={{ alignSelf: 'center', color: '#fff', fontSize: 20, fontFamily: 'sans-serif' }}>{val.engagement_type.toUpperCase()}</Text>
                             </View>
+                            <ScrollView>
+                                <View >
+                                    <View style={styles.fullText}>
+                                        <Text style={styles.message}>{val.reason_for_engagement}</Text>
+                                    </View>
+                                </View>
 
-                            {this.state.role !== "mentee" ? (
-                                <View style={{ marginVertical: 4, }}>
-                                    <View style={styles.textAreaContainer}>
-                                        <TextInput
-                                            style={styles.textArea}
-                                            value={this.state.comment}
-                                            onChangeText={this.handleInputText}
-                                            placeholder='Please write comment'
-                                            placeholderTextColor='gray'
-                                            multiline={true}
-                                        />
+                                <View style={styles.modeStatus}>
+                                    <Text style={styles.modeStatusText}>{val.mode_of_engagement.toUpperCase()}</Text>
+                                    <Text style={styles.modeStatusText}>{val.status.toUpperCase()}</Text>
+                                </View>
+
+                                <View style={styles.modeStatus}>
+                                    <Text style={styles.modeStatusText}>{val.proposed_date}</Text>
+                                    <Text style={styles.modeStatusText}> {val.proposed_time}</Text>
+                                </View>
+                                {val.mentor_reject_comment !== "" &&
+                                    <View >
+                                        <View>
+                                            <Text style={styles.comment}>Mentor's Comment</Text>
+                                        </View>
+                                        <View style={styles.fullText}>
+                                            <Text style={styles.comment}>{val.mentor_reject_comment}</Text>
+                                        </View>
                                     </View>
-                                    <View style={{ flexDirection: 'row', backgroundColor: '#f2f2f2', alignContent: 'center', justifyContent: 'center' }}>
-                                        <TouchableOpacity onPress={this.acceptEngagement}
-                                            style={{ margin: 5, backgroundColor: '#307ecc', width: '40%', }} >
-                                            <Text style={{ fontSize: 15, color: "#fff", margin: 2, alignSelf: 'center' }}>Accept</Text>
-                                        </TouchableOpacity>
-                                        <TouchableOpacity onPress={() => this.props.navigation.navigate("ModifyAccept", setEngID(val.engagement_ID))}
-                                            style={{ margin: 5, backgroundColor: 'gray', width: '40%', }} >
-                                            <Text style={{ fontSize: 15, color: "#fff", margin: 2, alignSelf: 'center' }}>Modify & Accept</Text>
-                                        </TouchableOpacity>
+                                }
+
+                                <View >
+                                    <View>
+                                        <Text style={styles.comment}>Engagement Task</Text>
                                     </View>
-                                </View>) : (<View>
-                                    {val.status === "Accepted" ? (
+                                    <View style={styles.modeStatus}>
+                                        <Text style={styles.comment}>{val.engagement_task}</Text>
+                                        <Text style={styles.comment}>{val.task_type}</Text>
+                                    </View>
+                                </View>
+
+                                <View style={styles.modeStatus}>
+                                    <Text style={styles.comment}>Engagement Reported? </Text>
+                                    {val.is_report_up !== "" ?
+                                        <Text style={styles.comment}>{val.is_report_up} {val.report_date_submitted}</Text>
+                                        : <Text style={styles.comment}>No</Text>
+                                    }
+                                </View>
+
+                                {
+                                    // val.report_uploaded
+                                    val.is_report_up !== "" &&
+                                    <TouchableOpacity
+                                        onPress={() => { }}
+                                        style={styles.button}>
+                                        <Text style={styles.comment}>View Report</Text>
+                                    </TouchableOpacity>
+                                }
+
+                                {val.Mentor_Closure_Comment !== "" &&
+                                    <View>
+                                        <View>
+                                            <Text style={styles.comment}>Mentor's Closure Comment</Text>
+                                        </View>
+                                        <View style={styles.fullText}>
+                                            <Text style={styles.comment}>{val.Mentor_Closure_Comment}</Text>
+                                        </View>
+                                    </View>
+                                }
+
+
+                                {this.state.role !== "mentee" && val.status === "Pending" ? (
+                                    <View style={{ marginVertical: 4, }}>
+                                        <View style={styles.textAreaContainer}>
+                                            <TextInput
+                                                style={styles.textArea}
+                                                value={this.state.comment}
+                                                onChangeText={this.handleInputText}
+                                                placeholder='Please write comment'
+                                                placeholderTextColor='gray'
+                                                multiline={true}
+                                            />
+                                        </View>
+                                        <View style={{ flexDirection: 'row', alignContent: 'center', justifyContent: 'space-between' }}>
+                                            <TouchableOpacity onPress={this.acceptEngagement}
+                                                style={styles.button} >
+                                                <Text style={{ fontSize: 20, color: "#fff", margin: 2, }}>Accept</Text>
+                                            </TouchableOpacity>
+                                            <TouchableOpacity onPress={() => this.props.navigation.navigate("ModifyAccept", setEngID(val.engagement_ID))}
+                                                style={styles.button} >
+                                                <Text style={{ fontSize: 20, color: "#fff", margin: 2, }}>Modify & Accept</Text>
+                                            </TouchableOpacity>
+                                        </View>
+                                    </View>) : <View />}
+                                {this.state.role === "mentee" && val.status === "Accepted" ?
+                                    <View>
                                         <View style={{ marginTop: 2 }}>
                                             {this.renderFileUploadView()}
                                         </View>
-                                    ) : (<View />)}
-                                </View>)}
+                                    </View> :
+                                    <View />}
+                            </ScrollView>
                         </View>
-                    </ScrollView>
-                </ScrollView>
+                    </View>
+                </View>
             )
         })
     }
@@ -295,21 +262,55 @@ export default class SingleEngagement extends Component {
 const styles = StyleSheet.create({
     mainContainer: {
         alignContent: 'center',
-        backgroundColor: '#e5e5e5',
+        backgroundColor: '#515265',
         height: '100%',
+    },
+    fullText: {
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: '#252757',
+        borderRadius: 10,
+        marginVertical: 10,
+    },
+    message: {
+        margin: 4,
+        justifyContent: 'space-between',
+        fontSize: 16,
+        color: '#ebeaf5'
+    },
+    modeStatus: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        backgroundColor: '#252757',
+        borderRadius: 10,
+        marginHorizontal: 2,
+        marginBottom: 10,
+    },
+    modeStatusText: {
+        margin: 10,
+        fontSize: 16,
+        color: '#ebeaf5'
+    },
+    comment: {
+        margin: 4,
+        alignItems: 'flex-start',
+        justifyContent: 'space-between',
+        fontSize: 16,
+        color: '#ebeaf5',
+        padding: 5,
     },
     engDetailsContainer: {
         margin: 2,
-        flexDirection: 'row',
         backgroundColor: '#f2f2f2',
     },
     mapNameDetails: {
         margin: 2,
-        width: '30%',
+        width: '100%',
     },
     mapDetails: {
         margin: 2,
-        width: '70%',
+        width: '100%',
     },
     textAreaContainer: {
         borderColor: 'gray',
@@ -317,8 +318,8 @@ const styles = StyleSheet.create({
         paddingRight: 5,
         margin: 5,
         borderRadius: 5,
-        height: 60,
-        backgroundColor: '#f2f2f2',
+        height: 120,
+        backgroundColor: '#a3a3a3',
     },
     textArea: {
         width: '60%',
@@ -326,9 +327,17 @@ const styles = StyleSheet.create({
     },
     uploadReport: {
         flexDirection: 'row',
-        backgroundColor: '#f2f2f2',
         margin: 2,
         marginTop: 5
+    },
+    button: {
+        margin: 5,
+        backgroundColor: 'gray',
+        width: '46%',
+        height: 40,
+        borderRadius: 5,
+        justifyContent: 'center',
+        alignItems: 'center'
     },
     reportButton: {
         margin: 2,

@@ -1,53 +1,23 @@
 import React, { Component } from 'react';
 import { Alert, AsyncStorage, StyleSheet, Text, View } from 'react-native';
+import { Drawer } from 'react-native-paper';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
-const itemsMentor = [
-    {
-        navOptionName: "Close Drawer <<<",
-        screenToNavigate: "home",
-    },
+const items = [
     {
         navOptionName: "Dash Board",
         screenToNavigate: "DashBoard",
+        iconName: "home-outline",
     },
     {
-        navOptionName: 'Profile',
+        navOptionName: 'Mentees',
         screenToNavigate: 'Profile',
+        iconName: "account-multiple",
     },
     {
         navOptionName: 'Settings',
         screenToNavigate: 'Settings',
-    },
-    {
-        navOptionName: 'Logout',
-        screenToNavigate: 'logout',
-    },
-];
-
-const itemsMentee = [
-    {
-        navOptionName: "Close Drawer <<<",
-        screenToNavigate: "home",
-    },
-    {
-        navOptionName: "Dash Board",
-        screenToNavigate: "DashBoard",
-    },
-    {
-        navOptionName: 'Profile',
-        screenToNavigate: 'Profile',
-    },
-    {
-        navOptionName: 'Start New Engagement',
-        screenToNavigate: 'NewEngagement',
-    },
-    {
-        navOptionName: 'Settings',
-        screenToNavigate: 'Settings',
-    },
-    {
-        navOptionName: 'Logout',
-        screenToNavigate: 'logout',
+        iconName: "settings-outline",
     },
 ];
 
@@ -55,14 +25,17 @@ const itemsAdminMenu = [
     {
         navOptionName: "Manage Engagements",
         screenToNavigate: "ManageEngagements",
+        iconName: "calendar-check-outline",
     },
     {
         navOptionName: 'Manage Mentors',
         screenToNavigate: 'ManageMentors',
+        iconName: "briefcase-account-outline",
     },
     {
         navOptionName: 'Manage Mentees',
         screenToNavigate: 'ManageMentees',
+        iconName: "briefcase-account-outline",
     },
 ];
 
@@ -101,9 +74,9 @@ class SideBarMenu extends Component {
     handleClick = (index, screenToNavigate) => {
         if (screenToNavigate === "logout") {
             this.props.navigation.toggleDrawer();
-            alert(
-                "Logged out",
-                "Are you sure?", "You want to logout?",
+            Alert.alert(
+                "Wait!",
+                "Are you sure You want to logout?",
                 [
                     {
                         text: "Cancel",
@@ -122,8 +95,6 @@ class SideBarMenu extends Component {
                 ],
                 { cancelable: false }
             );
-            AsyncStorage.clear();
-            this.props.navigation.navigate("Signin")
         } else {
             this.props.navigation.toggleDrawer();
             global.currentScreenIndex = screenToNavigate;
@@ -132,8 +103,6 @@ class SideBarMenu extends Component {
     };
 
     render() {
-        let items = []
-        this.state.role === "mentee" ? items = itemsMentee : items = itemsMentor
         return (
             <View style={styles.sideMenuContainer}>
                 <View style={styles.profileHeader}>
@@ -147,34 +116,40 @@ class SideBarMenu extends Component {
                         <Text style={styles.profileHeaderText2}>{this.state.greeting}</Text>
                     </View>
                 </View>
-                <View style={{ width: '100%', flex: 1 }}>
+                <Drawer.Section style={styles.drawerSection}>
                     {items.map((item, key) => (
                         <View key={key}>
                             <View
                                 style={{
                                     flexDirection: 'row',
+                                    justifyContent: 'space-between',
                                     alignItems: 'center',
                                     padding: 5,
                                     marginLeft: 12,
+                                    paddingBottom: 15,
                                     backgroundColor:
                                         global.currentScreenIndex === item.screenToNavigate
                                             ? '#aaa'
-                                            : 'gray',
+                                            : '#fff',
                                 }}
                                 key={key}
                                 onStartShouldSetResponder={() =>
                                     this.handleClick(key, item.screenToNavigate)
                                 }>
-                                <Text style={{ fontSize: 15, color: 'white' }}>
-                                    {item.navOptionName}
+                                <MaterialCommunityIcons name={item.iconName} size={26} color='#252757' style={{ paddingLeft: 40, }} />
+                                <Text style={{ fontSize: 15, marginRight: 70, color: '#252757' }}>
+                                    {
+                                        key === 1 && this.state.role === 'mentee' ? "Mentor's Profile" :
+                                            item.navOptionName
+                                    }
                                 </Text>
                             </View>
                             <View style={styles.profileHeaderLine} />
                         </View>
                     ))}
-                </View>
+                </Drawer.Section>
                 {this.state.role === "adminmember" ? (
-                    <View style={{ width: '100%', flex: 1 }}>
+                    <View style={[styles.bottomDrawerSection, { width: '100%', flex: 1 }]}>
                         <View>
                             <Text style={{ fontSize: 15, color: 'white', marginLeft: 15, }}>ADMIN MANAGEMENT BOARD</Text>
                         </View>
@@ -184,19 +159,22 @@ class SideBarMenu extends Component {
                                 <View
                                     style={{
                                         flexDirection: 'row',
+                                        justifyContent: 'space-between',
                                         alignItems: 'center',
                                         padding: 5,
                                         marginLeft: 12,
+                                        paddingBottom: 15,
                                         backgroundColor:
                                             global.currentScreenIndex === item.screenToNavigate
                                                 ? '#aaa'
-                                                : 'gray',
+                                                : '#fff',
                                     }}
                                     key={key}
                                     onStartShouldSetResponder={() =>
                                         this.handleClick(key, item.screenToNavigate)
                                     }>
-                                    <Text style={{ fontSize: 15, color: 'white' }}>
+                                    <MaterialCommunityIcons name={item.iconName} size={26} color='#252757' style={{ paddingLeft: 40, }} />
+                                    <Text style={{ fontSize: 15, marginRight: 20, color: '#252757' }}>
                                         {item.navOptionName}
                                     </Text>
                                 </View>
@@ -205,6 +183,32 @@ class SideBarMenu extends Component {
                         ))}
                     </View>
                 ) : (<View />)}
+
+                <Drawer.Section style={[styles.bottomDrawerSection, { flex: 1 }]}>
+
+                    <View>
+                        <View
+                            style={{
+                                flexDirection: 'row',
+                                justifyContent: 'space-between',
+                                alignItems: 'center',
+                                padding: 5,
+                                marginLeft: 12,
+                                paddingBottom: 15,
+                                backgroundColor: '#fff'
+                            }}
+                            onStartShouldSetResponder={() =>
+                                this.handleClick('any', 'logout')
+                            }>
+                            <MaterialCommunityIcons name='exit-to-app' size={26} color='#252757' style={{ paddingLeft: 40, }} />
+                            <Text style={{ fontSize: 15, marginRight: 70, color: '#252757' }}>
+                                Logout
+                                </Text>
+                        </View>
+                        <View style={styles.profileHeaderLine} />
+                    </View>
+
+                </Drawer.Section>
             </View>
         );
     }
@@ -214,35 +218,37 @@ const styles = StyleSheet.create({
     sideMenuContainer: {
         width: '100%',
         height: '100%',
-        backgroundColor: 'gray',
+        backgroundColor: '#fff',
         paddingTop: 20,
     },
     profileHeader: {
         flexDirection: 'row',
-        backgroundColor: 'gray',
+        backgroundColor: '#fff',
+        marginTop: 20,
         padding: 5,
     },
     profileHeaderPicCircle: {
         width: 40,
         height: 40,
         borderRadius: 60 / 2,
-        backgroundColor: '#fff',
+        backgroundColor: '#aaa',
         justifyContent: 'center',
         alignItems: 'center',
     },
     profileHeaderText: {
-        color: 'white',
         paddingHorizontal: 10,
         marginRight: 2,
         fontSize: 20,
+        marginBottom: 10,
         fontWeight: 'bold',
+        color: '#252757',
     },
     profileHeaderText2: {
-        color: 'white',
         alignSelf: 'flex-start',
         paddingHorizontal: 10,
         width: '90%',
         fontSize: 15,
+        color: '#252757',
     },
     profileHeaderLine: {
         height: 1,
@@ -250,6 +256,14 @@ const styles = StyleSheet.create({
         backgroundColor: '#e2e2e2',
         marginTop: 2,
         marginBottom: 2,
+    },
+    drawerSection: {
+        marginTop: 25,
+    },
+    bottomDrawerSection: {
+        borderTopColor: '#f4f4f4',
+        borderTopWidth: 1,
+        justifyContent: 'flex-end',
     },
 });
 
