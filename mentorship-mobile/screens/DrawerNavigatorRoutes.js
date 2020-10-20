@@ -1,6 +1,7 @@
 import React from 'react';
 import { Image } from 'react-native';
 import Entypo from '@expo/vector-icons/Entypo';
+import MaIcon from '@expo/vector-icons/MaterialCommunityIcons'
 
 //Import Navigators
 import { createStackNavigator } from 'react-navigation-stack';
@@ -14,7 +15,6 @@ import UserDetailsScreen from './UserDetailsScreen';
 import NavigationDrawerHeader from '../components/NavigationDrawerHeader';
 import SingleEngagement from './SingleEngagementScreen';
 import NewEngagement from './NewEngagementScreen';
-import AdminPanel from './AdminPanelScreen';
 import ManageEngagementsScreen from '../screensAdmin/ManageEngagementsScreen';
 import ManageMentorsScreen from '../screensAdmin/ManageMentorsScreen';
 import ManageMenteesScreen from '../screensAdmin/ManageMenteesScreen';
@@ -22,10 +22,6 @@ import ModifyAcceptEngagement from './ModifyAcceptEng';
 import MyProfileScreen from './MyProfileScreen';
 import SettingsScreen from './SettingsScreen';
 import NotificationScreen from './NotificationScreen';
-
-import logo from '../assets/logo.png';
-import { TouchableOpacity } from 'react-native-gesture-handler';
-import AdminCompletedScreen from './AdminCompletedScreen';
 import CompletedScreen from './CompletedScreen';
 
 const SingleEngagementStack = createStackNavigator({
@@ -68,146 +64,6 @@ const SettingsStack = createStackNavigator({
     }
 });
 
-// const SettingsNavigator = createStackNavigator({
-//     Settings: {
-//         screen: SettingsStack,
-//         navigationOptions: ({ navigation }) => ({
-//             title: 'Settings',
-//             headerStyle: {
-//                 backgroundColor: '#307ecc',
-//             },
-//             headerTintColor: '#fff',
-//             headerTitleAlign: 'center',
-//         }),
-//     }
-// });
-
-const NotificationStack = createStackNavigator({
-    Notifications: {
-        screen: NotificationScreen,
-        navigationOptions: ({ navigation }) => ({
-            title: 'Notifications',
-            headerStyle: {
-                backgroundColor: '#307ecc',
-            },
-            headerTintColor: '#fff',
-            headerTitleAlign: 'center',
-        }),
-    }
-});
-
-const DashBoardNavigator = createBottomTabNavigator({
-    DashBoard: {
-        screen: DashBoardScreen,
-        navigationOptions: {
-            tabBarLabel: 'Active',
-            tabBarOptions: {
-                activeBackgroundColor: '#fff',
-                inactiveBackgroundColor: '#f0edf6',
-                activeTintColor: '#307ecc',
-                labelStyle: {
-                    fontSize: 15,
-                    marginBottom: 10,
-                },
-                tabStyle: {
-                    width: 100,
-                },
-                style: { backgroundColor: '#aaa' },
-            },
-        }
-    },
-    UserProfile: {
-        screen: CompletedScreen,
-        navigationOptions: {
-            tabBarLabel: 'Completed',
-            tabBarOptions: {
-                activeBackgroundColor: '#fff',
-                inactiveBackgroundColor: '#f0edf6',
-                activeTintColor: '#307ecc',
-                labelStyle: {
-                    fontSize: 15,
-                    marginBottom: 10,
-                },
-                tabStyle: {
-                    width: 100,
-                },
-                style: { backgroundColor: '#aaa' },
-            },
-        }
-
-    },
-});
-
-const DashBoardStack = createStackNavigator({
-    DashBoard: {
-        screen: DashBoardNavigator,
-        navigationOptions: ({ navigation }) => ({
-            title: 'My Engagements',
-            headerLeft: () => <NavigationDrawerHeader navigationProps={navigation} />,
-            headerStyle: {
-                backgroundColor: '#fff',
-            },
-            headerTintColor: '#307ecc',
-            headerTitleAlign: 'center',
-        }),
-    },
-    SingleEngagement: {
-        screen: SingleEngagementStack,
-        navigationOptions: ({ navigation }) => ({
-            title: 'Engagement',
-            headerStyle: {
-                backgroundColor: '#307ecc',
-            },
-            headerTintColor: '#fff',
-            headerTitleAlign: 'center',
-        }),
-    },
-    NewEngagement: {
-        screen: NewEngagementStack,
-        navigationOptions: ({ navigation }) => ({
-            title: 'Start New Engagement',
-            headerStyle: {
-                backgroundColor: '#307ecc',
-            },
-            headerTintColor: '#fff',
-            headerTitleAlign: 'center',
-        }),
-    },
-    ModifyAccept: {
-        screen: ModifyAcceptEngagementStack,
-        navigationOptions: ({ navigation }) => ({
-            title: 'Modify Engagement',
-            headerStyle: {
-                backgroundColor: '#307ecc',
-            },
-            headerTintColor: '#fff',
-            headerTitleAlign: 'center',
-        }),
-    },
-    Notifications: {
-        screen: NotificationStack,
-        navigationOptions: ({ navigation }) => ({
-            title: 'Notifications',
-            headerStyle: {
-                backgroundColor: '#307ecc',
-            },
-            headerTintColor: '#fff',
-            headerTitleAlign: 'center',
-        }),
-    },
-    Settings: {
-        screen: SettingsStack,
-        navigationOptions: ({ navigation }) => ({
-            title: 'Settings',
-            headerStyle: {
-                backgroundColor: '#307ecc',
-            },
-            headerTintColor: '#fff',
-            headerTitleAlign: 'center',
-        }),
-    }
-});
-
 const ManageEngagementsStack = createStackNavigator({
     ManageEngagements: {
         screen: ManageEngagementsScreen,
@@ -238,15 +94,45 @@ const ManageMenteesStack = createStackNavigator({
     },
 });
 
-const AdminDashBoardNavigator = createBottomTabNavigator({
+
+// const SettingsNavigator = createStackNavigator({
+//     Settings: {
+//         screen: SettingsStack,
+//         navigationOptions: ({ navigation }) => ({
+//             title: 'Settings',
+//             headerStyle: {
+//                 backgroundColor: '#252757',
+//             },
+//             headerTintColor: '#fff',
+//             headerTitleAlign: 'center',
+//         }),
+//     }
+// });
+
+const NotificationStack = createStackNavigator({
+    Notifications: {
+        screen: NotificationScreen,
+        navigationOptions: ({ navigation }) => ({
+            title: 'Notifications',
+            headerStyle: {
+                backgroundColor: '#252757',
+            },
+            headerTintColor: '#fff',
+            headerTitleAlign: 'center',
+        }),
+    }
+});
+
+const DashBoardNavigator = createBottomTabNavigator({
     DashBoard: {
-        screen: AdminPanel,
+        screen: DashBoardScreen,
         navigationOptions: {
+            tabBarIcon: <MaIcon name='checkbox-blank-outline' size={20} color='#252757' />,
             tabBarLabel: 'Active',
             tabBarOptions: {
                 activeBackgroundColor: '#fff',
                 inactiveBackgroundColor: '#f0edf6',
-                activeTintColor: '#307ecc',
+                activeTintColor: '#252757',
                 labelStyle: {
                     fontSize: 15,
                     marginBottom: 10,
@@ -259,13 +145,36 @@ const AdminDashBoardNavigator = createBottomTabNavigator({
         }
     },
     UserProfile: {
-        screen: AdminCompletedScreen,
+        screen: CompletedScreen,
         navigationOptions: {
             tabBarLabel: 'Completed',
+            tabBarIcon: <MaIcon name='checkbox-marked-outline' size={20} color='#252757' />,
             tabBarOptions: {
                 activeBackgroundColor: '#fff',
                 inactiveBackgroundColor: '#f0edf6',
-                activeTintColor: '#307ecc',
+                activeTintColor: '#252757',
+                labelStyle: {
+                    fontSize: 15,
+                    marginBottom: 10,
+                },
+                tabStyle: {
+                    width: 100,
+                },
+                style: { backgroundColor: '#aaa' },
+            },
+        }
+
+    },
+
+    UserDetails: {
+        screen: MyProfileScreen,
+        navigationOptions: {
+            tabBarIcon: <Entypo name='user' size={20} color='#252757' />,
+            tabBarLabel: 'Profile',
+            tabBarOptions: {
+                activeBackgroundColor: '#fff',
+                inactiveBackgroundColor: '#f0edf6',
+                activeTintColor: '#252757',
                 labelStyle: {
                     fontSize: 15,
                     marginBottom: 10,
@@ -280,58 +189,48 @@ const AdminDashBoardNavigator = createBottomTabNavigator({
     },
 });
 
-const AdminDasboardStack = createStackNavigator({
-    AdminDashboard: {
-        screen: AdminDashBoardNavigator,
+const DashBoardStack = createStackNavigator({
+    DashBoard: {
+        screen: DashBoardNavigator,
         navigationOptions: ({ navigation }) => ({
-            title: "Admin Dashboard",
+            title: '',
             headerLeft: () => <NavigationDrawerHeader navigationProps={navigation} />,
             headerStyle: {
-                backgroundColor: '#fff',
+                backgroundColor: '#252757',
             },
-            headerTintColor: '#307ecc',
+            headerTintColor: '#252757',
             headerTitleAlign: 'center',
         }),
     },
     SingleEngagement: {
         screen: SingleEngagementStack,
         navigationOptions: ({ navigation }) => ({
-            title: 'Engagement',
+            title: '',
+            headerShown: false,
             headerStyle: {
-                backgroundColor: '#307ecc',
+                backgroundColor: '#252757',
             },
             headerTintColor: '#fff',
             headerTitleAlign: 'center',
         }),
     },
-    ManageEngagemente: {
-        screen: ManageEngagementsStack,
+    NewEngagement: {
+        screen: NewEngagementStack,
         navigationOptions: ({ navigation }) => ({
-            title: 'Manage All Engagement',
+            title: 'Start New Engagement',
             headerStyle: {
-                backgroundColor: '#307ecc',
+                backgroundColor: '#252757',
             },
             headerTintColor: '#fff',
             headerTitleAlign: 'center',
         }),
     },
-    ManageMentors: {
-        screen: ManageMentorsStack,
+    ModifyAccept: {
+        screen: ModifyAcceptEngagementStack,
         navigationOptions: ({ navigation }) => ({
-            title: 'Manage Mentors',
+            title: 'Modify Engagement',
             headerStyle: {
-                backgroundColor: '#307ecc',
-            },
-            headerTintColor: '#fff',
-            headerTitleAlign: 'center',
-        }),
-    },
-    ManageMentees: {
-        screen: ManageMenteesStack,
-        navigationOptions: ({ navigation }) => ({
-            title: 'Manage Mentees',
-            headerStyle: {
-                backgroundColor: '#307ecc',
+                backgroundColor: '#252757',
             },
             headerTintColor: '#fff',
             headerTitleAlign: 'center',
@@ -342,7 +241,7 @@ const AdminDasboardStack = createStackNavigator({
         navigationOptions: ({ navigation }) => ({
             title: 'Notifications',
             headerStyle: {
-                backgroundColor: '#307ecc',
+                backgroundColor: '#252757',
             },
             headerTintColor: '#fff',
             headerTitleAlign: 'center',
@@ -353,67 +252,80 @@ const AdminDasboardStack = createStackNavigator({
         navigationOptions: ({ navigation }) => ({
             title: 'Settings',
             headerStyle: {
-                backgroundColor: '#307ecc',
+                backgroundColor: '#252757',
             },
             headerTintColor: '#fff',
             headerTitleAlign: 'center',
         }),
-    }
-});
-
-const ProfileStack = createBottomTabNavigator({
-    UserDetails: {
-        screen: MyProfileScreen,
-        navigationOptions: {
-            tabBarLabel: 'My Profile',
-            tabBarOptions: {
-                activeBackgroundColor: '#fff',
-                inactiveBackgroundColor: '#f0edf6',
-                activeTintColor: '#307ecc',
-                labelStyle: {
-                    fontSize: 15,
-                    marginBottom: 10,
-                },
-                tabStyle: {
-                    width: 100,
-                },
-                style: { backgroundColor: '#aaa' },
-            },
-        }
-
     },
-    UserProfile: {
-        screen: UserDetailsScreen,
-        navigationOptions: {
-            tabBarLabel: 'My Mentor/Mentee(s)',
-            tabBarOptions: {
-                activeBackgroundColor: '#fff',
-                inactiveBackgroundColor: '#f0edf6',
-                activeTintColor: '#307ecc',
-                labelStyle: {
-                    fontSize: 15,
-                    marginBottom: 10,
-                },
-                tabStyle: {
-                    width: 100,
-                },
-                style: { backgroundColor: '#aaa' },
+    ManageEngagemente: {
+        screen: ManageEngagementsStack,
+        navigationOptions: ({ navigation }) => ({
+            title: 'Manage All Engagement',
+            headerStyle: {
+                backgroundColor: '#252757',
             },
-        }
-
+            headerTintColor: '#fff',
+            headerTitleAlign: 'center',
+        }),
+    },
+    ManageMentors: {
+        screen: ManageMentorsStack,
+        navigationOptions: ({ navigation }) => ({
+            title: 'Manage Mentors',
+            headerStyle: {
+                backgroundColor: '#252757',
+            },
+            headerTintColor: '#fff',
+            headerTitleAlign: 'center',
+        }),
+    },
+    ManageMentees: {
+        screen: ManageMenteesStack,
+        navigationOptions: ({ navigation }) => ({
+            title: 'Manage Mentees',
+            headerStyle: {
+                backgroundColor: '#252757',
+            },
+            headerTintColor: '#fff',
+            headerTitleAlign: 'center',
+        }),
     },
 });
+
+// const ProfileStack = createBottomTabNavigator({
+//     UserProfile: {
+//         screen: UserDetailsScreen,
+//         navigationOptions: {
+//             tabBarOptions: {
+//                 showLabel: false,
+//                 activeBackgroundColor: '#fff',
+//                 inactiveBackgroundColor: '#f0edf6',
+//                 activeTintColor: '#252757',
+//                 labelStyle: {
+//                     fontSize: 15,
+//                     marginBottom: 10,
+//                 },
+//                 tabStyle: {
+//                     width: 100,
+//                 },
+//                 style: { backgroundColor: '#aaa' },
+//             },
+//         }
+
+//     },
+// });
 
 const ProfileNavigatorStack = createStackNavigator({
     Profile: {
-        screen: ProfileStack,
+        screen: UserDetailsScreen,
         navigationOptions: ({ navigation }) => ({
             title: 'Profile',
             headerLeft: () => <NavigationDrawerHeader navigationProps={navigation} />,
             headerStyle: {
-                backgroundColor: '#fff',
+                backgroundColor: '#252757',
             },
-            headerTintColor: '#307ecc',
+            headerTintColor: '#fff',
             headerTitleAlign: 'center',
         }),
     },
@@ -439,7 +351,7 @@ const DrawerNavigatorRoutes = createDrawerNavigator({
 
 const AdminDrawerNavigatorRoutes = createDrawerNavigator({
     DashBoard: {
-        screen: AdminDasboardStack,
+        screen: DashBoardStack,
         navigationOptions: {
             drawerLabel: 'Admin DashBoard',
         },

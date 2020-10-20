@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import { Alert, AsyncStorage, Dimensions, RefreshControl, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Alert, AsyncStorage, Dimensions, RefreshControl, ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Constants from 'expo-constants'
 import Entypo from '@expo/vector-icons/Entypo';
+import * as Animatable from 'react-native-animatable';
 // import Entypo from 'react-native-vector-icons/Entypo';
 
 import { setEngID } from '../Backend/Storage';
@@ -133,7 +134,8 @@ export default class CompletedScreen extends Component {
                     statusColor = styles.task_assigned;
                 }
                 return (
-                    <View key={val.engagement_ID}>
+                    <Animatable.View
+                        animation="fadeInUpBig" duration={2000} key={val.engagement_ID}>
                         <View style={{ flexDirection: 'row', backgroundColor: '#aaa' }}>
                             <View style={{ height: '30%', width: '12%', marginLeft: 5, alignSelf: 'center', }}>
                                 {/* <Text style={{ height: 40, width: 75 }}>{val.photo}</Text> */}
@@ -168,7 +170,7 @@ export default class CompletedScreen extends Component {
                             </View>
                         </View>
                         <View style={styles.engagementBottomLine} />
-                    </View>
+                    </Animatable.View>
                 )
             }
 
@@ -213,7 +215,8 @@ export default class CompletedScreen extends Component {
                                 statusColor = styles.task_assigned;
                             }
                             return (
-                                <View style={styles.mapContainerMentee} key={val.engagement_ID}>
+                                <Animatable.View
+                                    animation='fadeInUpBig' duration={2000} style={styles.mapContainerMentee} key={val.engagement_ID}>
                                     <View style={{ flexDirection: 'row', marginVertical: 5, width: '100%', }}>
                                         <View>
                                             <View style={{ marginLeft: 8, borderRadius: 5, paddingHorizontal: 4, width: 'auto', }, [backgroundColor]} >
@@ -237,7 +240,7 @@ export default class CompletedScreen extends Component {
                                         </View>
                                     </View>
                                     <View style={styles.engagementBottomLine} />
-                                </View>
+                                </Animatable.View>
                             )
                         }
 
@@ -254,23 +257,22 @@ export default class CompletedScreen extends Component {
                 <RefreshControl refreshing={this.state.refreshing} onRefresh={this.refreshScreen} />
             }
                 style={styles.mainContainer}>
+                <StatusBar backgroundColor='#252757' barStyle='light-content' />
                 {this.state.loading ? (<View style={styles.loader}><Loader loading={this.state.loading} /></View>) : <View />}
                 {this.state.role === "mentee" ? (
                     <View>
                         <TouchableOpacity
                             style={{
-                                alignSelf: 'center',
+                                alignItems: 'center',
                                 marginHorizontal: 30,
                                 marginVertical: 10,
                                 borderRadius: 10,
-                                backgroundColor: '#011f4b',
-                                width: '90%',
                             }}
                             onPress={() => this.props.navigation.navigate("NewEngagement")}>
-                            <View style={{ flexDirection: 'row', backgroundColor: '#b3cde0', borderRadius: 5, }}>
-                                <Text style={{ fontSize: 20, marginLeft: 10, padding: 15, color: "#011f4b" }}>Start New Engagement</Text>
+                            <View style={{ flexDirection: 'row', width: "100%", justifyContent: 'space-between', marginHorizontal: 2, backgroundColor: '#3a3c67', borderRadius: 5, }}>
+                                <Text style={{ fontSize: 20, padding: 15, color: "#fff" }}>Start New Engagement</Text>
                                 <Entypo name='circle-with-plus' color="#e9eaec" size={40}
-                                    style={{ alignSelf: 'center', marginLeft: '20%' }} />
+                                    style={{ alignSelf: 'center', }} />
                             </View>
                         </TouchableOpacity>
                         {this.renderMenteeEngagements()}
@@ -290,7 +292,7 @@ const styles = StyleSheet.create({
     mainContainer: {
         flex: 1,
         alignContent: 'center',
-        backgroundColor: '#eee',
+        backgroundColor: '#515265',
     },
     mapContainerMentee: {
         flex: 1,

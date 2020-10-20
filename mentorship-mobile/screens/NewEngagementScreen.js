@@ -1,5 +1,5 @@
 import React, { Component, useState } from 'react';
-import { AsyncStorage, Button, Dimensions, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { AsyncStorage, Button, Dimensions, Platform, ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
 import { Dropdown } from 'react-native-material-dropdown';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
@@ -28,7 +28,8 @@ let engagementMode = [{
 },
 ]
 
-const expoPushToken = 'ExponentPushToken[yrgo07JkPGQ_FoSKbCjqVw]';
+const expoPushTokenMy = 'ExponentPushToken[yrgo07JkPGQ_FoSKbCjqVw]';
+const pushTokenCheta = 'ExponentPushToken[7SGg51N6Y_YoR2JImvzAON]';
 
 export default class NewEngagement extends Component {
 
@@ -71,7 +72,7 @@ export default class NewEngagement extends Component {
         this.hideTimePicker()
     }
 
-    createNewEngagement = async () => {
+    createNewEngagement = async (expoPushToken) => {
         this.setState({ loading: true })
         try {
             if (this.state.engagementType !== "" && this.state.engagementMode !== "" &&
@@ -79,8 +80,8 @@ export default class NewEngagement extends Component {
                 this.state.time !== "") {
                 await createEngagement(this.state.engagementType, this.state.engagementMode,
                     this.state.reasonForEngagement, this.state.date, this.state.time)
-                this.sendPushNotification;
                 this.setState({ loading: false })
+                this.sendPushNotification(expoPushToken);
                 this.props.navigation.navigate("Engagements")
                 return
             }
@@ -110,8 +111,8 @@ export default class NewEngagement extends Component {
         const message = {
             to: expoPushToken,
             sound: 'default',
-            title: 'Original Title',
-            body: 'And here is the body!',
+            title: 'New Engagement created',
+            body: 'Your mentee has created a new engagement',
             data: { data: 'goes here' },
         };
 
@@ -129,6 +130,7 @@ export default class NewEngagement extends Component {
     render() {
         return (
             <ScrollView style={styles.mainContainer}>
+                <StatusBar backgroundColor='#252757' barStyle='light-content' />
                 <View>
                     <View style={styles.header}>
                         <Text style={styles.headerText}>Create a new engagement with your mentor</Text>
@@ -186,7 +188,7 @@ export default class NewEngagement extends Component {
                             <Text style={styles.selectMenuText}>Proposed Date</Text>
                         </View>
                         <View>
-                            <Button title="Choose Date" onPress={this.showDatePicker} />
+                            <Button title="Choose Date" color="#252757" onPress={this.showDatePicker} />
                             <DateTimePickerModal
                                 isVisible={this.state.isDatePickerVisible}
                                 mode="date"
@@ -202,7 +204,7 @@ export default class NewEngagement extends Component {
                         </View>
                         <View >
                             <View>
-                                <Button title="Choose Time" onPress={this.showTimePicker} />
+                                <Button title="Choose Time" color="#252757" onPress={this.showTimePicker} />
                                 <DateTimePickerModal
                                     isVisible={this.state.isTimePickerVisible}
                                     mode="time"
@@ -213,7 +215,16 @@ export default class NewEngagement extends Component {
                         </View>
                     </View>
 
-                    <TouchableOpacity style={{ justifyContent: 'center', alignSelf: 'center', width: '98%', height: 35, marginVertical: 20, borderRadius: 10, backgroundColor: '#011f4b' }} onPress={this.createNewEngagement}>
+                    <TouchableOpacity
+                        style={{
+                            justifyContent: 'center',
+                            alignSelf: 'center',
+                            width: '98%',
+                            height: 35,
+                            marginVertical: 20,
+                            borderRadius: 10,
+                            backgroundColor: '#011f4b'
+                        }} onPress={() => this.createNewEngagement(pushTokenCheta)}>
                         <Text style={{ fontSize: 15, alignSelf: 'center', padding: 5, color: "#e9eaec" }}>SUBMIT</Text>
                     </TouchableOpacity>
                 </View>
@@ -226,14 +237,14 @@ const styles = StyleSheet.create({
     mainContainer: {
         flex: 1,
         alignContent: 'center',
-        backgroundColor: '#e5e5e5',
+        backgroundColor: '#515265',
         height: '100%',
     },
     header: {
         marginVertical: 2,
         height: 40,
         justifyContent: 'center',
-        backgroundColor: '#307ecc',
+        backgroundColor: '#252757',
     },
     headerText: {
         alignSelf: 'center',
@@ -243,13 +254,14 @@ const styles = StyleSheet.create({
     },
     selectMenu: {
         margin: 5,
-        backgroundColor: '#f2f2f2',
+        backgroundColor: '#a3a3a3',
+        borderRadius: 5,
     },
     selectMenuText: {
         marginVertical: 2,
         fontSize: 15,
         fontFamily: 'sans-serif',
-        color: '#307ecc',
+        color: '#252757',
     },
     textAreaContainer: {
         borderColor: 'gray',

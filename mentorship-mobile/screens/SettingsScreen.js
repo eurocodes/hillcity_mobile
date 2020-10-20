@@ -2,7 +2,7 @@ import * as React from 'react';
 import Constants from 'expo-constants';
 import * as Notifications from 'expo-notifications';
 import * as Permissions from 'expo-permissions';
-import { AsyncStorage, Text, View, Button, Platform, ScrollView, StyleSheet } from 'react-native';
+import { AsyncStorage, Text, View, Button, Platform, ScrollView, StyleSheet, Alert } from 'react-native';
 import { Switch } from 'react-native-gesture-handler';
 
 Notifications.setNotificationHandler({
@@ -80,9 +80,9 @@ export default class SettingsScreen extends React.Component {
 
                     <View style={[styles.screenContainer, styles.fill]}>
                         <Button onPress={() => {
-                            alert(
+                            Alert.alert(
                                 "Logged out",
-                                "Are you sure?", "You want to logout?",
+                                "Are you sure you want to logout?",
                                 [
                                     {
                                         text: "Cancel",
@@ -101,9 +101,6 @@ export default class SettingsScreen extends React.Component {
                                 ],
                                 { cancelable: false }
                             );
-                            AsyncStorage.clear();
-                            this.props.navigation.navigate("Signin")
-                            console.log("Logged out");
                         }}
                             title='Sign Out'
                         />

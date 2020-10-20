@@ -1,7 +1,14 @@
 import React, { Component } from 'react';
-import { Dimensions, Image, ImageBackground, StyleSheet, Text, TextInput, TouchableOpacity, View, KeyboardAvoidingView } from 'react-native';
+import {
+    Dimensions, Image,
+    ImageBackground, StyleSheet,
+    Text, TextInput, TouchableOpacity,
+    View, KeyboardAvoidingView, Alert, StatusBar,
+    SafeAreaView
+} from 'react-native';
 import Constants from 'expo-constants'
 import Feather from '@expo/vector-icons/Feather';
+import * as Animatable from 'react-native-animatable';
 
 import { setUserToken, setName, setUserRole } from '../Backend/Storage';
 import logo from '../assets/logo.png';
@@ -53,7 +60,9 @@ export default class SigninScreen extends Component {
                 return
             }
             this.setState({ err: results.message })
-            alert(this.state.err)
+            Alert.alert("Access Denied", this.state.err, [
+                { text: "OKAY" }
+            ]);
             this.setState({ loading: false, email: '', password: '', })
             this.props.navigation.navigate('Signin');
             return
@@ -64,7 +73,8 @@ export default class SigninScreen extends Component {
 
     render() {
         return (
-            <KeyboardAvoidingView style={styles.mainContainer}>
+            <SafeAreaView style={styles.mainContainer}>
+                <StatusBar backgroundColor='#252757' barStyle='light-content' />
                 <ImageBackground
                     style={{ alignSelf: 'flex-start', height: height * 0.4, width, }}
                     source={Mentoring}>
@@ -94,7 +104,9 @@ export default class SigninScreen extends Component {
                                 autoCapitalize='none'
                                 underlineColorAndroid='transparent' />
                         </View>
-                        {this.state.noEmail ? <Text style={styles.errText}>{this.state.noEmail}</Text> : <View />}
+                        {this.state.noEmail ? <Animatable.View animation='fadeInLeft' duration={500}>
+                            <Text style={styles.errText}>{this.state.noEmail}</Text>
+                        </Animatable.View> : <View />}
 
                         <View style={styles.inputField}>
                             <Feather name="key" size={20} color='#aaa' />
@@ -107,7 +119,9 @@ export default class SigninScreen extends Component {
                                 underlineColorAndroid='transparent' />
                             <Feather name="eye" size={20} color='#aaa' />
                         </View>
-                        {this.state.noPassword ? <Text style={styles.errText}>{this.state.noPassword}</Text> : <View />}
+                        {this.state.noPassword ? <Animatable.View animation='fadeInLeft' duration={500}>
+                            <Text style={styles.errText}>{this.state.noPassword}</Text>
+                        </Animatable.View> : <View />}
 
                         <TouchableOpacity style={styles.button} onPress={this.signin} >
                             <View>
@@ -124,7 +138,7 @@ export default class SigninScreen extends Component {
                     </View>
                 </View>
 
-            </KeyboardAvoidingView>
+            </SafeAreaView>
         );
     }
 }
@@ -135,7 +149,6 @@ const styles = StyleSheet.create({
         alignItems: 'flex-start',
         justifyContent: 'flex-start',
         backgroundColor: '#fff',
-        paddingTop: Constants.statusBarHeight,
         height,
         width: '100%',
     },
