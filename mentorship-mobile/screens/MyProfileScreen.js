@@ -16,6 +16,7 @@ import {
     fetchEngagementsMentor
 } from '../Backend/API';
 import Loader from '../components/Loader';
+import { setUserPhoto } from '../Backend/Storage';
 
 // import Icon from 'react-native-vector-icons/FontAwesome';
 
@@ -62,7 +63,7 @@ export default class UserDetailsScreen extends Component {
             if (results.myConnections && results.myDetails) {
                 const data = new Array(results.myDetails);
                 this.setState({ data: data, role: "mentor" })
-                console.log("ENG Results: ", this.state.data);
+                setUserPhoto(results.myDetails.photo)
                 this.setState({ loading: false })
                 return
             }
@@ -85,7 +86,6 @@ export default class UserDetailsScreen extends Component {
             const results = await fetchUsersMentee()
             const data = new Array(results.myDetails);
             this.setState({ data: data, role: "mentee" })
-            console.log("MENTEE Results: ", this.state.data);
             this.setState({ loading: false })
             return
         } catch (err) {
@@ -156,7 +156,7 @@ export default class UserDetailsScreen extends Component {
                         <View style={{ flexDirection: 'row', marginTop: 15 }}>
                             <Avatar.Image
                                 source={{
-                                    uri: 'https://p.kindpng.com/picc/s/78-785827_user-profile-avatar-login-account-male-user-icon.png'
+                                    uri: `http://hillcityfoundation.org/portal/storage/student_images/${val.photo}`
                                 }}
                                 size={80}
                             />
@@ -164,6 +164,7 @@ export default class UserDetailsScreen extends Component {
                                 <Title style={[styles.title, {
                                     marginTop: 15,
                                     marginBottom: 5,
+                                    width: '90%',
                                 }]}>{`${val.firstName} ${val.lastName}`}</Title>
                                 <Caption style={styles.caption}>{val.email}</Caption>
                             </View>
@@ -263,7 +264,7 @@ const styles = StyleSheet.create({
         marginBottom: 25,
     },
     title: {
-        fontSize: 24,
+        fontSize: 20,
         fontWeight: 'bold',
         color: '#252757',
     },

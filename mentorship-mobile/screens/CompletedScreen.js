@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Alert, AsyncStorage, Dimensions, RefreshControl, ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Alert, AsyncStorage, Dimensions, Image, RefreshControl, ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Constants from 'expo-constants'
 import Entypo from '@expo/vector-icons/Entypo';
 import * as Animatable from 'react-native-animatable';
@@ -125,10 +125,10 @@ export default class CompletedScreen extends Component {
                 backgroundColor = styles.choco_background
             }
 
-            if (val.status == 'Completed' || val.status == 'Task Assigned') {
+            if (val.status.toUpperCase() == 'COMPLETED' || val.status == 'Task Assigned') {
 
                 let statusColor;
-                if (val.status == 'Completed') {
+                if (val.status.toUpperCase() == 'COMPLETED') {
                     statusColor = styles.completed;
                 } else {
                     statusColor = styles.task_assigned;
@@ -139,7 +139,13 @@ export default class CompletedScreen extends Component {
                         <View style={{ flexDirection: 'row', backgroundColor: '#aaa' }}>
                             <View style={{ height: '30%', width: '12%', marginLeft: 5, alignSelf: 'center', }}>
                                 {/* <Text style={{ height: 40, width: 75 }}>{val.photo}</Text> */}
-                                <Entypo name='user' size={40} />
+                                {/* <Entypo name='user' size={40} /> */}
+                                <Image
+                                    style={{ width: 50, height: 50, borderRadius: 20 }}
+                                    source={{
+                                        uri: `http://hillcityfoundation.org/portal/storage/student_images/${val.photo}`
+                                    }}
+                                />
                             </View>
                             <View style={styles.mapContainerMentor}>
                                 <View style={{ alignSelf: 'flex-start', marginLeft: 8, marginVertical: 5, borderRadius: 5, }}>
@@ -206,10 +212,10 @@ export default class CompletedScreen extends Component {
                             backgroundColor = styles.choco_background
                         }
 
-                        if (val.status == 'Completed' || val.status == 'Task Assigned') {
+                        if (val.status.toUpperCase() == 'COMPLETED' || val.status == 'Task Assigned') {
 
                             let statusColor;
-                            if (val.status == 'Completed') {
+                            if (val.status.toUpperCase() == 'COMPLETED') {
                                 statusColor = styles.completed;
                             } else {
                                 statusColor = styles.task_assigned;

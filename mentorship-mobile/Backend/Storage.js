@@ -121,3 +121,20 @@ export const setEngType = engType => {
 export const getEngType = () => {
     AsyncStorage.getItem("engType")
 }
+
+// export const setUserRole = role => {
+//     SecureStore.setItemAsync("role", role)
+// }
+
+// Set Photo
+export const setUserPhoto = photo => {
+    AsyncStorage.setItem("photo", photo)
+}
+
+// export const getPhoto = () => {
+//     SecureStore.getItemAsync("photo")
+// }
+
+export const getUserPhoto = () => {
+    AsyncStorage.getItem("photo")
+}

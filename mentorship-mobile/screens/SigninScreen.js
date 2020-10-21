@@ -3,10 +3,9 @@ import {
     Dimensions, Image,
     ImageBackground, StyleSheet,
     Text, TextInput, TouchableOpacity,
-    View, KeyboardAvoidingView, Alert, StatusBar,
+    View, Alert, StatusBar,
     SafeAreaView
 } from 'react-native';
-import Constants from 'expo-constants'
 import Feather from '@expo/vector-icons/Feather';
 import * as Animatable from 'react-native-animatable';
 
@@ -14,6 +13,9 @@ import { setUserToken, setName, setUserRole } from '../Backend/Storage';
 import logo from '../assets/logo.png';
 import Mentoring from '../assets/mentoring.jpeg';
 import Loader from '../components/Loader';
+import FormInput from '../components/FormInput';
+import FormButton from '../components/FormButton';
+import SocialButton from '../components/SocialButton';
 
 const { width, height } = Dimensions.get('window');
 const baseUrl = "https://hillcityapp.herokuapp.com";
@@ -45,8 +47,7 @@ export default class SigninScreen extends Component {
                 body: JSON.stringify({ email: this.state.email, password: this.state.password })
             })
             this.setState({ loading: true })
-            const results = await response.json()
-            console.log(results);
+            const results = await response.json();
             if (response.ok) {
                 setUserToken(results.data.token)
                 setName(results.data.name)
@@ -73,70 +74,66 @@ export default class SigninScreen extends Component {
 
     render() {
         return (
-            <SafeAreaView style={styles.mainContainer}>
+            <SafeAreaView style={styles.container}>
                 <StatusBar backgroundColor='#252757' barStyle='light-content' />
-                <ImageBackground
-                    style={{ alignSelf: 'flex-start', height: height * 0.4, width, }}
-                    source={Mentoring}>
-                    <Image
-                        style={{ alignSelf: 'center', width: width * 0.3, height: height * 0.08, marginTop: 5, }}
-                        source={logo} />
+                <Image
+                    style={styles.logo}
+                    source={require("../assets/logo.png")}
+                />
 
-                    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', }}>
-                        <View style={{ alignItems: 'center', justifyContent: 'center', position: 'absolute', bottom: 0, }}>
-                            <Text style={{ color: '#fff', fontWeight: 'bold', }}>Adding value to lives</Text>
-                        </View>
-                    </View>
+                <Text style={styles.text}>HillCity Mentorship</Text>
+                {this.state.loading ? (<View style={styles.loader}><Loader loading={this.state.loading} /></View>) : (<View />)}
 
-                </ImageBackground>
-                <View style={{ paddingTop: '20%', alignContent: 'center', justifyContent: 'center', width: '100%', }} >
+                <FormInput
+                    onChangeText={this.handleInput('email')}
+                    labelValue={this.state.email}
+                    placeholderText="Email"
+                    iconType="user"
+                    keyboardType="email-address"
+                    autoCapitalize="none"
+                    autoCorrect={false}
+                />
+                {this.state.noEmail ? <Animatable.View animation='fadeInLeft' duration={500}>
+                    <Text style={styles.errText}>{this.state.noEmail}</Text>
+                </Animatable.View> : <View />}
 
+                <FormInput
+                    onChangeText={this.handleInput('password')}
+                    labelValue={this.state.password}
+                    placeholderText="Password"
+                    iconType="lock"
+                    secureTextEntry={true}
+                />
+                {this.state.noPassword ? <Animatable.View animation='fadeInLeft' duration={500}>
+                    <Text style={styles.errText}>{this.state.noPassword}</Text>
+                </Animatable.View> : <View />}
 
-                    <View >
-                        {this.state.loading ? (<View style={styles.loader}><Loader loading={this.state.loading} /></View>) : (<View />)}
+                <FormButton
+                    buttonTitle="Sign In"
+                    onPress={this.signin}
+                />
 
-                        <View style={styles.inputField}>
-                            <Feather name="mail" size={20} color='#aaa' />
-                            <TextInput style={styles.inputTextArea}
-                                placeholder='Email Address'
-                                onChangeText={this.handleInput('email')}
-                                value={this.state.email}
-                                autoCapitalize='none'
-                                underlineColorAndroid='transparent' />
-                        </View>
-                        {this.state.noEmail ? <Animatable.View animation='fadeInLeft' duration={500}>
-                            <Text style={styles.errText}>{this.state.noEmail}</Text>
-                        </Animatable.View> : <View />}
+                <TouchableOpacity
+                    onPress={() => { }}
+                    style={styles.forgotButton}>
+                    <Text style={styles.navButtonText}>Forgot Password</Text>
+                </TouchableOpacity>
 
-                        <View style={styles.inputField}>
-                            <Feather name="key" size={20} color='#aaa' />
-                            <TextInput style={styles.inputTextArea}
-                                placeholder='Password'
-                                onChangeText={this.handleInput('password')}
-                                value={this.state.password}
-                                autoCapitalize='none'
-                                secureTextEntry
-                                underlineColorAndroid='transparent' />
-                            <Feather name="eye" size={20} color='#aaa' />
-                        </View>
-                        {this.state.noPassword ? <Animatable.View animation='fadeInLeft' duration={500}>
-                            <Text style={styles.errText}>{this.state.noPassword}</Text>
-                        </Animatable.View> : <View />}
+                {/* <SocialButton
+                    buttonTitle="Sign In with Facebook"
+                    btnType="facebook"
+                    color="#4867aa"
+                    backgroundColor="#e6eaf4"
+                    onPress={() => { }}
+                />
 
-                        <TouchableOpacity style={styles.button} onPress={this.signin} >
-                            <View>
-                                <Text style={styles.buttonText}>Sign in</Text>
-                            </View>
-                        </TouchableOpacity>
-
-                    </View>
-                    <View style={{ flexDirection: 'row', justifyContent: 'center', width: '100%', position: 'absolute', bottom: 0, }}>
-                        <Text style={{ alignSelf: 'center', }}>Forgot Password?</Text>
-                        <TouchableOpacity style={{ alignSelf: 'center', marginLeft: 5, }}>
-                            <Text style={{ color: 'blue', }}>Click here!</Text>
-                        </TouchableOpacity>
-                    </View>
-                </View>
+                <SocialButton
+                    buttonTitle="Sign In with Google"
+                    btnType="google"
+                    color="#de4d41"
+                    backgroundColor="#f5e7ea"
+                    onPress={() => { }}
+                /> */}
 
             </SafeAreaView>
         );
@@ -190,5 +187,37 @@ const styles = StyleSheet.create({
         fontSize: 15,
         marginTop: 0,
         marginLeft: 20,
-    }
+    },
+
+    // Nwe style
+    container: {
+        backgroundColor: '#f9fafd',
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: 20,
+    },
+    logo: {
+        height: 75,
+        width: 120,
+        resizeMode: 'cover',
+    },
+    text: {
+        // fontFamily: 'Kufam-SemiBoldItalic',
+        fontSize: 28,
+        marginBottom: 10,
+        color: '#051d5f',
+    },
+    navButton: {
+        marginTop: 15,
+    },
+    forgotButton: {
+        marginVertical: 35,
+    },
+    navButtonText: {
+        fontSize: 18,
+        fontWeight: '500',
+        color: '#2e64e5',
+        // fontFamily: 'Lato-Regular',
+    },
 })
