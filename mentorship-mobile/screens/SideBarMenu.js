@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Alert, AsyncStorage, StyleSheet, Text, View } from 'react-native';
+import { Alert, AsyncStorage, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { Drawer } from 'react-native-paper';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
@@ -10,7 +10,7 @@ const items = [
         iconName: "home-outline",
     },
     {
-        navOptionName: 'Mentees',
+        navOptionName: 'My Mentees',
         screenToNavigate: 'Profile',
         iconName: "account-multiple",
     },
@@ -46,13 +46,16 @@ class SideBarMenu extends Component {
     state = {
         name: '',
         role: '',
+        photo: '',
         greeting: '',
     }
 
     async componentDidMount() {
         const name = await this.getName()
         const role = await this.getUserRole()
-        this.setState({ name, role })
+        const photo = await this.getUserPhoto()
+        this.setState({ name, role, photo })
+        console.log("Photo State:", this.state.photo)
         if (time[0] <= "02" || time[0] > "22") {
             this.setState({ greeting: "You should be in bed by now", })
             return
@@ -60,15 +63,16 @@ class SideBarMenu extends Component {
             this.setState({ greeting: "Good morning! Hope you had a great night", })
             return
         } else if (time[0] <= "18") {
-            this.setState({ greeting: "How's your day going?", })
+            this.setState({ greeting: "Hope you are having a good day", })
             return
         }
-        this.setState({ greeting: "Good evening", })
+        this.setState({ greeting: "Have a good evening", })
         return
     }
 
     getName = async () => AsyncStorage.getItem("name");
     getUserRole = async () => AsyncStorage.getItem("role");
+    getUserPhoto = async () => AsyncStorage.getItem("photo");
 
 
     handleClick = (index, screenToNavigate) => {
@@ -106,12 +110,18 @@ class SideBarMenu extends Component {
         return (
             <View style={styles.sideMenuContainer}>
                 <View style={styles.profileHeader}>
-                    <View style={styles.profileHeaderPicCircle}>
-                        <Text style={{ fontSize: 25, color: 'gray' }}>
-                            {this.state.name.charAt(0)}
-                        </Text>
-                    </View>
-                    <View style={{ width: '100%' }}>
+                    <TouchableOpacity
+                        onPress={() => { }}
+                        style={styles.profileHeaderPicCircle}>
+                        <Image
+                            source={{
+                                uri: `http://hillcityfoundation.org/portal/storage/student_images/${this.state.photo}`
+                            }}
+                            style={{ height: 60, width: 60, borderRadius: 25 }}>
+                            {/* {this.state.name.charAt(0)} */}
+                        </Image>
+                    </TouchableOpacity>
+                    <View style={{ width: '95%' }}>
                         <Text style={styles.profileHeaderText}>Hi, {this.state.name}</Text>
                         <Text style={styles.profileHeaderText2}>{this.state.greeting}</Text>
                     </View>
@@ -228,9 +238,9 @@ const styles = StyleSheet.create({
         padding: 5,
     },
     profileHeaderPicCircle: {
-        width: 40,
-        height: 40,
-        borderRadius: 60 / 2,
+        width: 60,
+        height: 60,
+        borderRadius: 80 / 2,
         backgroundColor: '#aaa',
         justifyContent: 'center',
         alignItems: 'center',
@@ -246,6 +256,7 @@ const styles = StyleSheet.create({
     profileHeaderText2: {
         alignSelf: 'flex-start',
         paddingHorizontal: 10,
+        marginRight: 2,
         width: '90%',
         fontSize: 15,
         color: '#252757',

@@ -100,14 +100,15 @@ export default class UserDetailsScreen extends Component {
                         <View style={{ flexDirection: 'row', marginTop: 15 }}>
                             <Avatar.Image
                                 source={{
-                                    uri: 'https://p.kindpng.com/picc/s/78-785827_user-profile-avatar-login-account-male-user-icon.png'
+                                    uri: `http://hillcityfoundation.org/portal/storage/student_images/${val.photo}`
                                 }}
                                 size={80}
                             />
-                            <View style={{ marginLeft: 20 }}>
+                            <View style={{ marginLeft: 10 }}>
                                 <Title style={[styles.title, {
                                     marginTop: 15,
                                     marginBottom: 5,
+                                    width: "90%",
                                 }]}>{`${val.firstName} ${val.lastName}`}</Title>
                                 <Caption style={styles.caption}>{val.email}</Caption>
                             </View>
@@ -195,7 +196,7 @@ const styles = StyleSheet.create({
         marginBottom: 25,
     },
     title: {
-        fontSize: 24,
+        fontSize: 18,
         fontWeight: 'bold',
         color: '#252757',
     },

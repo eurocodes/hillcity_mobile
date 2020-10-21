@@ -30,7 +30,7 @@
       "googleServicesFile": "./google-services.json",
       "useNextNotificationsApi": true
     },
-    "description": "Hillcity Mentorship Mobile ",
+    "description": "Hillcity Mentorship Mobile \nChanged views",
     "githubUrl": "https://github.com/eurocodes/hillcity_mobile"
   }
 }

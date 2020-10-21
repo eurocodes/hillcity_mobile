@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { AsyncStorage, Button, Dimensions, ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Alert, AsyncStorage, Button, Dimensions, ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Constants from 'expo-constants';
 import * as DocumentPicker from 'expo-document-picker';
 import { TextInput } from 'react-native-gesture-handler';
@@ -199,10 +199,25 @@ export default class SingleEngagement extends Component {
                                 </View>
 
                                 {
-                                    // val.report_uploaded
+                                    // `http://hillcityfoundation.org/portal/storage/student_images/${val.report_uploaded}`
                                     val.is_report_up !== "" &&
                                     <TouchableOpacity
-                                        onPress={() => { }}
+                                        onPress={() => {
+                                            Alert.alert("Download Report", "Holdon a bit report will be downloaded once feature implemented", [
+                                                {
+                                                    text: "Okay",
+                                                    onPress: () => {
+                                                        return null
+                                                    }
+                                                },
+                                                {
+                                                    text: "Download",
+                                                    onPress: () => {
+                                                        return null
+                                                    }
+                                                }
+                                            ])
+                                        }}
                                         style={styles.button}>
                                         <Text style={styles.comment}>View Report</Text>
                                     </TouchableOpacity>

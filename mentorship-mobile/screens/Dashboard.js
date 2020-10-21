@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Alert, AsyncStorage, Dimensions, RefreshControl, ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Alert, AsyncStorage, Dimensions, Image, RefreshControl, ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Constants from 'expo-constants'
 import Entypo from '@expo/vector-icons/Entypo';
 import * as Animatable from 'react-native-animatable';
@@ -85,6 +85,8 @@ export default class EngagementsScreen extends Component {
             const results = await fetchEngagementsMentee()
             if (results[0]) {
                 this.setState({ engagements: results, role: "mentee" })
+                // setUserPhoto(results.data.photo)
+                console.log("Resu:", this.state.engagements)
                 this.setState({ loading: false })
                 return
             } else {
@@ -123,10 +125,10 @@ export default class EngagementsScreen extends Component {
                 backgroundColor = styles.choco_background
             }
 
-            if (val.status == 'Pending' || val.status == 'Accepted') {
+            if (val.status.toUpperCase() == 'PENDING' || val.status.toUpperCase() == 'ACCEPTED') {
 
                 let statusColor;
-                if (val.status == 'Pending') {
+                if (val.status.toUpperCase() == 'PENDING') {
                     statusColor = styles.pending;
                 } else {
                     statusColor = styles.accepted;
@@ -139,7 +141,19 @@ export default class EngagementsScreen extends Component {
                         <View style={{ flexDirection: 'row', backgroundColor: '#aaa' }}>
                             <View style={{ height: '30%', width: '12%', marginLeft: 5, alignSelf: 'center', }}>
                                 {/* <Text style={{ height: 40, width: 75 }}>{val.photo}</Text> */}
-                                <Entypo name='user' size={40} />
+                                {/* <Entypo name='user' size={40} /> */}
+                                <Image
+                                    style={{ width: 50, height: 50, borderRadius: 20 }}
+                                    source={{
+                                        uri: `http://hillcityfoundation.org/portal/storage/student_images/${val.photo}`
+                                    }}
+                                />
+                                {/* <Image
+                                    style={{ width: 40, height: 40, borderRadius: 20 }}
+                                    source={{
+                                        uri: "http://hillcityfoundation.org/old_site/20181229_092159.jpg"
+                                    }}
+                                /> */}
                             </View>
                             <View style={styles.mapContainerMentor}>
                                 <View style={{ alignSelf: 'flex-start', marginLeft: 8, marginVertical: 5, borderRadius: 5, }}>
@@ -172,7 +186,11 @@ export default class EngagementsScreen extends Component {
                         <View style={styles.engagementBottomLine} />
                     </Animatable.View>
                 )
-            }
+            } // else {
+            // Alert.alert("No Active Engagement", "We could not find any active engaement at this time", [
+            //     { text: "OKAY" }
+            // ])
+            // }
 
         })
 
@@ -206,10 +224,10 @@ export default class EngagementsScreen extends Component {
                             backgroundColor = styles.choco_background
                         }
 
-                        if (val.status == 'Pending' || val.status == 'Accepted') {
+                        if (val.status.toUpperCase() == 'PENDING' || val.status.toUpperCase() == 'ACCEPTED') {
 
                             let statusColor;
-                            if (val.status == 'Pending') {
+                            if (val.status.toUpperCase() == 'PENDING') {
                                 statusColor = styles.pending;
                             } else {
                                 statusColor = styles.accepted;
